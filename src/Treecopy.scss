@@ -1,0 +1,363 @@
+
+$treePrefixCls: 'u-tree';
+.#{$treePrefixCls} {
+  margin: 0;
+  padding: 5px;
+  li {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    white-space: nowrap;
+    outline: 0;
+    .draggable {
+      color: #333;
+      -moz-user-select: none;
+      -khtml-user-select: none;
+      -webkit-user-select: none;
+      user-select: none;
+      /* Required to make elements draggable in old WebKit */
+      -khtml-user-drag: element;
+      -webkit-user-drag: element;
+    }
+    &.drag-over {
+      > .draggable {
+        background-color: #316ac5;
+        color: white;
+        border: 1px #316ac5 solid;
+        opacity: 0.8;
+      }
+    }
+    &.drag-over-gap-top {
+      > .draggable {
+        border-top: 2px blue solid;
+      }
+    }
+    &.drag-over-gap-bottom {
+      > .draggable {
+        border-bottom: 2px blue solid;
+      }
+    }
+    &.filter-node {
+      > .#{$treePrefixCls}-node-content-wrapper {
+        color: #a60000!important;
+        font-weight: bold!important;
+      }
+    }
+    ul {
+      margin: 0;
+      padding: 0 0 0 18px;
+      &.#{$treePrefixCls}-line {
+        background: url("https://t.alipayobjects.com/images/T13BtfXl0mXXXXXXXX.gif") 0 0 repeat-y;
+      }
+    }
+    .#{$treePrefixCls}-node-content-wrapper {
+      display: inline-block;
+      padding: 1px 3px 0 0;
+      margin: 0;
+      cursor: pointer;
+      height: 17px;
+      text-decoration: none;
+      vertical-align: top;
+    }
+    span {
+      &.#{$treePrefixCls}-switcher,
+      &.#{$treePrefixCls}-checkbox,
+      &.#{$treePrefixCls}-iconEle {
+        line-height: 16px;
+        margin-right: 2px;
+        width: 16px;
+        height: 16px;
+        display: inline-block;
+        vertical-align: middle;
+        border: 0 none;
+        cursor: pointer;
+        outline: none;
+        background-color: transparent;
+        background-repeat: no-repeat;
+        background-attachment: scroll;
+        background-image: url("https://t.alipayobjects.com/images/T1.ANfXhXtXXXXXXXX.png");
+      }
+      &.#{$treePrefixCls}-icon_loading {
+        margin-right: 2px;
+        vertical-align: top;
+        background: url(https://t.alipayobjects.com/images/rmsweb/T1YxhiXgJbXXXXXXXX.gif) no-repeat scroll 0 0 transparent;
+      }
+      &.#{$treePrefixCls}-switcher {
+        &.#{$treePrefixCls}-switcher-noop {
+          cursor: auto;
+        }
+        &.#{$treePrefixCls}-roots_open {
+          background-position: -93px -56px;
+        }
+        &.#{$treePrefixCls}-roots_close {
+          background-position: -75px -56px;
+        }
+        &.#{$treePrefixCls}-center_open {
+          background-position: -92px -18px;
+        }
+        &.#{$treePrefixCls}-center_close {
+          background-position: -74px -18px;
+        }
+        &.#{$treePrefixCls}-bottom_open {
+          background-position: -92px -36px;
+        }
+        &.#{$treePrefixCls}-bottom_close {
+          background-position: -74px -36px;
+        }
+        &.#{$treePrefixCls}-noline_open {
+          background-position: -92px -72px;
+        }
+        &.#{$treePrefixCls}-noline_close {
+          background-position: -74px -72px;
+        }
+        &.#{$treePrefixCls}-center_docu {
+          background-position: -56px -18px;
+        }
+        &.#{$treePrefixCls}-bottom_docu {
+          background-position: -56px -36px;
+        }
+        &.#{$treePrefixCls}-noline_docu {
+          background: none;
+        }
+      }
+      &.#{$treePrefixCls}-checkbox {
+        width: 13px;
+        height: 13px;
+        margin: 0 3px;
+        background-position: 0 0;
+        &-checked {
+          background-position: -14px 0;
+        }
+        &-indeterminate {
+          background-position: -14px -28px;
+        }
+        &-disabled {
+          background-position: 0 -56px;
+        }
+        &.#{$treePrefixCls}-checkbox-checked.#{$treePrefixCls}-checkbox-disabled {
+          background-position: -14px -56px;
+        }
+        &.#{$treePrefixCls}-checkbox-indeterminate.#{$treePrefixCls}-checkbox-disabled {
+          position: relative;
+          background: #ccc;
+          border-radius: 3px;
+          &::after {
+            content: ' ';
+            -webkit-transform: scale(1);
+            transform: scale(1);
+            position: absolute;
+            left: 3px;
+            top: 5px;
+            width: 5px;
+            height: 0;
+            border: 2px solid #fff;
+            border-top: 0;
+            border-left: 0;
+          }
+        }
+      }
+    }
+  }
+  &-child-tree {
+    display: none;
+    &-open {
+      display: block;
+    }
+  }
+  &-treenode-disabled {
+    >span,
+    >a,
+    >a span {
+      color: #ccc;
+      cursor: not-allowed;
+    }
+  }
+  &-node-selected {
+    background-color: #ffe6b0;
+    border: 1px #ffb951 solid;
+    opacity: 0.8;
+  }
+  &-icon__open {
+    margin-right: 2px;
+    background-position: -110px -16px;
+    vertical-align: top;
+  }
+  &-icon__close {
+    margin-right: 2px;
+    background-position: -110px 0;
+    vertical-align: top;
+  }
+  &-icon__docu {
+    margin-right: 2px;
+    background-position: -110px -32px;
+    vertical-align: top;
+  }
+}
+
+$tree-prefix-cls: "ant-tree";
+$primary-color: '#108ee9';
+$highlight-color: '#f50';
+$font-size-base: '12px';
+//.antCheckboxFn($checkbox-prefix-cls: "ant-tree-checkbox");
+
+.#{$tree-prefix-cls} {
+  margin: 0;
+  padding: 5px;
+  font-size: $font-size-base;
+  li {
+    padding: 0;
+    margin: 7px 0;
+    list-style: none;
+    white-space: nowrap;
+    outline: 0;
+    a[draggable],
+    a[draggable="true"] {
+      user-select: none;
+      /* Required to make elements draggable in old WebKit */
+      -khtml-user-drag: element;
+      -webkit-user-drag: element;
+    }
+    &.drag-over {
+      > a[draggable] {
+        background-color: $primary-color;
+        color: white;
+        opacity: 0.8;
+      }
+    }
+    &.drag-over-gap-top {
+      > a[draggable] {
+        border-top: 2px $primary-color solid;
+      }
+    }
+    &.drag-over-gap-bottom {
+      > a[draggable] {
+        border-bottom: 2px $primary-color solid;
+      }
+    }
+    &.filter-node {
+      > a {
+        color: $highlight-color!important;
+        font-weight: bold!important;
+      }
+    }
+    ul {
+      margin: 0;
+      padding: 0 0 0 18px;
+    }
+    a {
+      display: inline-block;
+      padding: 1px 5px;
+      border-radius: 2px;
+      margin: 0;
+      cursor: pointer;
+      text-decoration: none;
+      vertical-align: top;
+      color: $text-color;
+      transition: all 0.3s ease;
+      &:hover {
+        background-color: tint($primary-color, 90%);
+      }
+      &.#{$tree-prefix-cls}-node-selected {
+        background-color: tint($primary-color, 80%);
+      }
+    }
+    span {
+      &.#{$tree-prefix-cls}-checkbox {
+        margin: 2px 4px 0 0;
+      }
+      &.#{$tree-prefix-cls}-switcher,
+      &.#{$tree-prefix-cls}-iconEle {
+        margin: 0;
+        width: 16px;
+        height: 16px;
+        line-height: 16px;
+        display: inline-block;
+        vertical-align: middle;
+        border: 0 none;
+        cursor: pointer;
+        outline: none;
+      }
+      &.#{$tree-prefix-cls}-icon_loading {
+        &:after {
+          display: inline-block;
+          animation: loadingCircle 1s infinite linear;
+          color: $primary-color;
+          font-family: 'uf';
+		  	text-rendering: optimizeLegibility;
+		    -webkit-font-smoothing: antialiased;
+		    -moz-osx-font-smoothing: grayscale;
+		    content: "\e6ae";
+        }
+      }
+      &.#{$tree-prefix-cls}-switcher {
+        &.#{$tree-prefix-cls}-switcher-noop {
+          cursor: auto;
+        }
+        &.#{$tree-prefix-cls}-roots_open,
+        &.#{$tree-prefix-cls}-center_open,
+        &.#{$tree-prefix-cls}-bottom_open,
+        &.#{$tree-prefix-cls}-noline_open {
+          //@include antTreeSwitcherIcon;
+        }
+        &.#{$tree-prefix-cls}-roots_close,
+        &.#{$tree-prefix-cls}-center_close,
+        &.#{$tree-prefix-cls}-bottom_close,
+        &.#{$tree-prefix-cls}-noline_close {
+          //@include antTreeSwitcherIcon;
+          -ms-filter: "progid:DXImageTransform.Microsoft.BasicImage(rotation=3)";
+          &:after {
+            transform: rotate(270deg) scale(0.6);
+          }
+        }
+      }
+    }
+  }
+  &-child-tree {
+    display: none;
+    &-open {
+      display: block;
+    }
+  }
+  &-treenode-disabled {
+    >span,
+    >a,
+    >a span {
+      color: #ccc;
+      cursor: not-allowed;
+    }
+  }
+  &-icon__open {
+    margin-right: 2px;
+    vertical-align: top;
+  }
+  &-icon__close {
+    margin-right: 2px;
+    vertical-align: top;
+  }
+}
+@mixin antTreeSwitcherIcon {
+  position: relative;
+  &:after {
+  	font-size: 12px;
+    -webkit-transform: scale(0.58333333) rotate(0deg);
+    -ms-transform: scale(0.58333333) rotate(0deg);
+    transform: scale(0.58333333) rotate(0deg);
+    -ms-filter: "progid:DXImageTransform.Microsoft.Matrix(sizingMethod='auto expand', M11=1, M12=0, M21=0, M22=1)";
+    zoom: 1;
+    display: inline-block;
+    font-family: 'anticon';
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    content: "\E606";
+    font-weight: bold;
+    position: absolute;
+    top: 0;
+    right: 4px;
+    color: #666;
+    -webkit-transition: -webkit-transform .3s ease;
+    transition: -webkit-transform .3s ease;
+    transition: transform .3s ease;
+    transition: transform .3s ease, -webkit-transform .3s ease;
+  }
+}

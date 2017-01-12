@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react';
 import assign from 'object-assign';
 import classNames from 'classnames';
-import Animate from 'rc-animate';
+import Animate from 'bee-animate';
 import { browser } from './util';
 
 const browserUa = typeof window !== 'undefined' ? browser(window.navigator) : '';

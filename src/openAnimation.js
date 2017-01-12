@@ -1,4 +1,4 @@
-import cssAnimation from 'css-animation';
+import { cssAnimation } from 'tinper-bee-core';
 
 function animate(node, show, done) {
   let height;

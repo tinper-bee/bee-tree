@@ -1,14 +1,31 @@
-/* eslint no-loop-func: 0*/
+'use strict';
 
-import React from 'react';
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.browser = browser;
+exports.getOffset = getOffset;
+exports.loopAllChildren = loopAllChildren;
+exports.isInclude = isInclude;
+exports.filterParentPosition = filterParentPosition;
+exports.handleCheckState = handleCheckState;
+exports.getCheck = getCheck;
+exports.getStrictlyValue = getStrictlyValue;
+exports.arraysEqual = arraysEqual;
 
-export function browser(navigator) {
-  let tem;
-  const ua = navigator.userAgent;
-  let M = ua.match(/(opera|chrome|safari|firefox|msie|trident(?=\/))\/?\s*(\d+)/i) || [];
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+
+function browser(navigator) {
+  var tem = void 0;
+  var ua = navigator.userAgent;
+  var M = ua.match(/(opera|chrome|safari|firefox|msie|trident(?=\/))\/?\s*(\d+)/i) || [];
   if (/trident/i.test(M[1])) {
     tem = /\brv[ :]+(\d+)/g.exec(ua) || [];
-    return `IE ${tem[1] || ''}`;
+    return 'IE ' + (tem[1] || '');
   }
   if (M[1] === 'Chrome') {
     tem = ua.match(/\b(OPR|Edge)\/(\d+)/);
@@ -51,8 +68,13 @@ export function browser(navigator) {
 // }
 
 /* eslint-disable */
-export function getOffset(ele) {
-  let doc, win, docElem, rect;
+/* eslint no-loop-func: 0*/
+
+function getOffset(ele) {
+  var doc = void 0,
+      win = void 0,
+      docElem = void 0,
+      rect = void 0;
 
   if (!ele.getClientRects().length) {
     return { top: 0, left: 0 };
@@ -76,7 +98,7 @@ export function getOffset(ele) {
 /* eslint-enable */
 
 function getChildrenlength(children) {
-  let len = 1;
+  var len = 1;
   if (Array.isArray(children)) {
     len = children.length;
   }
@@ -94,13 +116,13 @@ function getSiblingPosition(index, len, siblingPosition) {
   return siblingPosition;
 }
 
-export function loopAllChildren(childs, callback, parent) {
-  const loop = (children, level, _parent) => {
-    const len = getChildrenlength(children);
-    React.Children.forEach(children, (item, index) => {
-      const pos = `${level}-${index}`;
+function loopAllChildren(childs, callback, parent) {
+  var loop = function loop(children, level, _parent) {
+    var len = getChildrenlength(children);
+    _react2["default"].Children.forEach(children, function (item, index) {
+      var pos = level + '-' + index;
       if (item.props.children && item.type && item.type.isTreeNode) {
-        loop(item.props.children, pos, { node: item, pos });
+        loop(item.props.children, pos, { node: item, pos: pos });
       }
       callback(item, index, pos, item.key || pos, getSiblingPosition(index, len, {}), _parent);
     });
@@ -108,8 +130,8 @@ export function loopAllChildren(childs, callback, parent) {
   loop(childs, 0, parent);
 }
 
-export function isInclude(smallArray, bigArray) {
-  return smallArray.every((ii, i) => {
+function isInclude(smallArray, bigArray) {
+  return smallArray.every(function (ii, i) {
     return ii === bigArray[i];
   });
 }
@@ -117,32 +139,43 @@ export function isInclude(smallArray, bigArray) {
 
 
 // arr.length === 628, use time: ~20ms
-export function filterParentPosition(arr) {
-  const levelObj = {};
-  arr.forEach((item) => {
-    const posLen = item.split('-').length;
+function filterParentPosition(arr) {
+  var levelObj = {};
+  arr.forEach(function (item) {
+    var posLen = item.split('-').length;
     if (!levelObj[posLen]) {
       levelObj[posLen] = [];
     }
     levelObj[posLen].push(item);
   });
-  const levelArr = Object.keys(levelObj).sort();
-  for (let i = 0; i < levelArr.length; i++) {
+  var levelArr = Object.keys(levelObj).sort();
+
+  var _loop = function _loop(i) {
     if (levelArr[i + 1]) {
-      levelObj[levelArr[i]].forEach(ii => {
-        for (let j = i + 1; j < levelArr.length; j++) {
-          levelObj[levelArr[j]].forEach((_i, index) => {
+      levelObj[levelArr[i]].forEach(function (ii) {
+        var _loop2 = function _loop2(j) {
+          levelObj[levelArr[j]].forEach(function (_i, index) {
             if (isInclude(ii.split('-'), _i.split('-'))) {
               levelObj[levelArr[j]][index] = null;
             }
           });
-          levelObj[levelArr[j]] = levelObj[levelArr[j]].filter(p => p);
+          levelObj[levelArr[j]] = levelObj[levelArr[j]].filter(function (p) {
+            return p;
+          });
+        };
+
+        for (var j = i + 1; j < levelArr.length; j++) {
+          _loop2(j);
         }
       });
     }
+  };
+
+  for (var i = 0; i < levelArr.length; i++) {
+    _loop(i);
   }
-  let nArr = [];
-  levelArr.forEach(i => {
+  var nArr = [];
+  levelArr.forEach(function (i) {
     nArr = nArr.concat(levelObj[i]);
   });
   return nArr;
@@ -153,8 +186,8 @@ export function filterParentPosition(arr) {
 
 
 function stripTail(str) {
-  const arr = str.match(/(.+)(-[^-]+)$/);
-  let st = '';
+  var arr = str.match(/(.+)(-[^-]+)$/);
+  var st = '';
   if (arr && arr.length === 3) {
     st = arr[1];
   }
@@ -164,16 +197,16 @@ function splitPosition(pos) {
   return pos.split('-');
 }
 
-export function handleCheckState(obj, checkedPositionArr, checkIt) {
+function handleCheckState(obj, checkedPositionArr, checkIt) {
   // console.log(stripTail('0-101-000'));
-  let objKeys = Object.keys(obj);
+  var objKeys = Object.keys(obj);
   // let s = Date.now();
-  objKeys.forEach((i, index) => {
-    const iArr = splitPosition(i);
-    let saved = false;
-    checkedPositionArr.forEach((_pos) => {
+  objKeys.forEach(function (i, index) {
+    var iArr = splitPosition(i);
+    var saved = false;
+    checkedPositionArr.forEach(function (_pos) {
       // 设置子节点，全选或全不选
-      const _posArr = splitPosition(_pos);
+      var _posArr = splitPosition(_pos);
       if (iArr.length > _posArr.length && isInclude(_posArr, iArr)) {
         obj[i].halfChecked = false;
         obj[i].checked = checkIt;
@@ -190,29 +223,32 @@ export function handleCheckState(obj, checkedPositionArr, checkIt) {
   });
   // TODO: 循环 2470000 次耗时约 1400 ms。 性能瓶颈！
   // console.log(Date.now()-s, checkedPositionArr.length * objKeys.length);
-  objKeys = objKeys.filter(i => i); // filter non null;
+  objKeys = objKeys.filter(function (i) {
+    return i;
+  }); // filter non null;
 
-  for (let pIndex = 0; pIndex < checkedPositionArr.length; pIndex++) {
+  var _loop3 = function _loop3(_pIndex) {
     // 循环设置父节点的 选中 或 半选状态
-    const loop = (__pos) => {
-      const _posLen = splitPosition(__pos).length;
-      if (_posLen <= 2) { // e.g. '0-0', '0-1'
+    var loop = function loop(__pos) {
+      var _posLen = splitPosition(__pos).length;
+      if (_posLen <= 2) {
+        // e.g. '0-0', '0-1'
         return;
       }
-      let sibling = 0;
-      let siblingChecked = 0;
-      const parentPosition = stripTail(__pos);
-      objKeys.forEach((i /* , index*/) => {
-        const iArr = splitPosition(i);
+      var sibling = 0;
+      var siblingChecked = 0;
+      var parentPosition = stripTail(__pos);
+      objKeys.forEach(function (i /* , index*/) {
+        var iArr = splitPosition(i);
         if (iArr.length === _posLen && isInclude(splitPosition(parentPosition), iArr)) {
           sibling++;
           if (obj[i].checked) {
             siblingChecked++;
-            const _i = checkedPositionArr.indexOf(i);
+            var _i = checkedPositionArr.indexOf(i);
             if (_i > -1) {
               checkedPositionArr.splice(_i, 1);
-              if (_i <= pIndex) {
-                pIndex--;
+              if (_i <= _pIndex) {
+                _pIndex--;
               }
             }
           } else if (obj[i].halfChecked) {
@@ -222,7 +258,7 @@ export function handleCheckState(obj, checkedPositionArr, checkIt) {
         }
       });
       // objKeys = objKeys.filter(i => i); // filter non null;
-      const parent = obj[parentPosition];
+      var parent = obj[parentPosition];
       // sibling 不会等于0
       // 全不选 - 全选 - 半选
       if (siblingChecked === 0) {
@@ -237,18 +273,23 @@ export function handleCheckState(obj, checkedPositionArr, checkIt) {
       }
       loop(parentPosition);
     };
-    loop(checkedPositionArr[pIndex], pIndex);
+    loop(checkedPositionArr[_pIndex], _pIndex);
+    pIndex = _pIndex;
+  };
+
+  for (var pIndex = 0; pIndex < checkedPositionArr.length; pIndex++) {
+    _loop3(pIndex);
   }
   // console.log(Date.now()-s, objKeys.length, checkIt);
 }
 
-export function getCheck(treeNodesStates) {
-  const halfCheckedKeys = [];
-  const checkedKeys = [];
-  const checkedNodes = [];
-  const checkedNodesPositions = [];
-  Object.keys(treeNodesStates).forEach((item) => {
-    const itemObj = treeNodesStates[item];
+function getCheck(treeNodesStates) {
+  var halfCheckedKeys = [];
+  var checkedKeys = [];
+  var checkedNodes = [];
+  var checkedNodesPositions = [];
+  Object.keys(treeNodesStates).forEach(function (item) {
+    var itemObj = treeNodesStates[item];
     if (itemObj.checked) {
       checkedKeys.push(itemObj.key);
       checkedNodes.push(itemObj.node);
@@ -258,18 +299,18 @@ export function getCheck(treeNodesStates) {
     }
   });
   return {
-    halfCheckedKeys, checkedKeys, checkedNodes, checkedNodesPositions, treeNodesStates,
+    halfCheckedKeys: halfCheckedKeys, checkedKeys: checkedKeys, checkedNodes: checkedNodes, checkedNodesPositions: checkedNodesPositions, treeNodesStates: treeNodesStates
   };
 }
 
-export function getStrictlyValue(checkedKeys, halfChecked) {
+function getStrictlyValue(checkedKeys, halfChecked) {
   if (halfChecked) {
-    return { checked: checkedKeys, halfChecked };
+    return { checked: checkedKeys, halfChecked: halfChecked };
   }
   return checkedKeys;
 }
 
-export function arraysEqual(a, b) {
+function arraysEqual(a, b) {
   if (a === b) return true;
   if (a === null || typeof a === 'undefined' || b === null || typeof b === 'undefined') {
     return false;
@@ -279,7 +320,7 @@ export function arraysEqual(a, b) {
   // If you don't care about the order of the elements inside
   // the array, you should sort both arrays here.
 
-  for (let i = 0; i < a.length; ++i) {
+  for (var i = 0; i < a.length; ++i) {
     if (a[i] !== b[i]) return false;
   }
   return true;

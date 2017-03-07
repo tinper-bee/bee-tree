@@ -3,7 +3,6 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.AntTreeNode = undefined;
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
@@ -32,32 +31,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : _defaults(subClass, superClass); }
-
-var AntTreeNodeProps = {
-  disabled: _react.PropTypes.bool,
-  disableCheckbox: _react.PropTypes.bool,
-  title: _react.PropTypes.oneOfType([_react.PropTypes.string, _react.PropTypes.node]),
-  key: _react.PropTypes.string,
-  isLeaf: _react.PropTypes.bool
-};
-
-var AntTreeNode = exports.AntTreeNode = function (_Component) {
-  _inherits(AntTreeNode, _Component);
-
-  function AntTreeNode() {
-    _classCallCheck(this, AntTreeNode);
-
-    return _possibleConstructorReturn(this, _Component.apply(this, arguments));
-  }
-
-  AntTreeNode.prototype.render = function render() {
-    return _react2["default"].createElement(AntTreeNode, this.props);
-  };
-
-  return AntTreeNode;
-}(_react.Component);
-
-AntTreeNode.AntTreeNodeProps = AntTreeNodeProps;
 
 var TreeProps = {
   showLine: _react.PropTypes.bool,
@@ -120,13 +93,13 @@ var defaultProps = {
   openAnimation: _openAnimation2["default"]
 };
 
-var Tree = function (_Component2) {
-  _inherits(Tree, _Component2);
+var Tree = function (_Component) {
+  _inherits(Tree, _Component);
 
   function Tree() {
     _classCallCheck(this, Tree);
 
-    return _possibleConstructorReturn(this, _Component2.apply(this, arguments));
+    return _possibleConstructorReturn(this, _Component.apply(this, arguments));
   }
 
   Tree.prototype.render = function render() {
@@ -148,3 +121,4 @@ Tree.TreeNode = _TreeNode2["default"];
 Tree.TreeProps = TreeProps;
 Tree.defaultProps = defaultProps;
 exports["default"] = Tree;
+module.exports = exports['default'];

@@ -3,25 +3,6 @@ import RcTree from './Tree';
 import TreeNode  from './TreeNode';
 import animation from './openAnimation';
 
-const AntTreeNodeProps ={
-  disabled: PropTypes.bool,
-  disableCheckbox: PropTypes.bool,
-  title: PropTypes.oneOfType([
-      PropTypes.string,
-      PropTypes.node
-  ]),
-  key: PropTypes.string,
-  isLeaf: PropTypes.bool
-}
-
-export class AntTreeNode extends Component {
-  render() {
-    return <AntTreeNode {...this.props} />;
-  }
-}
-
-AntTreeNode.AntTreeNodeProps = AntTreeNodeProps;
-
 const TreeProps ={
   showLine: PropTypes.bool,
   className: PropTypes.string,

@@ -7,6 +7,7 @@
 const defaultProps = {
 	keys: ['0-0-0', '0-0-1']
 }
+console.log(Tree);
 class Demo1 extends Component {
 	constructor(props) {
 		super(props);

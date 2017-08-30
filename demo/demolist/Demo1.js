@@ -4,6 +4,13 @@
 * @description 事例涵盖 checkbox如何选择，disable状态和部分选择状态。
 *
 */
+
+
+import React, { Component } from 'react';
+import Tree from '../../src';
+
+const TreeNode = Tree.TreeNode;
+
 const defaultProps = {
 	keys: ['0-0-0', '0-0-1']
 }
@@ -47,3 +54,6 @@ class Demo1 extends Component {
 }
 
 Demo1.defaultProps = defaultProps;
+
+
+export default Demo1;

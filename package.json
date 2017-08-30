@@ -38,6 +38,7 @@
   "bee-form-control": "^0.1.5",
   "classnames": "^2.2.5",
   "object-assign": "latest",
+  "babel-runtime": "^6.23.0",
   "tinper-bee-core": "latest"
  },
  "devDependencies": {

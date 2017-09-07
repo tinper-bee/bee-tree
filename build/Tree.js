@@ -249,16 +249,14 @@ var Tree = function (_React$Component) {
       this.props.onCheck((0, _util.getStrictlyValue)(checkedKeys, this.props.checkedKeys.halfChecked), newSt);
     } else {
       if (checked && index === -1) {
-        (function () {
-          _this3.treeNodesStates[treeNode.props.pos].checked = true;
-          var checkedPositions = [];
-          Object.keys(_this3.treeNodesStates).forEach(function (i) {
-            if (_this3.treeNodesStates[i].checked) {
-              checkedPositions.push(i);
-            }
-          });
-          (0, _util.handleCheckState)(_this3.treeNodesStates, (0, _util.filterParentPosition)(checkedPositions), true);
-        })();
+        this.treeNodesStates[treeNode.props.pos].checked = true;
+        var checkedPositions = [];
+        Object.keys(this.treeNodesStates).forEach(function (i) {
+          if (_this3.treeNodesStates[i].checked) {
+            checkedPositions.push(i);
+          }
+        });
+        (0, _util.handleCheckState)(this.treeNodesStates, (0, _util.filterParentPosition)(checkedPositions), true);
       }
       if (!checked) {
         this.treeNodesStates[treeNode.props.pos].checked = false;
@@ -567,37 +565,33 @@ var Tree = function (_React$Component) {
         this.halfCheckedKeys = props._treeNodesStates.halfCheckedKeys;
         this.checkedKeys = props._treeNodesStates.checkedKeys;
       } else {
-        (function () {
-          var checkedKeys = _this4.state.checkedKeys;
-          var checkKeys = void 0;
-          if (!props.loadData && _this4.checkKeys && _this4._checkedKeys && (0, _util.arraysEqual)(_this4._checkedKeys, checkedKeys)) {
-            // if checkedKeys the same as _checkedKeys from onCheck, use _checkedKeys.
-            checkKeys = _this4.checkKeys;
-          } else {
-            (function () {
-              var checkedPositions = [];
-              _this4.treeNodesStates = {};
-              (0, _util.loopAllChildren)(props.children, function (item, index, pos, keyOrPos, siblingPosition) {
-                _this4.treeNodesStates[pos] = {
-                  node: item,
-                  key: keyOrPos,
-                  checked: false,
-                  halfChecked: false,
-                  siblingPosition: siblingPosition
-                };
-                if (checkedKeys.indexOf(keyOrPos) !== -1) {
-                  _this4.treeNodesStates[pos].checked = true;
-                  checkedPositions.push(pos);
-                }
-              });
-              // if the parent node's key exists, it all children node will be checked
-              (0, _util.handleCheckState)(_this4.treeNodesStates, (0, _util.filterParentPosition)(checkedPositions), true);
-              checkKeys = (0, _util.getCheck)(_this4.treeNodesStates);
-            })();
-          }
-          _this4.halfCheckedKeys = checkKeys.halfCheckedKeys;
-          _this4.checkedKeys = checkKeys.checkedKeys;
-        })();
+        var checkedKeys = this.state.checkedKeys;
+        var checkKeys = void 0;
+        if (!props.loadData && this.checkKeys && this._checkedKeys && (0, _util.arraysEqual)(this._checkedKeys, checkedKeys)) {
+          // if checkedKeys the same as _checkedKeys from onCheck, use _checkedKeys.
+          checkKeys = this.checkKeys;
+        } else {
+          var checkedPositions = [];
+          this.treeNodesStates = {};
+          (0, _util.loopAllChildren)(props.children, function (item, index, pos, keyOrPos, siblingPosition) {
+            _this4.treeNodesStates[pos] = {
+              node: item,
+              key: keyOrPos,
+              checked: false,
+              halfChecked: false,
+              siblingPosition: siblingPosition
+            };
+            if (checkedKeys.indexOf(keyOrPos) !== -1) {
+              _this4.treeNodesStates[pos].checked = true;
+              checkedPositions.push(pos);
+            }
+          });
+          // if the parent node's key exists, it all children node will be checked
+          (0, _util.handleCheckState)(this.treeNodesStates, (0, _util.filterParentPosition)(checkedPositions), true);
+          checkKeys = (0, _util.getCheck)(this.treeNodesStates);
+        }
+        this.halfCheckedKeys = checkKeys.halfCheckedKeys;
+        this.checkedKeys = checkKeys.checkedKeys;
       }
     }
 

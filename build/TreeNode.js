@@ -157,17 +157,15 @@ var TreeNode = function (_React$Component) {
 
     var callbackPromise = this.props.root.onExpand(this);
     if (callbackPromise && (typeof callbackPromise === 'undefined' ? 'undefined' : _typeof(callbackPromise)) === 'object') {
-      (function () {
-        var setLoading = function setLoading(dataLoading) {
-          _this2.setState({ dataLoading: dataLoading });
-        };
-        setLoading(true);
-        callbackPromise.then(function () {
-          setLoading(false);
-        }, function () {
-          setLoading(false);
-        });
-      })();
+      var setLoading = function setLoading(dataLoading) {
+        _this2.setState({ dataLoading: dataLoading });
+      };
+      setLoading(true);
+      callbackPromise.then(function () {
+        setLoading(false);
+      }, function () {
+        setLoading(false);
+      });
     }
   };
 

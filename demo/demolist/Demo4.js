@@ -113,7 +113,7 @@ class Demo4 extends Component {
       const title = index > -1 ? (
         <span>
           {beforeStr}
-          <span className="ant-tree-searchable-filter">{searchValue}</span>
+          <span className="u-tree-searchable-filter">{searchValue}</span>
           {afterStr}
         </span>
       ) : <span>{item.key}</span>;

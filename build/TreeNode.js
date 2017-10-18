@@ -26,6 +26,10 @@ var _beeAnimate2 = _interopRequireDefault(_beeAnimate);
 
 var _util = require('./util');
 
+var _propTypes = require('prop-types');
+
+var _propTypes2 = _interopRequireDefault(_propTypes);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
 function _defaults(obj, defaults) { var keys = Object.getOwnPropertyNames(defaults); for (var i = 0; i < keys.length; i++) { var key = keys[i]; var value = Object.getOwnPropertyDescriptor(defaults, key); if (value && value.configurable && obj[key] === undefined) { Object.defineProperty(obj, key, value); } } return obj; }
@@ -158,7 +162,9 @@ var TreeNode = function (_React$Component) {
     var callbackPromise = this.props.root.onExpand(this);
     if (callbackPromise && (typeof callbackPromise === 'undefined' ? 'undefined' : _typeof(callbackPromise)) === 'object') {
       var setLoading = function setLoading(dataLoading) {
-        _this2.setState({ dataLoading: dataLoading });
+        _this2.setState({
+          dataLoading: dataLoading
+        });
       };
       setLoading(true);
       callbackPromise.then(function () {
@@ -177,6 +183,7 @@ var TreeNode = function (_React$Component) {
   };
 
   TreeNode.prototype.renderSwitcher = function renderSwitcher(props, expandedState) {
+    var stateIcon = void 0;
     var prefixCls = props.prefixCls;
     var switcherCls = _defineProperty({}, prefixCls + '-switcher', true);
     if (!props.showLine) {
@@ -187,6 +194,15 @@ var TreeNode = function (_React$Component) {
       switcherCls[prefixCls + '-center_' + expandedState] = !props.last;
       switcherCls[prefixCls + '-bottom_' + expandedState] = props.last;
     }
+
+    if (expandedState === 'open' && props.openIcon) {
+      stateIcon = 'uf ' + props.openIcon;
+    }
+    if (expandedState === 'close' && props.closeIcon) {
+      stateIcon = ['uf ' + props.closeIcon];
+    }
+    switcherCls[stateIcon] = stateIcon;
+
     if (props.disabled) {
       switcherCls[prefixCls + '-switcher-disabled'] = true;
       return _react2["default"].createElement('span', { className: (0, _classnames2["default"])(switcherCls) });
@@ -282,6 +298,8 @@ var TreeNode = function (_React$Component) {
     var canRenderSwitcher = true;
     var content = props.title;
     var newChildren = this.renderChildren(props);
+    var openIconCls = false,
+        closeIconCls = false;
     if (!newChildren || newChildren === props.children) {
       // content = newChildren;
       newChildren = null;
@@ -296,7 +314,6 @@ var TreeNode = function (_React$Component) {
     // }
 
     var iconEleCls = (_iconEleCls = {}, _defineProperty(_iconEleCls, prefixCls + '-iconEle', true), _defineProperty(_iconEleCls, prefixCls + '-icon_loading', this.state.dataLoading), _defineProperty(_iconEleCls, prefixCls + '-icon__' + iconState, true), _iconEleCls);
-
     var selectHandle = function selectHandle() {
       var icon = props.showIcon || props.loadData && _this3.state.dataLoading ? _react2["default"].createElement('span', { className: (0, _classnames2["default"])(iconEleCls) }) : null;
       var title = _react2["default"].createElement(
@@ -404,13 +421,15 @@ var TreeNode = function (_React$Component) {
 TreeNode.isTreeNode = 1;
 
 TreeNode.propTypes = {
-  prefixCls: _react.PropTypes.string,
-  disabled: _react.PropTypes.bool,
-  disableCheckbox: _react.PropTypes.bool,
-  expanded: _react.PropTypes.bool,
-  isLeaf: _react.PropTypes.bool,
-  root: _react.PropTypes.object,
-  onSelect: _react.PropTypes.func
+  prefixCls: _propTypes2["default"].string,
+  disabled: _propTypes2["default"].bool,
+  disableCheckbox: _propTypes2["default"].bool,
+  expanded: _propTypes2["default"].bool,
+  isLeaf: _propTypes2["default"].bool,
+  root: _propTypes2["default"].object,
+  onSelect: _propTypes2["default"].func,
+  openIcon: _propTypes2["default"].string,
+  closeIcon: _propTypes2["default"].string
 };
 
 TreeNode.defaultProps = {

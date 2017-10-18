@@ -1,7 +1,5 @@
 /* eslint no-console:0 */
-import React, {
-  PropTypes
-} from 'react';
+import React from 'react';
 import assign from 'object-assign';
 import classNames from 'classnames';
 import {
@@ -14,6 +12,8 @@ import {
   getStrictlyValue,
   arraysEqual,
 } from './util';
+import PropTypes from 'prop-types';
+
 
 function noop() {}
 

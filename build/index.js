@@ -22,6 +22,10 @@ var _openAnimation = require('./openAnimation');
 
 var _openAnimation2 = _interopRequireDefault(_openAnimation);
 
+var _propTypes = require('prop-types');
+
+var _propTypes2 = _interopRequireDefault(_propTypes);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
 function _defaults(obj, defaults) { var keys = Object.getOwnPropertyNames(defaults); for (var i = 0; i < keys.length; i++) { var key = keys[i]; var value = Object.getOwnPropertyDescriptor(defaults, key); if (value && value.configurable && obj[key] === undefined) { Object.defineProperty(obj, key, value); } } return obj; }
@@ -33,57 +37,57 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : _defaults(subClass, superClass); }
 
 var TreeProps = {
-  showLine: _react.PropTypes.bool,
-  className: _react.PropTypes.string,
+  showLine: _propTypes2["default"].bool,
+  className: _propTypes2["default"].string,
   /** 是否支持多选 */
-  multiple: _react.PropTypes.bool,
+  multiple: _propTypes2["default"].bool,
   /** 是否自动展开父节点 */
-  autoExpandParent: _react.PropTypes.bool,
+  autoExpandParent: _propTypes2["default"].bool,
   /** checkable状态下节点选择完全受控（父子节点选中状态不再关联）*/
-  checkStrictly: _react.PropTypes.bool,
+  checkStrictly: _propTypes2["default"].bool,
   /** 是否支持选中 */
-  checkable: _react.PropTypes.bool,
+  checkable: _propTypes2["default"].bool,
   /** 默认展开所有树节点 */
-  defaultExpandAll: _react.PropTypes.bool,
+  defaultExpandAll: _propTypes2["default"].bool,
   /** 默认展开指定的树节点 */
-  defaultExpandedKeys: _react.PropTypes.array,
+  defaultExpandedKeys: _propTypes2["default"].array,
   /** （受控）展开指定的树节点 */
-  expandedKeys: _react.PropTypes.array,
+  expandedKeys: _propTypes2["default"].array,
   /** （受控）选中复选框的树节点 */
-  checkedKeys: _react.PropTypes.oneOfType([_react.PropTypes.array, _react.PropTypes.object]),
+  checkedKeys: _propTypes2["default"].oneOfType([_propTypes2["default"].array, _propTypes2["default"].object]),
   /** 默认选中复选框的树节点 */
-  defaultCheckedKeys: _react.PropTypes.array,
+  defaultCheckedKeys: _propTypes2["default"].array,
   /** （受控）设置选中的树节点 */
-  selectedKeys: _react.PropTypes.array,
+  selectedKeys: _propTypes2["default"].array,
   /** 默认选中的树节点 */
-  defaultSelectedKeys: _react.PropTypes.array,
+  defaultSelectedKeys: _propTypes2["default"].array,
   /** 展开/收起节点时触发 */
-  onExpand: _react.PropTypes.func,
+  onExpand: _propTypes2["default"].func,
   /** 点击复选框触发 */
-  onCheck: _react.PropTypes.func,
+  onCheck: _propTypes2["default"].func,
   /** 点击树节点触发 */
-  onSelect: _react.PropTypes.func,
+  onSelect: _propTypes2["default"].func,
   /** filter some AntTreeNodes as you need. it should return true */
-  filterAntTreeNode: _react.PropTypes.func,
+  filterAntTreeNode: _propTypes2["default"].func,
   /** 异步加载数据 */
-  loadData: _react.PropTypes.func,
+  loadData: _propTypes2["default"].func,
   /** 响应右键点击 */
-  onRightClick: _react.PropTypes.func,
+  onRightClick: _propTypes2["default"].func,
   /** 设置节点可拖拽（IE>8）*/
-  draggable: _react.PropTypes.bool,
+  draggable: _propTypes2["default"].bool,
   /** 开始拖拽时调用 */
-  onDragStart: _react.PropTypes.func,
+  onDragStart: _propTypes2["default"].func,
   /** dragenter 触发时调用 */
-  onDragEnter: _react.PropTypes.func,
+  onDragEnter: _propTypes2["default"].func,
   /** dragover 触发时调用 */
-  onDragOver: _react.PropTypes.func,
+  onDragOver: _propTypes2["default"].func,
   /** dragleave 触发时调用 */
-  onDragLeave: _react.PropTypes.func,
+  onDragLeave: _propTypes2["default"].func,
   /** drop 触发时调用 */
-  onDrop: _react.PropTypes.func,
+  onDrop: _propTypes2["default"].func,
   style: _react2["default"].CSSProperties,
-  prefixCls: _react.PropTypes.string,
-  filterTreeNode: _react.PropTypes.func
+  prefixCls: _propTypes2["default"].string,
+  filterTreeNode: _propTypes2["default"].func
 };
 
 var defaultProps = {

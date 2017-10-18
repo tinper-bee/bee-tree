@@ -1,12 +1,11 @@
-import React, {
-  PropTypes
-} from 'react';
+import React from 'react';
 import assign from 'object-assign';
 import classNames from 'classnames';
 import Animate from 'bee-animate';
 import {
   browser
 } from './util';
+import PropTypes from 'prop-types';
 
 const browserUa = typeof window !== 'undefined' ? browser(window.navigator) : '';
 const ieOrEdge = /.*(IE|Edge).+/.test(browserUa);

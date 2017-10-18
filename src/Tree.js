@@ -1,15 +1,21 @@
 /* eslint no-console:0 */
-import React, { PropTypes } from 'react';
+import React, {
+  PropTypes
+} from 'react';
 import assign from 'object-assign';
 import classNames from 'classnames';
 import {
-  loopAllChildren, isInclude, getOffset,
-  filterParentPosition, handleCheckState, getCheck,
-  getStrictlyValue, arraysEqual,
+  loopAllChildren,
+  isInclude,
+  getOffset,
+  filterParentPosition,
+  handleCheckState,
+  getCheck,
+  getStrictlyValue,
+  arraysEqual,
 } from './util';
 
-function noop() {
-}
+function noop() {}
 
 class Tree extends React.Component {
   constructor(props) {
@@ -114,11 +120,17 @@ class Tree extends React.Component {
   }
 
   onDragOver(e, treeNode) {
-    this.props.onDragOver({ event: e, node: treeNode });
+    this.props.onDragOver({
+      event: e,
+      node: treeNode
+    });
   }
 
   onDragLeave(e, treeNode) {
-    this.props.onDragLeave({ event: e, node: treeNode });
+    this.props.onDragLeave({
+      event: e,
+      node: treeNode
+    });
   }
 
   onDrop(e, treeNode) {
@@ -156,7 +168,10 @@ class Tree extends React.Component {
     this.setState({
       dragOverNodeKey: '',
     });
-    this.props.onDragEnd({ event: e, node: treeNode });
+    this.props.onDragEnd({
+      event: e,
+      node: treeNode
+    });
   }
 
   onExpand(treeNode) {
@@ -170,15 +185,22 @@ class Tree extends React.Component {
       expandedKeys.splice(index, 1);
     }
     if (!controlled) {
-      this.setState({ expandedKeys });
+      this.setState({
+        expandedKeys
+      });
     }
-    this.props.onExpand(expandedKeys, { node: treeNode, expanded });
+    this.props.onExpand(expandedKeys, {
+      node: treeNode,
+      expanded
+    });
 
     // after data loaded, need set new expandedKeys
     if (expanded && this.props.loadData) {
       return this.props.loadData(treeNode).then(() => {
         if (!controlled) {
-          this.setState({ expandedKeys });
+          this.setState({
+            expandedKeys
+          });
         }
       });
     }
@@ -284,11 +306,17 @@ class Tree extends React.Component {
   }
 
   onMouseEnter(e, treeNode) {
-    this.props.onMouseEnter({ event: e, node: treeNode });
+    this.props.onMouseEnter({
+      event: e,
+      node: treeNode
+    });
   }
 
   onMouseLeave(e, treeNode) {
-    this.props.onMouseLeave({ event: e, node: treeNode });
+    this.props.onMouseLeave({
+      event: e,
+      node: treeNode
+    });
   }
 
   onContextMenu(e, treeNode) {
@@ -309,7 +337,10 @@ class Tree extends React.Component {
     this.setState({
       selectedKeys,
     });
-    this.props.onRightClick({ event: e, node: treeNode });
+    this.props.onRightClick({
+      event: e,
+      node: treeNode
+    });
   }
 
   // all keyboard events callbacks run from here at first
@@ -336,9 +367,7 @@ class Tree extends React.Component {
         filterExpandedKeys.push(newKey);
       } else if (props.autoExpandParent) {
         expandedPositionArr.forEach(p => {
-          if ((p.split('-').length > pos.split('-').length
-            && isInclude(pos.split('-'), p.split('-')) || pos === p)
-            && filterExpandedKeys.indexOf(newKey) === -1) {
+          if ((p.split('-').length > pos.split('-').length && isInclude(pos.split('-'), p.split('-')) || pos === p) && filterExpandedKeys.indexOf(newKey) === -1) {
             filterExpandedKeys.push(newKey);
           }
         });
@@ -477,6 +506,8 @@ class Tree extends React.Component {
       openTransitionName: this.getOpenTransitionName(),
       openAnimation: props.openAnimation,
       filterTreeNode: this.filterTreeNode.bind(this),
+      openIcon: props.openIcon,
+      closeIcon: props.closeIcon
     };
     if (props.checkable) {
       cloneProps.checkable = props.checkable;

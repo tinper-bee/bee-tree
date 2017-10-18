@@ -18,13 +18,15 @@
 |checkStrictly|精细的检查每个节点|bool|false
 |defaultSelectedKeys|指定选中的节点key|String[]|[]
 |selectedKeys|指定选中的节点keys(controlled)|String[]|-
+|openIcon|自定义展开节点图标的名称[参考这里](http://bee.tinper.org/bee-icon)String[]|-
+|closeIcon|自定义关闭节点图标的名称[参考这里](http://bee.tinper.org/bee-icon)String[]|-
 |onExpand|当打开或关闭树节点触发的方法|function(expandedKeys, {expanded: bool, node})|-
 |onCheck|当选择事件发生触发的方法|function(checkedKeys, e:{checked: bool, checkedNodes, node, event})|-
 |onSelect|当用户选择树节点触发的回调函数|function(selectedKeys, e:{selected: bool, selectedNodes, node, event})|-
 |filterTreeNode|过滤树节点的方法（highlight）,当返回true,相关联的节点会高亮|function(node)|-
 |loadData|异步加载数据|function(node)|-
 |onRightClick|当用户点击右键触发的回调函数|function({event,node})|-
-|draggable|树是否可拖拽（IE>8|	bool|false
+|draggable|树是否可拖拽（IE>8| bool|false
 |onDragStart|当树节点刚开始拖拽所触发的放方法|function({event,node})|-
 |onDragEnter|当拖拽进入触发的方法|function({event,node,expandedKeys})|-
 |onDragOver|当拖拽经过触发的方法|function({event,node})|-
@@ -37,6 +39,6 @@
 |:---|:-----|:----|:------|
 |disabled|节点是否不可用|bool|false
 |disableCheckbox|节点的checkbox是否不可用|bool|false
-|title|名称标题|String/element	|--
+|title|名称标题|String/element  |--
 |key|节点key,和(default)ExpandedKeys / (default)CheckedKeys / (default)SelectedKeys一起用，必须是唯一的|String|-
 |isLeaf|是否是叶子节点|bool|false

@@ -1,8 +1,12 @@
-import React, { PropTypes } from 'react';
+import React, {
+  PropTypes
+} from 'react';
 import assign from 'object-assign';
 import classNames from 'classnames';
 import Animate from 'bee-animate';
-import { browser } from './util';
+import {
+  browser
+} from './util';
 
 const browserUa = typeof window !== 'undefined' ? browser(window.navigator) : '';
 const ieOrEdge = /.*(IE|Edge).+/.test(browserUa);
@@ -36,17 +40,17 @@ class TreeNode extends React.Component {
   }
 
   componentDidMount() {
-    if (!this.props.root._treeNodeInstances) {
-      this.props.root._treeNodeInstances = [];
+      if (!this.props.root._treeNodeInstances) {
+        this.props.root._treeNodeInstances = [];
+      }
+      this.props.root._treeNodeInstances.push(this);
     }
-    this.props.root._treeNodeInstances.push(this);
-  }
-  // shouldComponentUpdate(nextProps) {
-  //   if (!nextProps.expanded) {
-  //     return false;
-  //   }
-  //   return true;
-  // }
+    // shouldComponentUpdate(nextProps) {
+    //   if (!nextProps.expanded) {
+    //     return false;
+    //   }
+    //   return true;
+    // }
 
   onCheck() {
     this.props.root.onCheck(this);
@@ -128,7 +132,9 @@ class TreeNode extends React.Component {
     const callbackPromise = this.props.root.onExpand(this);
     if (callbackPromise && typeof callbackPromise === 'object') {
       const setLoading = (dataLoading) => {
-        this.setState({ dataLoading });
+        this.setState({
+          dataLoading
+        });
       };
       setLoading(true);
       callbackPromise.then(() => {
@@ -145,6 +151,7 @@ class TreeNode extends React.Component {
   }
 
   renderSwitcher(props, expandedState) {
+    let stateIcon;
     const prefixCls = props.prefixCls;
     const switcherCls = {
       [`${prefixCls}-switcher`]: true,
@@ -157,6 +164,15 @@ class TreeNode extends React.Component {
       switcherCls[`${prefixCls}-center_${expandedState}`] = !props.last;
       switcherCls[`${prefixCls}-bottom_${expandedState}`] = props.last;
     }
+
+    if (expandedState === 'open' && props.openIcon) {
+      stateIcon = `uf ${props.openIcon}`;
+    }
+    if (expandedState === 'close' && props.closeIcon) {
+      stateIcon = [`uf ${props.closeIcon}`];
+    }
+    switcherCls[stateIcon] = stateIcon;
+
     if (props.disabled) {
       switcherCls[`${prefixCls}-switcher-disabled`] = true;
       return <span className={classNames(switcherCls)}></span>;
@@ -200,10 +216,10 @@ class TreeNode extends React.Component {
     let newChildren = children;
     if (children &&
       (children.type === TreeNode ||
-      Array.isArray(children) &&
-      children.every((item) => {
-        return item.type === TreeNode;
-      }))) {
+        Array.isArray(children) &&
+        children.every((item) => {
+          return item.type === TreeNode;
+        }))) {
       const cls = {
         [`${props.prefixCls}-child-tree`]: true,
         [`${props.prefixCls}-child-tree-open`]: props.expanded,
@@ -246,6 +262,8 @@ class TreeNode extends React.Component {
     let canRenderSwitcher = true;
     const content = props.title;
     let newChildren = this.renderChildren(props);
+    let openIconCls = false,
+      closeIconCls = false;
     if (!newChildren || newChildren === props.children) {
       // content = newChildren;
       newChildren = null;
@@ -262,9 +280,8 @@ class TreeNode extends React.Component {
     const iconEleCls = {
       [`${prefixCls}-iconEle`]: true,
       [`${prefixCls}-icon_loading`]: this.state.dataLoading,
-      [`${prefixCls}-icon__${iconState}`]: true,
+      [`${prefixCls}-icon__${iconState}`]: true
     };
-
     const selectHandle = () => {
       const icon = (props.showIcon || props.loadData && this.state.dataLoading) ?
         <span className={classNames(iconEleCls)}></span> : null;
@@ -374,6 +391,8 @@ TreeNode.propTypes = {
   isLeaf: PropTypes.bool,
   root: PropTypes.object,
   onSelect: PropTypes.func,
+  openIcon: PropTypes.string,
+  closeIcon: PropTypes.string
 };
 
 TreeNode.defaultProps = {

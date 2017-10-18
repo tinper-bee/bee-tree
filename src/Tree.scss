@@ -318,3 +318,14 @@
   -webkit-transition: height 0.2s cubic-bezier(0.215, 0.61, 0.355, 1);
   transition: height 0.2s cubic-bezier(0.215, 0.61, 0.355, 1);
 }
+
+/**
+ * 自定义switcher图标
+ */
+
+.u-tree li span.u-tree-switcher.uf {
+  font-size: 14px;
+  &:after{
+    content:"";
+  }
+}

@@ -1,7 +1,8 @@
-import React,{PropTypes,Component} from 'react';
+import React,{Component} from 'react';
 import RcTree from './Tree';
 import TreeNode  from './TreeNode';
 import animation from './openAnimation';
+import PropTypes from 'prop-types';
 
 const TreeProps ={
   showLine: PropTypes.bool,

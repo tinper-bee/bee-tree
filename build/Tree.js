@@ -20,6 +20,10 @@ var _classnames2 = _interopRequireDefault(_classnames);
 
 var _util = require('./util');
 
+var _propTypes = require('prop-types');
+
+var _propTypes2 = _interopRequireDefault(_propTypes);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
 function _defaults(obj, defaults) { var keys = Object.getOwnPropertyNames(defaults); for (var i = 0; i < keys.length; i++) { var key = keys[i]; var value = Object.getOwnPropertyDescriptor(defaults, key); if (value && value.configurable && obj[key] === undefined) { Object.defineProperty(obj, key, value); } } return obj; }
@@ -144,11 +148,17 @@ var Tree = function (_React$Component) {
   };
 
   Tree.prototype.onDragOver = function onDragOver(e, treeNode) {
-    this.props.onDragOver({ event: e, node: treeNode });
+    this.props.onDragOver({
+      event: e,
+      node: treeNode
+    });
   };
 
   Tree.prototype.onDragLeave = function onDragLeave(e, treeNode) {
-    this.props.onDragLeave({ event: e, node: treeNode });
+    this.props.onDragLeave({
+      event: e,
+      node: treeNode
+    });
   };
 
   Tree.prototype.onDrop = function onDrop(e, treeNode) {
@@ -186,7 +196,10 @@ var Tree = function (_React$Component) {
     this.setState({
       dragOverNodeKey: ''
     });
-    this.props.onDragEnd({ event: e, node: treeNode });
+    this.props.onDragEnd({
+      event: e,
+      node: treeNode
+    });
   };
 
   Tree.prototype.onExpand = function onExpand(treeNode) {
@@ -202,15 +215,22 @@ var Tree = function (_React$Component) {
       expandedKeys.splice(index, 1);
     }
     if (!controlled) {
-      this.setState({ expandedKeys: expandedKeys });
+      this.setState({
+        expandedKeys: expandedKeys
+      });
     }
-    this.props.onExpand(expandedKeys, { node: treeNode, expanded: expanded });
+    this.props.onExpand(expandedKeys, {
+      node: treeNode,
+      expanded: expanded
+    });
 
     // after data loaded, need set new expandedKeys
     if (expanded && this.props.loadData) {
       return this.props.loadData(treeNode).then(function () {
         if (!controlled) {
-          _this2.setState({ expandedKeys: expandedKeys });
+          _this2.setState({
+            expandedKeys: expandedKeys
+          });
         }
       });
     }
@@ -318,11 +338,17 @@ var Tree = function (_React$Component) {
   };
 
   Tree.prototype.onMouseEnter = function onMouseEnter(e, treeNode) {
-    this.props.onMouseEnter({ event: e, node: treeNode });
+    this.props.onMouseEnter({
+      event: e,
+      node: treeNode
+    });
   };
 
   Tree.prototype.onMouseLeave = function onMouseLeave(e, treeNode) {
-    this.props.onMouseLeave({ event: e, node: treeNode });
+    this.props.onMouseLeave({
+      event: e,
+      node: treeNode
+    });
   };
 
   Tree.prototype.onContextMenu = function onContextMenu(e, treeNode) {
@@ -343,7 +369,10 @@ var Tree = function (_React$Component) {
     this.setState({
       selectedKeys: selectedKeys
     });
-    this.props.onRightClick({ event: e, node: treeNode });
+    this.props.onRightClick({
+      event: e,
+      node: treeNode
+    });
   };
 
   // all keyboard events callbacks run from here at first
@@ -508,7 +537,9 @@ var Tree = function (_React$Component) {
       selected: state.selectedKeys.indexOf(key) !== -1,
       openTransitionName: this.getOpenTransitionName(),
       openAnimation: props.openAnimation,
-      filterTreeNode: this.filterTreeNode.bind(this)
+      filterTreeNode: this.filterTreeNode.bind(this),
+      openIcon: props.openIcon,
+      closeIcon: props.closeIcon
     };
     if (props.checkable) {
       cloneProps.checkable = props.checkable;
@@ -606,40 +637,40 @@ var Tree = function (_React$Component) {
 }(_react2["default"].Component);
 
 Tree.propTypes = {
-  prefixCls: _react.PropTypes.string,
-  children: _react.PropTypes.any,
-  showLine: _react.PropTypes.bool,
-  showIcon: _react.PropTypes.bool,
-  selectable: _react.PropTypes.bool,
-  multiple: _react.PropTypes.bool,
-  checkable: _react.PropTypes.oneOfType([_react.PropTypes.bool, _react.PropTypes.node]),
-  _treeNodesStates: _react.PropTypes.object,
-  checkStrictly: _react.PropTypes.bool,
-  draggable: _react.PropTypes.bool,
-  autoExpandParent: _react.PropTypes.bool,
-  defaultExpandAll: _react.PropTypes.bool,
-  defaultExpandedKeys: _react.PropTypes.arrayOf(_react.PropTypes.string),
-  expandedKeys: _react.PropTypes.arrayOf(_react.PropTypes.string),
-  defaultCheckedKeys: _react.PropTypes.arrayOf(_react.PropTypes.string),
-  checkedKeys: _react.PropTypes.oneOfType([_react.PropTypes.arrayOf(_react.PropTypes.string), _react.PropTypes.object]),
-  defaultSelectedKeys: _react.PropTypes.arrayOf(_react.PropTypes.string),
-  selectedKeys: _react.PropTypes.arrayOf(_react.PropTypes.string),
-  onExpand: _react.PropTypes.func,
-  onCheck: _react.PropTypes.func,
-  onSelect: _react.PropTypes.func,
-  loadData: _react.PropTypes.func,
-  onMouseEnter: _react.PropTypes.func,
-  onMouseLeave: _react.PropTypes.func,
-  onRightClick: _react.PropTypes.func,
-  onDragStart: _react.PropTypes.func,
-  onDragEnter: _react.PropTypes.func,
-  onDragOver: _react.PropTypes.func,
-  onDragLeave: _react.PropTypes.func,
-  onDrop: _react.PropTypes.func,
-  onDragEnd: _react.PropTypes.func,
-  filterTreeNode: _react.PropTypes.func,
-  openTransitionName: _react.PropTypes.string,
-  openAnimation: _react.PropTypes.oneOfType([_react.PropTypes.string, _react.PropTypes.object])
+  prefixCls: _propTypes2["default"].string,
+  children: _propTypes2["default"].any,
+  showLine: _propTypes2["default"].bool,
+  showIcon: _propTypes2["default"].bool,
+  selectable: _propTypes2["default"].bool,
+  multiple: _propTypes2["default"].bool,
+  checkable: _propTypes2["default"].oneOfType([_propTypes2["default"].bool, _propTypes2["default"].node]),
+  _treeNodesStates: _propTypes2["default"].object,
+  checkStrictly: _propTypes2["default"].bool,
+  draggable: _propTypes2["default"].bool,
+  autoExpandParent: _propTypes2["default"].bool,
+  defaultExpandAll: _propTypes2["default"].bool,
+  defaultExpandedKeys: _propTypes2["default"].arrayOf(_propTypes2["default"].string),
+  expandedKeys: _propTypes2["default"].arrayOf(_propTypes2["default"].string),
+  defaultCheckedKeys: _propTypes2["default"].arrayOf(_propTypes2["default"].string),
+  checkedKeys: _propTypes2["default"].oneOfType([_propTypes2["default"].arrayOf(_propTypes2["default"].string), _propTypes2["default"].object]),
+  defaultSelectedKeys: _propTypes2["default"].arrayOf(_propTypes2["default"].string),
+  selectedKeys: _propTypes2["default"].arrayOf(_propTypes2["default"].string),
+  onExpand: _propTypes2["default"].func,
+  onCheck: _propTypes2["default"].func,
+  onSelect: _propTypes2["default"].func,
+  loadData: _propTypes2["default"].func,
+  onMouseEnter: _propTypes2["default"].func,
+  onMouseLeave: _propTypes2["default"].func,
+  onRightClick: _propTypes2["default"].func,
+  onDragStart: _propTypes2["default"].func,
+  onDragEnter: _propTypes2["default"].func,
+  onDragOver: _propTypes2["default"].func,
+  onDragLeave: _propTypes2["default"].func,
+  onDrop: _propTypes2["default"].func,
+  onDragEnd: _propTypes2["default"].func,
+  filterTreeNode: _propTypes2["default"].func,
+  openTransitionName: _propTypes2["default"].string,
+  openAnimation: _propTypes2["default"].oneOfType([_propTypes2["default"].string, _propTypes2["default"].object])
 };
 
 Tree.defaultProps = {

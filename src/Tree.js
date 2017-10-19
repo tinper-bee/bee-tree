@@ -268,6 +268,7 @@ class Tree extends React.Component {
   }
 
   onSelect(treeNode) {
+    debugger;
     const props = this.props;
     const selectedKeys = [...this.state.selectedKeys];
     const eventKey = treeNode.props.eventKey;
@@ -437,6 +438,7 @@ class Tree extends React.Component {
   }
 
   getDragNodes(treeNode) {
+    debugger;
     const dragNodesKeys = [];
     const tPArr = treeNode.props.pos.split('-');
     loopAllChildren(this.props.children, (item, index, pos, newKey) => {

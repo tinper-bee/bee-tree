@@ -10,7 +10,7 @@ import React, {
 	Component
 } from 'react';
 import Tree from '../../src';
-
+import Icon from 'bee-icon';
 const TreeNode = Tree.TreeNode;
 
 const defaultProps = {
@@ -36,7 +36,7 @@ class Demo1 extends Component {
 	render() {
 		return (
 
-			<Tree className="myCls"  checkable openIcon="uf-minus" closeIcon="uf-plus"
+			<Tree className="myCls"  checkable openIcon={<Icon type="uf-minus" />} closeIcon={<Icon type="uf-plus" />}
 	        defaultExpandedKeys={this.state.defaultExpandedKeys}
 	        defaultSelectedKeys={this.state.defaultSelectedKeys}
 	        defaultCheckedKeys={this.state.defaultCheckedKeys}

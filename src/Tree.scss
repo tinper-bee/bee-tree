@@ -323,9 +323,14 @@
  * 自定义switcher图标
  */
 
-.u-tree li span.u-tree-switcher.uf {
-  font-size: 14px;
+.u-tree li span.u-tree-switcher.icon-none {
+  
   &:after{
     content:"";
   }
+  .uf {
+    padding: 0px;
+    font-size: 14px;
+  }
 }
+

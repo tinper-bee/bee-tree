@@ -1,12 +1,14 @@
 /**
-*
-* @title Tree可搜索事例
-* @description
-*
-*/
+ *
+ * @title Tree可搜索事例
+ * @description
+ *
+ */
 
 
-import React, { Component } from 'react';
+import React, {
+  Component
+} from 'react';
 import FormControl from 'bee-form-control';
 import Tree from '../../src';
 
@@ -16,25 +18,28 @@ const z = 1;
 const gData = [];
 
 const generateData = (_level, _preKey, _tns) => {
-    const preKey = _preKey || '0';
-    const tns = _tns || gData;
+  const preKey = _preKey || '0';
+  const tns = _tns || gData;
 
-    const children = [];
-    for (let i = 0; i < x; i++) {
-        const key = `${preKey}-${i}`;
-        tns.push({ title: key, key });
-        if (i < y) {
-            children.push(key);
-        }
-    }
-    if (_level < 0) {
-        return tns;
-    }
-    const level = _level - 1;
-    children.forEach((key, index) => {
-        tns[index].children = [];
-        return generateData(level, key, tns[index].children);
+  const children = [];
+  for (let i = 0; i < x; i++) {
+    const key = `${preKey}-${i}`;
+    tns.push({
+      title: key,
+      key
     });
+    if (i < y) {
+      children.push(key);
+    }
+  }
+  if (_level < 0) {
+    return tns;
+  }
+  const level = _level - 1;
+  children.forEach((key, index) => {
+    tns[index].children = [];
+    return generateData(level, key, tns[index].children);
+  });
 };
 generateData(z);
 
@@ -45,7 +50,10 @@ const generateList = (data) => {
   for (let i = 0; i < data.length; i++) {
     const node = data[i];
     const key = node.key;
-    dataList.push({ key, title: key });
+    dataList.push({
+      key,
+      title: key
+    });
     if (node.children) {
       generateList(node.children, node.key);
     }
@@ -84,8 +92,8 @@ class Demo4 extends Component {
       autoExpandParent: false,
     });
   }
-  onChange = (e) => {
-    const value = e.target.value;
+  onChange = (value) => {
+    // const value = e.target.value;
     const expandedKeys = [];
     dataList.forEach((item) => {
       if (item.key.indexOf(value) > -1) {
@@ -105,7 +113,11 @@ class Demo4 extends Component {
     });
   }
   render() {
-    const { searchValue, expandedKeys, autoExpandParent } = this.state;
+    const {
+      searchValue,
+      expandedKeys,
+      autoExpandParent
+    } = this.state;
     const loop = data => data.map((item) => {
       const index = item.key.search(searchValue);
       const beforeStr = item.key.substr(0, index);

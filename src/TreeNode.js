@@ -165,18 +165,20 @@ class TreeNode extends React.Component {
     }
 
     if (expandedState === 'open' && props.openIcon) {
-      stateIcon = `uf ${props.openIcon}`;
+      stateIcon = props.openIcon;
+      switcherCls['icon-none'] = true;
     }
     if (expandedState === 'close' && props.closeIcon) {
-      stateIcon = [`uf ${props.closeIcon}`];
+      stateIcon = props.closeIcon;
+      switcherCls['icon-none'] = true;
     }
-    switcherCls[stateIcon] = stateIcon;
+    //switcherCls[stateIcon] = stateIcon;
 
     if (props.disabled) {
       switcherCls[`${prefixCls}-switcher-disabled`] = true;
-      return <span className={classNames(switcherCls)}></span>;
+      return <span className={classNames(switcherCls)}>{stateIcon}</span>;
     }
-    return <span className={classNames(switcherCls)} onClick={this.onExpand}></span>;
+    return <span className={classNames(switcherCls)} onClick={this.onExpand}>{stateIcon}</span>;
   }
 
   renderCheckbox(props) {
@@ -263,6 +265,12 @@ class TreeNode extends React.Component {
     let newChildren = this.renderChildren(props);
     let openIconCls = false,
       closeIconCls = false;
+
+    //以下变量控制是否鼠标单机双击方法中的变量
+    let timer = 0;
+    let delay = 500;
+    let prevent = false;
+
     if (!newChildren || newChildren === props.children) {
       // content = newChildren;
       newChildren = null;
@@ -294,15 +302,18 @@ class TreeNode extends React.Component {
           domProps.className += ` ${prefixCls}-node-selected`;
         }
         domProps.onClick = (e) => {
+          var _this = this;
           e.preventDefault();
           if (props.selectable) {
-            this.onSelect();
+            _this.onSelect();
           }
+
           // not fire check event
           // if (props.checkable) {
           //   this.onCheck();
           // }
         };
+
         if (props.onRightClick) {
           domProps.onContextMenu = this.onContextMenu;
         }
@@ -312,6 +323,7 @@ class TreeNode extends React.Component {
         if (props.onMouseLeave) {
           domProps.onMouseLeave = this.onMouseLeave;
         }
+
         if (props.draggable) {
           domProps.className += ' draggable';
           if (ieOrEdge) {
@@ -390,8 +402,8 @@ TreeNode.propTypes = {
   isLeaf: PropTypes.bool,
   root: PropTypes.object,
   onSelect: PropTypes.func,
-  openIcon: PropTypes.string,
-  closeIcon: PropTypes.string
+  openIcon: PropTypes.element,
+  closeIcon: PropTypes.element
 };
 
 TreeNode.defaultProps = {

@@ -4,6 +4,7 @@
 
 ### build
 
+* **changelog集成:** changelog集成 ([39483f0](https://github.com/tinper-bee/bee-tree/commit/39483f0))
 * **组件依赖清理:** 组件依赖清理 ([0871a43](https://github.com/tinper-bee/bee-tree/commit/0871a43))
 
 
@@ -14,6 +15,7 @@
 
 ### BREAKING CHANGES
 
+* **changelog集成:** changelog集成完毕，具体使用方式参考文档。
 * **文档补充:** 文档补充
 * **组件依赖清理:** 组件依赖清理
 

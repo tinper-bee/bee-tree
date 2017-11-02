@@ -39,7 +39,6 @@
   "dependencies": {
     "bee-animate": "latest",
     "bee-checkbox": "latest",
-    "bee-form-control": "latest",
     "classnames": "^2.2.5",
     "object-assign": "latest",
     "babel-runtime": "^6.23.0",
@@ -51,6 +50,7 @@
     "prop-types": "15.6.0"
   },
   "devDependencies": {
+    "bee-form-control": "latest",
     "bee-button": "latest",
     "bee-layout": "latest",
     "bee-panel": "latest",

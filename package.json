@@ -20,14 +20,10 @@
   "license": "MIT",
   "main": "./build/index.js",
   "config": {
-<<<<<<< HEAD
     "port": 3000,
     "commitizen": {
       "path": "./node_modules/cz-conventional-changelog"
     }
-=======
-    "port": 3000
->>>>>>> dc5a25248043f0a122cad2ee3e207014a44a2e5a
   },
   "scripts": {
     "dev": "bee-tools run start",
@@ -37,7 +33,6 @@
     "chrome": "bee-tools run chrome",
     "coveralls": "bee-tools run coverage",
     "browsers": "bee-tools run browsers",
-<<<<<<< HEAD
     "pub": "bee-tools run pub",
     "changelog":"conventional-changelog -p angular -i CHANGELOG.md -s -r 0"
   },
@@ -47,7 +42,6 @@
     "classnames": "^2.2.5",
     "object-assign": "latest",
     "babel-runtime": "^6.23.0",
-=======
     "pub": "bee-tools run pub"
   },
   "dependencies": {
@@ -58,7 +52,6 @@
     "bee-icon": "^1.0.0",
     "classnames": "^2.2.5",
     "object-assign": "latest",
->>>>>>> dc5a25248043f0a122cad2ee3e207014a44a2e5a
     "tinper-bee-core": "latest"
   },
   "peerDependencies": {
@@ -67,7 +60,6 @@
     "prop-types": "15.6.0"
   },
   "devDependencies": {
-<<<<<<< HEAD
     "bee-form-control": "latest",
     "bee-button": "latest",
     "bee-layout": "latest",
@@ -80,17 +72,5 @@
     "react": "15.3.2",
     "react-addons-test-utils": "15.3.2",
     "react-dom": "15.3.2"
-=======
-    "chai": "^3.5.0",
-    "enzyme": "^2.4.1",
-    "react": "15.3.2",
-    "react-addons-test-utils": "15.3.2",
-    "react-dom": "15.3.2",
-    "console-polyfill": "~0.2.1",
-    "es5-shim": "~4.1.10",
-    "bee-panel": "latest",
-    "bee-layout": "latest",
-    "bee-button": "latest"
->>>>>>> dc5a25248043f0a122cad2ee3e207014a44a2e5a
   }
 }

@@ -41,9 +41,8 @@
     "bee-animate": "^1.0.0",
     "bee-checkbox": "^1.0.1",
     "bee-form-control": "^1.0.2",
-    "bee-icon": "latest",
+    "bee-icon": "1.0.3",
     "classnames": "^2.2.5",
-    "object-assign": "latest",
     "tinper-bee-core": "latest"
   },
   "peerDependencies": {

@@ -1,6 +1,5 @@
 /* eslint no-console:0 */
 import React from 'react';
-import assign from 'object-assign';
 import classNames from 'classnames';
 import {
   loopAllChildren,
@@ -528,7 +527,7 @@ class Tree extends React.Component {
       }
     }
     if (this.treeNodesStates && this.treeNodesStates[pos]) {
-      assign(cloneProps, this.treeNodesStates[pos].siblingPosition);
+      Object.assign(cloneProps, this.treeNodesStates[pos].siblingPosition);
     }
     return React.cloneElement(child, cloneProps);
   }

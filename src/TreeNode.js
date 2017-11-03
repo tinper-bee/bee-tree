@@ -1,5 +1,4 @@
 import React from 'react';
-import assign from 'object-assign';
 import classNames from 'classnames';
 import Animate from 'bee-animate';
 import {
@@ -232,7 +231,7 @@ class TreeNode extends React.Component {
       if (props.openTransitionName) {
         animProps.transitionName = props.openTransitionName;
       } else if (typeof props.openAnimation === 'object') {
-        animProps.animation = assign({}, props.openAnimation);
+        animProps.animation = Object.assign({}, props.openAnimation);
         if (!transitionAppear) {
           delete animProps.animation.appear;
         }

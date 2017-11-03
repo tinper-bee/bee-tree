@@ -93,7 +93,7 @@ class Demo4 extends Component {
     });
   }
   onChange = (value) => {
-
+    // const value = e.target.value;
     const expandedKeys = [];
     dataList.forEach((item) => {
       if (item.key.indexOf(value) > -1) {

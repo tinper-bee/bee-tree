@@ -535,10 +535,15 @@ class Tree extends React.Component {
 
   render() {
     const props = this.props;
+    let showLineCls = "";
+    if (props.showLine) {
+      showLineCls = `${props.prefixCls}-show-line`;
+    }
     const domProps = {
-      className: classNames(props.className, props.prefixCls),
+      className: classNames(props.className, props.prefixCls, showLineCls),
       role: 'tree-node',
     };
+
     if (props.focusable) {
       domProps.tabIndex = '0';
       domProps.onKeyDown = this.onKeyDown;

@@ -55,16 +55,16 @@ var TreeNode = function (_React$Component) {
   function TreeNode(props) {
     _classCallCheck(this, TreeNode);
 
-    var _this = _possibleConstructorReturn(this, _React$Component.call(this, props));
+    var _this2 = _possibleConstructorReturn(this, _React$Component.call(this, props));
 
     ['onExpand', 'onCheck', 'onContextMenu', 'onMouseEnter', 'onMouseLeave', 'onDragStart', 'onDragEnter', 'onDragOver', 'onDragLeave', 'onDrop', 'onDragEnd'].forEach(function (m) {
-      _this[m] = _this[m].bind(_this);
+      _this2[m] = _this2[m].bind(_this2);
     });
-    _this.state = {
+    _this2.state = {
       dataLoading: false,
       dragNodeHighlight: false
     };
-    return _this;
+    return _this2;
   }
 
   TreeNode.prototype.componentDidMount = function componentDidMount() {
@@ -157,12 +157,12 @@ var TreeNode = function (_React$Component) {
   };
 
   TreeNode.prototype.onExpand = function onExpand() {
-    var _this2 = this;
+    var _this3 = this;
 
     var callbackPromise = this.props.root.onExpand(this);
     if (callbackPromise && (typeof callbackPromise === 'undefined' ? 'undefined' : _typeof(callbackPromise)) === 'object') {
       var setLoading = function setLoading(dataLoading) {
-        _this2.setState({
+        _this3.setState({
           dataLoading: dataLoading
         });
       };
@@ -196,18 +196,28 @@ var TreeNode = function (_React$Component) {
     }
 
     if (expandedState === 'open' && props.openIcon) {
-      stateIcon = 'uf ' + props.openIcon;
+      stateIcon = props.openIcon;
+      switcherCls['icon-none'] = true;
     }
     if (expandedState === 'close' && props.closeIcon) {
-      stateIcon = ['uf ' + props.closeIcon];
+      stateIcon = props.closeIcon;
+      switcherCls['icon-none'] = true;
     }
-    switcherCls[stateIcon] = stateIcon;
+    //switcherCls[stateIcon] = stateIcon;
 
     if (props.disabled) {
       switcherCls[prefixCls + '-switcher-disabled'] = true;
-      return _react2["default"].createElement('span', { className: (0, _classnames2["default"])(switcherCls) });
+      return _react2["default"].createElement(
+        'span',
+        { className: (0, _classnames2["default"])(switcherCls) },
+        stateIcon
+      );
     }
-    return _react2["default"].createElement('span', { className: (0, _classnames2["default"])(switcherCls), onClick: this.onExpand });
+    return _react2["default"].createElement(
+      'span',
+      { className: (0, _classnames2["default"])(switcherCls), onClick: this.onExpand },
+      stateIcon
+    );
   };
 
   TreeNode.prototype.renderCheckbox = function renderCheckbox(props) {
@@ -288,7 +298,7 @@ var TreeNode = function (_React$Component) {
 
   TreeNode.prototype.render = function render() {
     var _iconEleCls,
-        _this3 = this;
+        _this4 = this;
 
     var props = this.props;
     var prefixCls = props.prefixCls;
@@ -300,6 +310,12 @@ var TreeNode = function (_React$Component) {
     var newChildren = this.renderChildren(props);
     var openIconCls = false,
         closeIconCls = false;
+
+    //以下变量控制是否鼠标单机双击方法中的变量
+    var timer = 0;
+    var delay = 500;
+    var prevent = false;
+
     if (!newChildren || newChildren === props.children) {
       // content = newChildren;
       newChildren = null;
@@ -315,7 +331,7 @@ var TreeNode = function (_React$Component) {
 
     var iconEleCls = (_iconEleCls = {}, _defineProperty(_iconEleCls, prefixCls + '-iconEle', true), _defineProperty(_iconEleCls, prefixCls + '-icon_loading', this.state.dataLoading), _defineProperty(_iconEleCls, prefixCls + '-icon__' + iconState, true), _iconEleCls);
     var selectHandle = function selectHandle() {
-      var icon = props.showIcon || props.loadData && _this3.state.dataLoading ? _react2["default"].createElement('span', { className: (0, _classnames2["default"])(iconEleCls) }) : null;
+      var icon = props.showIcon || props.loadData && _this4.state.dataLoading ? _react2["default"].createElement('span', { className: (0, _classnames2["default"])(iconEleCls) }) : null;
       var title = _react2["default"].createElement(
         'span',
         { className: prefixCls + '-title' },
@@ -326,28 +342,32 @@ var TreeNode = function (_React$Component) {
         className: wrap + ' ' + wrap + '-' + (iconState === expandedState ? iconState : 'normal')
       };
       if (!props.disabled) {
-        if (props.selected || !props._dropTrigger && _this3.state.dragNodeHighlight) {
+        if (props.selected || !props._dropTrigger && _this4.state.dragNodeHighlight) {
           domProps.className += ' ' + prefixCls + '-node-selected';
         }
         domProps.onClick = function (e) {
+          var _this = _this4;
           e.preventDefault();
           if (props.selectable) {
-            _this3.onSelect();
+            _this.onSelect();
           }
+
           // not fire check event
           // if (props.checkable) {
           //   this.onCheck();
           // }
         };
+
         if (props.onRightClick) {
-          domProps.onContextMenu = _this3.onContextMenu;
+          domProps.onContextMenu = _this4.onContextMenu;
         }
         if (props.onMouseEnter) {
-          domProps.onMouseEnter = _this3.onMouseEnter;
+          domProps.onMouseEnter = _this4.onMouseEnter;
         }
         if (props.onMouseLeave) {
-          domProps.onMouseLeave = _this3.onMouseLeave;
+          domProps.onMouseLeave = _this4.onMouseLeave;
         }
+
         if (props.draggable) {
           domProps.className += ' draggable';
           if (ieOrEdge) {
@@ -356,7 +376,7 @@ var TreeNode = function (_React$Component) {
           }
           domProps.draggable = true;
           domProps['aria-grabbed'] = true;
-          domProps.onDragStart = _this3.onDragStart;
+          domProps.onDragStart = _this4.onDragStart;
         }
       }
       return _react2["default"].createElement(
@@ -395,6 +415,7 @@ var TreeNode = function (_React$Component) {
 
       var cls = (_cls2 = {}, _defineProperty(_cls2, prefixCls + '-switcher', true), _defineProperty(_cls2, prefixCls + '-switcher-noop', true), _cls2);
       if (props.showLine) {
+        console.log('line---------');
         cls[prefixCls + '-center_docu'] = !props.last;
         cls[prefixCls + '-bottom_docu'] = props.last;
       } else {
@@ -428,8 +449,8 @@ TreeNode.propTypes = {
   isLeaf: _propTypes2["default"].bool,
   root: _propTypes2["default"].object,
   onSelect: _propTypes2["default"].func,
-  openIcon: _propTypes2["default"].string,
-  closeIcon: _propTypes2["default"].string
+  openIcon: _propTypes2["default"].element,
+  closeIcon: _propTypes2["default"].element
 };
 
 TreeNode.defaultProps = {

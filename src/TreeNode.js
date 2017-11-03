@@ -371,6 +371,7 @@ class TreeNode extends React.Component {
         [`${prefixCls}-switcher-noop`]: true,
       };
       if (props.showLine) {
+        console.log('line---------');
         cls[`${prefixCls}-center_docu`] = !props.last;
         cls[`${prefixCls}-bottom_docu`] = props.last;
       } else {

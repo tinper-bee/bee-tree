@@ -569,10 +569,15 @@ var Tree = function (_React$Component) {
     var _this4 = this;
 
     var props = this.props;
+    var showLineCls = "";
+    if (props.showLine) {
+      showLineCls = props.prefixCls + '-show-line';
+    }
     var domProps = {
-      className: (0, _classnames2["default"])(props.className, props.prefixCls),
+      className: (0, _classnames2["default"])(props.className, props.prefixCls, showLineCls),
       role: 'tree-node'
     };
+
     if (props.focusable) {
       domProps.tabIndex = '0';
       domProps.onKeyDown = this.onKeyDown;
@@ -628,7 +633,7 @@ var Tree = function (_React$Component) {
 
     return _react2["default"].createElement(
       'ul',
-      _extends({}, domProps, { unselectable: true, ref: 'tree' }),
+      _extends({}, domProps, { unselectable: 'true', ref: 'tree' }),
       _react2["default"].Children.map(props.children, this.renderTreeNode, this)
     );
   };

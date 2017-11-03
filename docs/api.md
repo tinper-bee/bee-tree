@@ -18,6 +18,7 @@
 |checkStrictly|精细的检查每个节点|bool|false
 |defaultSelectedKeys|指定选中的节点key|String[]|[]
 |selectedKeys|指定选中的节点keys(controlled)|String[]|-
+|showLine|是否显示连接线|bool|false
 |openIcon|自定义展开节点图标的名称[参考这里](http://bee.tinper.org/bee-icon)String[]|-
 |closeIcon|自定义关闭节点图标的名称[参考这里](http://bee.tinper.org/bee-icon)String[]|-
 |onExpand|当打开或关闭树节点触发的方法|function(expandedKeys, {expanded: bool, node})|-

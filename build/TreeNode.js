@@ -12,10 +12,6 @@ var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
 
-var _objectAssign = require('object-assign');
-
-var _objectAssign2 = _interopRequireDefault(_objectAssign);
-
 var _classnames = require('classnames');
 
 var _classnames2 = _interopRequireDefault(_classnames);
@@ -272,7 +268,7 @@ var TreeNode = function (_React$Component) {
       if (props.openTransitionName) {
         animProps.transitionName = props.openTransitionName;
       } else if (_typeof(props.openAnimation) === 'object') {
-        animProps.animation = (0, _objectAssign2["default"])({}, props.openAnimation);
+        animProps.animation = _extends({}, props.openAnimation);
         if (!transitionAppear) {
           delete animProps.animation.appear;
         }

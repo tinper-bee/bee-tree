@@ -10,10 +10,6 @@ var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
 
-var _objectAssign = require('object-assign');
-
-var _objectAssign2 = _interopRequireDefault(_objectAssign);
-
 var _classnames = require('classnames');
 
 var _classnames2 = _interopRequireDefault(_classnames);
@@ -560,7 +556,7 @@ var Tree = function (_React$Component) {
       }
     }
     if (this.treeNodesStates && this.treeNodesStates[pos]) {
-      (0, _objectAssign2["default"])(cloneProps, this.treeNodesStates[pos].siblingPosition);
+      _extends(cloneProps, this.treeNodesStates[pos].siblingPosition);
     }
     return _react2["default"].cloneElement(child, cloneProps);
   };

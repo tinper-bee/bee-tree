@@ -69,13 +69,8 @@ class Demo extends Component {
         );
         const header = (
             <Row>
-                <Col md={11}>
+                <Col md={12}>
                 { example }
-                </Col>
-                <Col md={1}>
-                <Button shape="icon" onClick={ this.handleClick }>
-                    { caret }
-                </Button>
                 </Col>
             </Row>
         );

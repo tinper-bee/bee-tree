@@ -1,8 +1,7 @@
 /**
  *
  * @title Tree 节点可编辑
- * @description 双击节点可编辑
- *
+ * @description 鼠标移动到节点上点击编辑图标进行编辑。e.node.props.eventKey代表当前节点key值。editKey指当前操作的节点key
  */
 
 
@@ -36,7 +35,7 @@ class Demo8 extends Component {
 
 	onMouseEnter = (e) => {
 		this.setState({
-			isHover: e.node.props.pos
+			isHover: e.node.props.eventKey
 		})
 	}
 	onMouseLeave = (e, treenode) => {
@@ -59,19 +58,19 @@ class Demo8 extends Component {
 		let titleIcon, titleInfo;
 		//编辑时input框
 		if (this.state.editKey == item.key) {
-			titleInfo = <input type="text" id="itemKey" defaultValue={item.name} onChange={(e) => this.nodechange(item,e.target.value)}/>
+			titleInfo = <input type="text" id="itemKey" defaultValue={item.name} onChange={(e) => this.nodechange(item, e.target.value)} />
 		} else {
 			titleInfo = <span className="title-middle">{item.name}</span>
 		}
 		//编辑图标
 		if (this.state.isHover == item.key) {
-			titleIcon = <Icon className="title-middle edit-icon" type="uf-pencil" onClick={(e)=>this.editRender(item)}></Icon>;
+			titleIcon = <Icon className="title-middle edit-icon" type="uf-pencil" onClick={(e) => this.editRender(item)}></Icon>;
 		}
 		return (<div className="title-con">
-					
-					{titleInfo}
-					{titleIcon}
-				</div>);
+
+			{titleInfo}
+			{titleIcon}
+		</div>);
 	}
 
 	componentDidMount = () => {
@@ -103,6 +102,7 @@ class Demo8 extends Component {
 					isLeaf: true
 				}, ],
 			});
+		
 		}, 100);
 	}
 	render() {
@@ -116,7 +116,7 @@ class Demo8 extends Component {
 		return (
 			<Tree onMouseLeave={this.onMouseLeave} onMouseEnter={this.onMouseEnter}>
 				{treeNodes}
-	      	</Tree>
+			</Tree>
 
 		);
 	}

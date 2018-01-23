@@ -34,12 +34,18 @@ class Demo1 extends Component {
 		console.log('onCheck', info);
 	}
 	render() {
+		let checkedKeys = {
+			checked:this.state.defaultCheckedKeys
+		}
 		return (
 			<Tree className="myCls" showLine checkable
 	        defaultExpandedKeys={this.state.defaultExpandedKeys}
-	        defaultSelectedKeys={this.state.defaultSelectedKeys}
-	        defaultCheckedKeys={this.state.defaultCheckedKeys}
-	        onSelect={this.onSelect} onCheck={this.onCheck}
+					defaultSelectedKeys={this.state.defaultSelectedKeys}
+					// defaultCheckedKeys = {this.state.defaultCheckedKeys}
+					checkedKeys={checkedKeys}
+					checkStrictly = {true}
+					onSelect={this.onSelect} onCheck={this.onCheck}
+					
 	      >
 	        <TreeNode title="parent 1" key="0-0">
 	          <TreeNode title="parent 1-0" key="0-0-0" disabled>

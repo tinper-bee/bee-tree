@@ -5,19 +5,5 @@
 @import "../node_modules/bee-button/src/Button.scss";
 @import "../node_modules/bee-transition/src/Transition.scss";
 @import "../node_modules/bee-form-control/src/FormControl.scss";
-.u-tree-searchable-filter {
-  color: #f50;
-  transition: all .3s ease;
-}
 
-.title-middle {
-	display: inline-block;
-	vertical-align: middle;
-}
-.edit-icon {
-	float:right;
-	font-size: 14px;
-}
-.title-con {
-	min-width: 150px;
-}
+

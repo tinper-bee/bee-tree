@@ -249,20 +249,27 @@ var Tree = function (_React$Component) {
       checked: checked
     };
 
-    if (this.props.checkStrictly && 'checkedKeys' in this.props) {
+    if (this.props.checkStrictly) {
       if (checked && index === -1) {
         checkedKeys.push(key);
       }
       if (!checked && index > -1) {
         checkedKeys.splice(index, 1);
       }
+      this.treeNodesStates[treeNode.props.pos].checked = checked;
       newSt.checkedNodes = [];
       (0, _util.loopAllChildren)(this.props.children, function (item, ind, pos, keyOrPos) {
         if (checkedKeys.indexOf(keyOrPos) !== -1) {
           newSt.checkedNodes.push(item);
         }
       });
-      this.props.onCheck((0, _util.getStrictlyValue)(checkedKeys, this.props.checkedKeys.halfChecked), newSt);
+      if (!('checkedKeys' in this.props)) {
+        this.setState({
+          checkedKeys: checkedKeys
+        });
+      }
+      var halfChecked = this.props.checkedKeys ? this.props.checkedKeys.halfChecked : [];
+      this.props.onCheck((0, _util.getStrictlyValue)(checkedKeys, halfChecked), newSt);
     } else {
       if (checked && index === -1) {
         this.treeNodesStates[treeNode.props.pos].checked = true;
@@ -543,7 +550,7 @@ var Tree = function (_React$Component) {
         if (state.checkedKeys) {
           cloneProps.checked = state.checkedKeys.indexOf(key) !== -1 || false;
         }
-        if (props.checkedKeys.halfChecked) {
+        if (props.checkedKeys && props.checkedKeys.halfChecked) {
           cloneProps.halfChecked = props.checkedKeys.halfChecked.indexOf(key) !== -1 || false;
         } else {
           cloneProps.halfChecked = false;

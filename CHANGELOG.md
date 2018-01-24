@@ -1,10 +1,11 @@
-<a name="1.0.0"></a>
-# 1.0.0 (2017-11-02)
+<a name="1.0.3"></a>
+## 1.0.3 (2018-01-24)
 
 
 ### Bug Fixes
 
 * **解决配置冲突:** 解决配置冲突 ([fb15e37](https://github.com/tinper-bee/bee-tree/commit/fb15e37))
+* checkStrictly ([5fa28b2](https://github.com/tinper-bee/bee-tree/commit/5fa28b2))
 
 
 ### build

@@ -42,8 +42,8 @@ class Demo1 extends Component {
 	        defaultExpandedKeys={this.state.defaultExpandedKeys}
 					defaultSelectedKeys={this.state.defaultSelectedKeys}
 					// defaultCheckedKeys = {this.state.defaultCheckedKeys}
-					checkedKeys={checkedKeys}
-					checkStrictly = {true}
+					// checkedKeys={checkedKeys}
+					checkStrictly
 					onSelect={this.onSelect} onCheck={this.onCheck}
 					
 	      >

@@ -1,7 +1,7 @@
 /**
  *
  * @title Tree基本使用事例
- * @description 事例涵盖 checkbox如何选择，disable状态和部分选择状态。
+ * @description 事例涵盖 checkbox如何选择，disable状态和部分选择状态。checkStrictly为true时，子节点与父节点的选择情况都不会影响到对方
  *
  */
 
@@ -24,25 +24,27 @@ class Demo1 extends Component {
 		this.state = {
 			defaultExpandedKeys: keys,
 			defaultSelectedKeys: keys,
-			defaultCheckedKeys: keys,
+			checkedKeys: {checked:keys},
 		};
 	}
 	onSelect(info) {
 		console.log('selected', info);
 	}
-	onCheck(info) {
-		console.log('onCheck', info);
+	onCheck = (checkedKeys) => {
+		let self = this;
+		console.log('onCheck', checkedKeys);
+		const cks = {
+			checked: checkedKeys.checked || checkedKeys,
+		};
+		this.setState({checkedKeys:cks});
 	}
 	render() {
-		let checkedKeys = {
-			checked:this.state.defaultCheckedKeys
-		}
+	
 		return (
 			<Tree className="myCls" showLine checkable
 	        defaultExpandedKeys={this.state.defaultExpandedKeys}
 					defaultSelectedKeys={this.state.defaultSelectedKeys}
-					// defaultCheckedKeys = {this.state.defaultCheckedKeys}
-					// checkedKeys={checkedKeys}
+					checkedKeys = {this.state.checkedKeys}
 					checkStrictly
 					onSelect={this.onSelect} onCheck={this.onCheck}
 					

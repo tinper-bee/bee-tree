@@ -1,3 +1,18 @@
+<a name="1.0.3"></a>
+## [1.0.3](https://github.com/tinper-bee/bee-tree/compare/v11.0.3...v1.0.3) (2018-01-24)
+
+
+### Features
+
+* 含有[3~[B[3~heckStrictly复选框tree ([932b9fa](https://github.com/tinper-bee/bee-tree/commit/932b9fa))
+
+
+### BREAKING CHANGES
+
+* 示例文档描述优化
+
+
+
 <a name="11.0.3"></a>
 ## [11.0.3](https://github.com/tinper-bee/bee-tree/compare/v1.0.3...v11.0.3) (2018-01-24)
 

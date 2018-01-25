@@ -1,10 +1,16 @@
-<a name="1.0.3"></a>
-## [1.0.3](https://github.com/tinper-bee/bee-tree/compare/v11.0.3...v1.0.3) (2018-01-24)
+<a name="1.0.5"></a>
+## [1.0.5](https://github.com/tinper-bee/bee-tree/compare/v11.0.3...v1.0.5) (2018-01-25)
+
+
+### Bug Fixes
+
+* children 为0时不显示图标 ([5481ec6](https://github.com/tinper-bee/bee-tree/commit/5481ec6))
 
 
 ### Features
 
 * 含有[3~[B[3~heckStrictly复选框tree ([932b9fa](https://github.com/tinper-bee/bee-tree/commit/932b9fa))
+* **子节节点children为空数组时，不显示扩展图图标:** 子节点children属性为空数组时，不显示扩展图标 ([3536f71](https://github.com/tinper-bee/bee-tree/commit/3536f71))
 
 
 ### BREAKING CHANGES

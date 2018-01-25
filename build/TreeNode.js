@@ -255,7 +255,8 @@ var TreeNode = function (_React$Component) {
     }
     var children = props.children;
     var newChildren = children;
-    if (children && (children.type === TreeNode || Array.isArray(children) && children.every(function (item) {
+    //如果props.children的长度大于0才可以生成子对象
+    if (children && children.length > 0 && (children.type === TreeNode || Array.isArray(children) && children.every(function (item) {
       return item.type === TreeNode;
     }))) {
       var _cls;

@@ -5455,13 +5455,11 @@ a, .mdl-accordion, .mdl-button, .mdl-card, .mdl-checkbox, .mdl-dropdown-menu,
 
 .u-tree li span.u-tree-icon_loading:after {
   display: inline-block;
-  font-family: 'uf';
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  content: "\E6AE";
-  animation: loadingCircle 1s infinite linear;
-  color: #108ee9; }
+  vertical-align: middle;
+  background: url("data:image/gif;base64,R0lGODlhEAAQAKIGAMLY8YSx5HOm4Mjc88/g9Ofw+v///wAAACH/C05FVFNDQVBFMi4wAwEAAAAh+QQFCgAGACwAAAAAEAAQAAADMGi6RbUwGjKIXCAA016PgRBElAVlG/RdLOO0X9nK61W39qvqiwz5Ls/rRqrggsdkAgAh+QQFCgAGACwCAAAABwAFAAADD2hqELAmiFBIYY4MAutdCQAh+QQFCgAGACwGAAAABwAFAAADD1hU1kaDOKMYCGAGEeYFCQAh+QQFCgAGACwKAAIABQAHAAADEFhUZjSkKdZqBQG0IELDQAIAIfkEBQoABgAsCgAGAAUABwAAAxBoVlRKgyjmlAIBqCDCzUoCACH5BAUKAAYALAYACgAHAAUAAAMPaGpFtYYMAgJgLogA610JACH5BAUKAAYALAIACgAHAAUAAAMPCAHWFiI4o1ghZZJB5i0JACH5BAUKAAYALAAABgAFAAcAAAMQCAFmIaEp1motpDQySMNFAgA7") no-repeat scroll 0 0 transparent;
+  content: "";
+  width: 14px;
+  height: 14px; }
 
 .u-tree li span.u-tree-switcher.u-tree-switcher-noop {
   cursor: auto; }
@@ -6675,5 +6673,20 @@ input.u-button[type="submit"] {
   line-height: 0;
   right: 7px;
   color: rgba(0, 0, 0, 0.65); }
+
+.u-tree-searchable-filter {
+  color: #f50;
+  transition: all .3s ease; }
+
+.title-middle {
+  display: inline-block;
+  vertical-align: middle; }
+
+.edit-icon {
+  float: right;
+  font-size: 14px; }
+
+.title-con {
+  min-width: 150px; }
 
 /*# sourceMappingURL=demo.css.map */

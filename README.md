@@ -25,7 +25,7 @@ npm install --save bee-tree
 ```
 组件调用
 ```js
-import { Tree } from 'bee-tree';
+import Tree from 'bee-tree';
 
 const TreeNode = Tree.TreeNode;
 

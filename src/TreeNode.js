@@ -214,7 +214,8 @@ class TreeNode extends React.Component {
     }
     const children = props.children;
     let newChildren = children;
-    if (children &&
+     //如果props.children的长度大于0才可以生成子对象
+    if (children && (children.length > 0) && 
       (children.type === TreeNode ||
         Array.isArray(children) &&
         children.every((item) => {

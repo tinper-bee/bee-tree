@@ -73,7 +73,7 @@ class Demo2 extends Component{
   constructor(props) {
   	super(props);
     this.state = {
-      expandedKeys: ['0-0-0', '0-0-1'],
+      expandedKeys: [],
       autoExpandParent: true,
       checkedKeys: ['0-0-0'],
       selectedKeys: [],

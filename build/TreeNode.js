@@ -328,11 +328,11 @@ var TreeNode = function (_React$Component) {
 
     var iconEleCls = (_iconEleCls = {}, _defineProperty(_iconEleCls, prefixCls + '-iconEle', true), _defineProperty(_iconEleCls, prefixCls + '-icon_loading', this.state.dataLoading), _defineProperty(_iconEleCls, prefixCls + '-icon__' + iconState, true), _iconEleCls);
     var selectHandle = function selectHandle() {
-      var titleClass = props.className ? prefixCls + '-title' + ' ' + props.className : prefixCls + '-title';
+      var titleClass = props.titleClass ? prefixCls + '-title' + ' ' + props.className : prefixCls + '-title';
       var icon = props.showIcon || props.loadData && _this4.state.dataLoading ? _react2["default"].createElement('span', { className: (0, _classnames2["default"])(iconEleCls) }) : null;
       var title = _react2["default"].createElement(
         'span',
-        { className: titleClass, style: props.style },
+        { className: titleClass },
         content
       );
       var wrap = prefixCls + '-node-content-wrapper';
@@ -424,7 +424,7 @@ var TreeNode = function (_React$Component) {
 
     return _react2["default"].createElement(
       'li',
-      _extends({}, liProps, { ref: 'li',
+      _extends({}, liProps, { ref: 'li', style: props.style,
         className: (0, _classnames2["default"])(props.className, disabledCls, dragOverCls, filterCls)
       }),
       canRenderSwitcher ? this.renderSwitcher(props, expandedState) : noopSwitcher(),
@@ -450,7 +450,8 @@ TreeNode.propTypes = {
   openIcon: _propTypes2["default"].element,
   closeIcon: _propTypes2["default"].element,
   style: _propTypes2["default"].object,
-  className: _propTypes2["default"].string
+  className: _propTypes2["default"].string,
+  titleClass: _propTypes2["default"].string
 };
 
 TreeNode.defaultProps = {

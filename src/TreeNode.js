@@ -290,10 +290,10 @@ class TreeNode extends React.Component {
       [`${prefixCls}-icon__${iconState}`]: true
     };
     const selectHandle = () => {
-      const titleClass=props.className?prefixCls+'-title'+' '+props.className:prefixCls+'-title';
+      const titleClass=props.titleClass?prefixCls+'-title'+' '+props.className:prefixCls+'-title';
       const icon = (props.showIcon || props.loadData && this.state.dataLoading) ?
         <span className={classNames(iconEleCls)}></span> : null;
-      const title = <span className={titleClass} style={props.style}>{content}</span>;
+      const title = <span className={titleClass} >{content}</span>;
       const wrap = `${prefixCls}-node-content-wrapper`;
       const domProps = {
         className: `${wrap} ${wrap}-${iconState === expandedState ? iconState : 'normal'}`,
@@ -382,7 +382,7 @@ class TreeNode extends React.Component {
     };
 
     return (
-      <li {...liProps} ref="li"
+      <li {...liProps} ref="li" style={props.style}
         className={classNames(props.className, disabledCls, dragOverCls, filterCls) }
       >
         {canRenderSwitcher ? this.renderSwitcher(props, expandedState) : noopSwitcher()}
@@ -407,7 +407,8 @@ TreeNode.propTypes = {
   openIcon: PropTypes.element,
   closeIcon: PropTypes.element,
   style: PropTypes.object,
-  className: PropTypes.string
+  className: PropTypes.string,
+  titleClass:PropTypes.string
 };
 
 TreeNode.defaultProps = {

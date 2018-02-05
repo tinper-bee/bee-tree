@@ -152,7 +152,7 @@ class TreeNode extends React.Component {
     let stateIcon;
     const prefixCls = props.prefixCls;
     const switcherCls = {
-      [`${prefixCls}-switcher`]: true,
+      [`${prefixCls}-switcher`]: true
     };
     if (!props.showLine) {
       switcherCls[`${prefixCls}-noline_${expandedState}`] = true;
@@ -172,12 +172,12 @@ class TreeNode extends React.Component {
       switcherCls['icon-none'] = true;
     }
     //switcherCls[stateIcon] = stateIcon;
-
+    props.switcherClass?switcherCls[`${props.switcherClass}`]=true:'';
     if (props.disabled) {
       switcherCls[`${prefixCls}-switcher-disabled`] = true;
-      return <span className={classNames(switcherCls)}>{stateIcon}</span>;
+      return <span className={classNames(switcherCls)} style={props.switcherStyle}>{stateIcon}</span>;
     }
-    return <span className={classNames(switcherCls)} onClick={this.onExpand}>{stateIcon}</span>;
+    return <span className={classNames(switcherCls)} style={props.switcherStyle} onClick={this.onExpand}>{stateIcon}</span>;
   }
 
   renderCheckbox(props) {
@@ -293,7 +293,7 @@ class TreeNode extends React.Component {
       const titleClass=props.titleClass?prefixCls+'-title'+' '+props.className:prefixCls+'-title';
       const icon = (props.showIcon || props.loadData && this.state.dataLoading) ?
         <span className={classNames(iconEleCls)}></span> : null;
-      const title = <span className={titleClass} >{content}</span>;
+      const title = <span className={titleClass} style={props.titleStyle} >{content}</span>;
       const wrap = `${prefixCls}-node-content-wrapper`;
       const domProps = {
         className: `${wrap} ${wrap}-${iconState === expandedState ? iconState : 'normal'}`,
@@ -408,7 +408,10 @@ TreeNode.propTypes = {
   closeIcon: PropTypes.element,
   style: PropTypes.object,
   className: PropTypes.string,
-  titleClass:PropTypes.string
+  titleClass:PropTypes.string,
+  titleStyle:PropTypes.object,
+  switcherClass:PropTypes.string,
+  switcherStyle:PropTypes.object
 };
 
 TreeNode.defaultProps = {

@@ -7695,18 +7695,18 @@
 	      switcherCls['icon-none'] = true;
 	    }
 	    //switcherCls[stateIcon] = stateIcon;
-	
+	    props.switcherClass ? switcherCls['' + props.switcherClass] = true : '';
 	    if (props.disabled) {
 	      switcherCls[prefixCls + '-switcher-disabled'] = true;
 	      return _react2['default'].createElement(
 	        'span',
-	        { className: (0, _classnames2['default'])(switcherCls) },
+	        { className: (0, _classnames2['default'])(switcherCls), style: props.switcherStyle },
 	        stateIcon
 	      );
 	    }
 	    return _react2['default'].createElement(
 	      'span',
-	      { className: (0, _classnames2['default'])(switcherCls), onClick: this.onExpand },
+	      { className: (0, _classnames2['default'])(switcherCls), style: props.switcherStyle, onClick: this.onExpand },
 	      stateIcon
 	    );
 	  };
@@ -7827,7 +7827,7 @@
 	      var icon = props.showIcon || props.loadData && _this4.state.dataLoading ? _react2['default'].createElement('span', { className: (0, _classnames2['default'])(iconEleCls) }) : null;
 	      var title = _react2['default'].createElement(
 	        'span',
-	        { className: titleClass },
+	        { className: titleClass, style: props.titleStyle },
 	        content
 	      );
 	      var wrap = prefixCls + '-node-content-wrapper';
@@ -7946,7 +7946,10 @@
 	  closeIcon: _propTypes2['default'].element,
 	  style: _propTypes2['default'].object,
 	  className: _propTypes2['default'].string,
-	  titleClass: _propTypes2['default'].string
+	  titleClass: _propTypes2['default'].string,
+	  titleStyle: _propTypes2['default'].object,
+	  switcherClass: _propTypes2['default'].string,
+	  switcherStyle: _propTypes2['default'].object
 	};
 	
 	TreeNode.defaultProps = {

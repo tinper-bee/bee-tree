@@ -1,3 +1,13 @@
+<a name="1.0.9"></a>
+## [1.0.9](https://github.com/tinper-bee/bee-tree/compare/v1.0.8...v1.0.9) (2018-02-05)
+
+
+### Features
+
+* **bee-tree:** switer支持Class和style，title支持Style ([7a47697](https://github.com/tinper-bee/bee-tree/commit/7a47697))
+
+
+
 <a name="1.0.8"></a>
 ## [1.0.8](https://github.com/tinper-bee/bee-tree/compare/v1.0.7...v1.0.8) (2018-02-05)
 

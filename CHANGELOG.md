@@ -1,3 +1,13 @@
+<a name="1.0.8"></a>
+## [1.0.8](https://github.com/tinper-bee/bee-tree/compare/v1.0.7...v1.0.8) (2018-02-05)
+
+
+### Features
+
+* **bee-tree:** 支持treeNode title的class ([1989965](https://github.com/tinper-bee/bee-tree/commit/1989965))
+
+
+
 <a name="1.0.7"></a>
 ## [1.0.7](https://github.com/tinper-bee/bee-tree/compare/v1.0.6...v1.0.7) (2018-02-05)
 

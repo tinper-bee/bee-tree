@@ -290,9 +290,10 @@ class TreeNode extends React.Component {
       [`${prefixCls}-icon__${iconState}`]: true
     };
     const selectHandle = () => {
+      const titleClass=props.className?prefixCls+'-title'+' '+props.className:prefixCls+'-title';
       const icon = (props.showIcon || props.loadData && this.state.dataLoading) ?
         <span className={classNames(iconEleCls)}></span> : null;
-      const title = <span className={`${prefixCls}-title`}>{content}</span>;
+      const title = <span className={titleClass} style={props.style}>{content}</span>;
       const wrap = `${prefixCls}-node-content-wrapper`;
       const domProps = {
         className: `${wrap} ${wrap}-${iconState === expandedState ? iconState : 'normal'}`,
@@ -371,7 +372,7 @@ class TreeNode extends React.Component {
         [`${prefixCls}-switcher-noop`]: true,
       };
       if (props.showLine) {
-        console.log('line---------');
+        // console.log('line---------');
         cls[`${prefixCls}-center_docu`] = !props.last;
         cls[`${prefixCls}-bottom_docu`] = props.last;
       } else {
@@ -404,7 +405,9 @@ TreeNode.propTypes = {
   root: PropTypes.object,
   onSelect: PropTypes.func,
   openIcon: PropTypes.element,
-  closeIcon: PropTypes.element
+  closeIcon: PropTypes.element,
+  style: PropTypes.object,
+  className: PropTypes.string
 };
 
 TreeNode.defaultProps = {

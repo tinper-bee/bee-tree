@@ -328,10 +328,11 @@ var TreeNode = function (_React$Component) {
 
     var iconEleCls = (_iconEleCls = {}, _defineProperty(_iconEleCls, prefixCls + '-iconEle', true), _defineProperty(_iconEleCls, prefixCls + '-icon_loading', this.state.dataLoading), _defineProperty(_iconEleCls, prefixCls + '-icon__' + iconState, true), _iconEleCls);
     var selectHandle = function selectHandle() {
+      var titleClass = props.className ? prefixCls + '-title' + ' ' + props.className : prefixCls + '-title';
       var icon = props.showIcon || props.loadData && _this4.state.dataLoading ? _react2["default"].createElement('span', { className: (0, _classnames2["default"])(iconEleCls) }) : null;
       var title = _react2["default"].createElement(
         'span',
-        { className: prefixCls + '-title' },
+        { className: titleClass, style: props.style },
         content
       );
       var wrap = prefixCls + '-node-content-wrapper';
@@ -412,7 +413,7 @@ var TreeNode = function (_React$Component) {
 
       var cls = (_cls2 = {}, _defineProperty(_cls2, prefixCls + '-switcher', true), _defineProperty(_cls2, prefixCls + '-switcher-noop', true), _cls2);
       if (props.showLine) {
-        console.log('line---------');
+        // console.log('line---------');
         cls[prefixCls + '-center_docu'] = !props.last;
         cls[prefixCls + '-bottom_docu'] = props.last;
       } else {
@@ -447,7 +448,9 @@ TreeNode.propTypes = {
   root: _propTypes2["default"].object,
   onSelect: _propTypes2["default"].func,
   openIcon: _propTypes2["default"].element,
-  closeIcon: _propTypes2["default"].element
+  closeIcon: _propTypes2["default"].element,
+  style: _propTypes2["default"].object,
+  className: _propTypes2["default"].string
 };
 
 TreeNode.defaultProps = {

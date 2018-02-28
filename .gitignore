@@ -36,3 +36,4 @@ jspm_packages
 
 .idea/
 coverage
+.DS_Store

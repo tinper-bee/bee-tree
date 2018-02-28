@@ -214,13 +214,14 @@ class TreeNode extends React.Component {
     }
     const children = props.children;
     let newChildren = children;
+    let allTreeNode = undefined;
+    if (Array.isArray(children)) {
+      allTreeNode = children.every(function (item) {
+        return item.type === TreeNode;
+      });
+    }
      //如果props.children的长度大于0才可以生成子对象
-    if (children && (children.length > 0) && 
-      (children.type === TreeNode ||
-        Array.isArray(children) &&
-        children.every((item) => {
-          return item.type === TreeNode;
-        }))) {
+    if (children &&  (children.type === TreeNode || allTreeNode)){
       const cls = {
         [`${props.prefixCls}-child-tree`]: true,
         [`${props.prefixCls}-child-tree-open`]: props.expanded,

@@ -1,3 +1,13 @@
+<a name="1.1.0"></a>
+# [1.1.0](https://github.com/tinper-bee/bee-tree/compare/v1.0.9...v1.1.0) (2018-02-28)
+
+
+### Bug Fixes
+
+* **tree中只有一个子节点时不显示:** 支持只有一个子节点 ([ac619e1](https://github.com/tinper-bee/bee-tree/commit/ac619e1))
+
+
+
 <a name="1.0.9"></a>
 ## [1.0.9](https://github.com/tinper-bee/bee-tree/compare/v1.0.8...v1.0.9) (2018-02-05)
 

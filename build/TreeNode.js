@@ -255,10 +255,14 @@ var TreeNode = function (_React$Component) {
     }
     var children = props.children;
     var newChildren = children;
+    var allTreeNode = undefined;
+    if (Array.isArray(children)) {
+      allTreeNode = children.every(function (item) {
+        return item.type === TreeNode;
+      });
+    }
     //如果props.children的长度大于0才可以生成子对象
-    if (children && children.length > 0 && (children.type === TreeNode || Array.isArray(children) && children.every(function (item) {
-      return item.type === TreeNode;
-    }))) {
+    if (children && (children.type === TreeNode || allTreeNode)) {
       var _cls;
 
       var cls = (_cls = {}, _defineProperty(_cls, props.prefixCls + '-child-tree', true), _defineProperty(_cls, props.prefixCls + '-child-tree-open', props.expanded), _cls);

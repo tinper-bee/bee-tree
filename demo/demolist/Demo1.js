@@ -54,7 +54,7 @@ class Demo1 extends Component {
 					onSelect={this.onSelect} onCheck={this.onCheck}
 					onDoubleClick={this.onDoubleClick}
 	      >
-	        <TreeNode title="parent 1" key="0-0" onDoubleClick={this.onDoubleClick}>
+	        <TreeNode title="parent 1" key="0-0" >
 	          <TreeNode title="parent 1-0" key="0-0-0" disabled>
 	            <TreeNode title="leaf" key="0-0-0-0" disableCheckbox />
 	            <TreeNode title="leaf" key="0-0-0-1" />

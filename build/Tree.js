@@ -340,6 +340,16 @@ var Tree = function (_React$Component) {
     props.onSelect(selectedKeys, newSt);
   };
 
+  Tree.prototype.onDoubleClick = function onDoubleClick(treeNode) {
+    var props = this.props;
+    var eventKey = treeNode.props.eventKey;
+    var newSt = {
+      event: 'dblclick',
+      node: treeNode
+    };
+    props.onDoubleClick(eventKey, newSt);
+  };
+
   Tree.prototype.onMouseEnter = function onMouseEnter(e, treeNode) {
     this.props.onMouseEnter({
       event: e,
@@ -528,6 +538,7 @@ var Tree = function (_React$Component) {
       onMouseEnter: props.onMouseEnter,
       onMouseLeave: props.onMouseLeave,
       onRightClick: props.onRightClick,
+      onDoubleClick: props.onDoubleClick,
       prefixCls: props.prefixCls,
       showLine: props.showLine,
       showIcon: props.showIcon,

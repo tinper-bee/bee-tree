@@ -53,7 +53,7 @@ var TreeNode = function (_React$Component) {
 
     var _this2 = _possibleConstructorReturn(this, _React$Component.call(this, props));
 
-    ['onExpand', 'onCheck', 'onContextMenu', 'onMouseEnter', 'onMouseLeave', 'onDragStart', 'onDragEnter', 'onDragOver', 'onDragLeave', 'onDrop', 'onDragEnd'].forEach(function (m) {
+    ['onExpand', 'onCheck', 'onContextMenu', 'onMouseEnter', 'onMouseLeave', 'onDragStart', 'onDragEnter', 'onDragOver', 'onDragLeave', 'onDrop', 'onDragEnd', 'onDoubleClick'].forEach(function (m) {
       _this2[m] = _this2[m].bind(_this2);
     });
     _this2.state = {
@@ -77,11 +77,23 @@ var TreeNode = function (_React$Component) {
   // }
 
   TreeNode.prototype.onCheck = function onCheck() {
+
     this.props.root.onCheck(this);
   };
 
   TreeNode.prototype.onSelect = function onSelect() {
-    this.props.root.onSelect(this);
+    clearTimeout(this.doubleClickFlag);
+    var _this = this;
+    //执行延时
+    this.doubleClickFlag = setTimeout(function () {
+      //do function在此处写单击事件要执行的代码
+      _this.props.root.onSelect(_this);
+    }, 300);
+  };
+
+  TreeNode.prototype.onDoubleClick = function onDoubleClick() {
+    clearTimeout(this.doubleClickFlag);
+    this.props.root.onDoubleClick(this);
   };
 
   TreeNode.prototype.onMouseEnter = function onMouseEnter(e) {
@@ -359,6 +371,10 @@ var TreeNode = function (_React$Component) {
           //   this.onCheck();
           // }
         };
+
+        if (props.onDoubleClick) {
+          domProps.onDoubleClick = _this4.onDoubleClick;
+        }
 
         if (props.onRightClick) {
           domProps.onContextMenu = _this4.onContextMenu;

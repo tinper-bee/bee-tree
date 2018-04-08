@@ -311,6 +311,17 @@ class Tree extends React.Component {
     props.onSelect(selectedKeys, newSt);
   }
 
+
+  onDoubleClick(treeNode){
+     const props = this.props;
+     const eventKey = treeNode.props.eventKey;
+     const newSt = {
+      event: 'dblclick',
+      node: treeNode
+    };
+    props.onDoubleClick(eventKey,newSt);
+  }
+
   onMouseEnter(e, treeNode) {
     this.props.onMouseEnter({
       event: e,
@@ -499,6 +510,7 @@ class Tree extends React.Component {
       onMouseEnter: props.onMouseEnter,
       onMouseLeave: props.onMouseLeave,
       onRightClick: props.onRightClick,
+      onDoubleClick:props.onDoubleClick,
       prefixCls: props.prefixCls,
       showLine: props.showLine,
       showIcon: props.showIcon,

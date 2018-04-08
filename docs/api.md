@@ -34,6 +34,7 @@
 |onDragLeave|当拖拽离开触发的方法|function({event,node})|-
 |onDragEnd|当拖拽结束触发的方法|function({event,node})|-
 |onDrop|当节点放下触发方法|function({event, node, dragNode, dragNodesKeys})|-
+|onDoubleClick|当双击发生触发的方法|function(checkedKeys, e:{node, event})|-
 
 ## TreeNode
 |参数|说明|类型|默认值|

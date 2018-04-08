@@ -28,6 +28,7 @@ class TreeNode extends React.Component {
       'onDragLeave',
       'onDrop',
       'onDragEnd',
+      'onDoubleClick'
     ].forEach((m) => {
       this[m] = this[m].bind(this);
     });
@@ -51,11 +52,25 @@ class TreeNode extends React.Component {
     // }
 
   onCheck() {
+
     this.props.root.onCheck(this);
   }
 
   onSelect() {
-    this.props.root.onSelect(this);
+    clearTimeout(this.doubleClickFlag);
+    let _this = this;
+    //执行延时
+    this.doubleClickFlag = setTimeout(function(){
+        //do function在此处写单击事件要执行的代码
+        _this.props.root.onSelect(_this);
+    },300);
+    
+  }
+
+  
+  onDoubleClick() {
+    clearTimeout(this.doubleClickFlag);
+    this.props.root.onDoubleClick(this);
   }
 
   onMouseEnter(e) {
@@ -315,6 +330,10 @@ class TreeNode extends React.Component {
           //   this.onCheck();
           // }
         };
+
+        if(props.onDoubleClick){
+          domProps.onDoubleClick = this.onDoubleClick;
+        }
 
         if (props.onRightClick) {
           domProps.onContextMenu = this.onContextMenu;

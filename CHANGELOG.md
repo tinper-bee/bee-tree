@@ -1,3 +1,13 @@
+<a name="1.1.1"></a>
+## [1.1.1](https://github.com/tinper-bee/bee-tree/compare/v1.1.0...v1.1.1) (2018-04-08)
+
+
+### Features
+
+* **支持节点双击事件:** 节点双击事件 ([ca8ddfc](https://github.com/tinper-bee/bee-tree/commit/ca8ddfc))
+
+
+
 <a name="1.1.0"></a>
 # [1.1.0](https://github.com/tinper-bee/bee-tree/compare/v1.0.9...v1.1.0) (2018-02-28)
 

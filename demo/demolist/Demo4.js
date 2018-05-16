@@ -1,6 +1,6 @@
 /**
  *
- * @title Tree可搜索事例
+ * @title Tree可搜索示例
  * @description
  *
  */

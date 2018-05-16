@@ -1,6 +1,6 @@
 /**
 *
-* @title Tree 拖拽使用事例
+* @title Tree 拖拽使用示例
 * @description 拖动结点插入到另一个结点后面或者其他的父节点里面。
 *
 */

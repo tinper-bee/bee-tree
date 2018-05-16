@@ -1,6 +1,6 @@
 /**
  *
- * @title Tree基本使用事例自定义图标
+ * @title Tree基本使用示例自定义图标
  * @description 添加openIcon、closeIcon属性
  *
  */

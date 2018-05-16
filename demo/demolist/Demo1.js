@@ -1,7 +1,7 @@
 /**
  *
- * @title Tree基本使用事例
- * @description 事例涵盖 checkbox如何选择，disable状态和部分选择状态。checkStrictly为true时，子节点与父节点的选择情况都不会影响到对方
+ * @title Tree基本使用示例
+ * @description 示例涵盖 checkbox如何选择，disable状态和部分选择状态。checkStrictly为true时，子节点与父节点的选择情况都不会影响到对方
  *
  */
 

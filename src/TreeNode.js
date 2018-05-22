@@ -59,11 +59,16 @@ class TreeNode extends React.Component {
   onSelect() {
     clearTimeout(this.doubleClickFlag);
     let _this = this;
+    if(this.props.onDoubleClick){
     //执行延时
-    this.doubleClickFlag = setTimeout(function(){
-        //do function在此处写单击事件要执行的代码
-        _this.props.root.onSelect(_this);
-    },300);
+      this.doubleClickFlag = setTimeout(function(){
+          //do function在此处写单击事件要执行的代码
+          _this.props.root.onSelect(_this);
+      },300);
+    }else{
+       _this.props.root.onSelect(_this);
+    }
+   
     
   }
 

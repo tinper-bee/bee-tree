@@ -1,3 +1,13 @@
+<a name="1.1.2"></a>
+## [1.1.2](https://github.com/tinper-bee/bee-tree/compare/v1.1.1...v1.1.2) (2018-05-22)
+
+
+### Bug Fixes
+
+* **优化双击事件:** 优化双击 ([1c8ff5d](https://github.com/tinper-bee/bee-tree/commit/1c8ff5d))
+
+
+
 <a name="1.1.1"></a>
 ## [1.1.1](https://github.com/tinper-bee/bee-tree/compare/v1.1.0...v1.1.1) (2018-04-08)
 

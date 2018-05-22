@@ -84,11 +84,15 @@ var TreeNode = function (_React$Component) {
   TreeNode.prototype.onSelect = function onSelect() {
     clearTimeout(this.doubleClickFlag);
     var _this = this;
-    //执行延时
-    this.doubleClickFlag = setTimeout(function () {
-      //do function在此处写单击事件要执行的代码
+    if (this.props.onDoubleClick) {
+      //执行延时
+      this.doubleClickFlag = setTimeout(function () {
+        //do function在此处写单击事件要执行的代码
+        _this.props.root.onSelect(_this);
+      }, 300);
+    } else {
       _this.props.root.onSelect(_this);
-    }, 300);
+    }
   };
 
   TreeNode.prototype.onDoubleClick = function onDoubleClick() {

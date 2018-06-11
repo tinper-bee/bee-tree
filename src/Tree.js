@@ -499,6 +499,10 @@ class Tree extends React.Component {
     if (child.props.hasOwnProperty('selectable')) {
       selectable = child.props.selectable;
     }
+    let draggable = props.draggable;
+    if(child.props.hasOwnProperty('draggable')){
+      draggable = child.props.draggable;
+    }
 
     const cloneProps = {
       ref: `treeNode-${key}`,
@@ -514,7 +518,7 @@ class Tree extends React.Component {
       prefixCls: props.prefixCls,
       showLine: props.showLine,
       showIcon: props.showIcon,
-      draggable: props.draggable,
+      draggable,
       dragOver: state.dragOverNodeKey === key && this.dropPosition === 0,
       dragOverGapTop: state.dragOverNodeKey === key && this.dropPosition === -1,
       dragOverGapBottom: state.dragOverNodeKey === key && this.dropPosition === 1,

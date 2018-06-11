@@ -1,3 +1,13 @@
+<a name="1.1.3"></a>
+## [1.1.3](https://github.com/tinper-bee/bee-tree/compare/v1.1.2...v1.1.3) (2018-06-11)
+
+
+### Features
+
+* **自定义节点是否可拖拽:** 自定义节点是否可拖拽 ([c2a3552](https://github.com/tinper-bee/bee-tree/commit/c2a3552))
+
+
+
 <a name="1.1.2"></a>
 ## [1.1.2](https://github.com/tinper-bee/bee-tree/compare/v1.1.1...v1.1.2) (2018-05-22)
 

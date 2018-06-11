@@ -1,3 +1,13 @@
+<a name="1.1.4"></a>
+## [1.1.4](https://github.com/tinper-bee/bee-tree/compare/v1.1.3...v1.1.4) (2018-06-11)
+
+
+### Bug Fixes
+
+* LoadData增加loading图标 ([4125448](https://github.com/tinper-bee/bee-tree/commit/4125448))
+
+
+
 <a name="1.1.3"></a>
 ## [1.1.3](https://github.com/tinper-bee/bee-tree/compare/v1.1.2...v1.1.3) (2018-06-11)
 

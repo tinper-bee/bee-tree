@@ -174,7 +174,7 @@ $treePrefixCls : "u-tree";
     cursor: pointer;
     outline: none;
   }
-  .u-tree li span.u-tree-icon_loading:after {
+  li span.u-tree-icon_loading:after {
     display: inline-block;
     // margin-right: 2px;
     vertical-align: middle;

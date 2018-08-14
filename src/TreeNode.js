@@ -241,7 +241,7 @@ class TreeNode extends React.Component {
       });
     }
      //如果props.children的长度大于0才可以生成子对象
-    if (children &&  (children.type === TreeNode || allTreeNode)){
+    if (children  && (children.length > 0) &&  (children.type === TreeNode || allTreeNode)){
       const cls = {
         [`${props.prefixCls}-child-tree`]: true,
         [`${props.prefixCls}-child-tree-open`]: props.expanded,

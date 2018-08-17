@@ -14,12 +14,6 @@ import Icon from 'bee-icon';
 
 const TreeNode = Tree.TreeNode;
 
-let timer = 0;
-let delay = 200;
-let prevent = false;
-
-
-
 class Demo8 extends Component {
 	constructor(props) {
 		super(props);

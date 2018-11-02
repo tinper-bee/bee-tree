@@ -5,11 +5,7 @@
 /*  Navlayout  */
 .u-checkbox {
   display: inline-block;
-  position: relative;
-  margin: 0 5px;
-  height: 18px;
-  line-height: 18px;
-  font-size: 14px; }
+  position: relative; }
   .u-checkbox.disabled .u-checkbox-label {
     cursor: not-allowed;
     opacity: 0.5; }
@@ -48,7 +44,7 @@
       width: 18px;
       height: 18px;
       left: 0;
-      top: 0;
+      top: 4px;
       text-align: center;
       position: absolute; }
     .u-checkbox .u-checkbox-label:after {
@@ -58,7 +54,7 @@
       width: 18px;
       height: 18px;
       left: 0;
-      top: 0;
+      top: 4px;
       text-align: center;
       position: absolute; }
 

@@ -271,14 +271,22 @@ var TreeNode = function (_React$Component) {
     }
     var children = props.children;
     var newChildren = children;
-    var allTreeNode = undefined;
+    // 确定所有子节点是否是TreeNode
+    var allTreeNode = false;
     if (Array.isArray(children)) {
-      allTreeNode = children.every(function (item) {
-        return item.type === TreeNode;
-      });
+      for (var index = 0; index < children.length; index++) {
+        var item = children[index];
+        allTreeNode = item.type.isTreeNode == 1;
+        if (!allTreeNode) {
+          //当检查到子节点中有不是 TreeNode 的，则直接结束检查。同时不会渲染所有子节点
+          break;
+        }
+      }
+    } else if (children && children.type && children.type.isTreeNode == 1) {
+      allTreeNode = true;
     }
-    //如果props.children的长度大于0才可以生成子对象
-    if (children && children.length > 0 && (children.type === TreeNode || allTreeNode)) {
+    //  如果props.children的长度大于0才可以生成子对象
+    if (allTreeNode && _react2["default"].Children.count(children)) {
       var _cls;
 
       var cls = (_cls = {}, _defineProperty(_cls, props.prefixCls + '-child-tree', true), _defineProperty(_cls, props.prefixCls + '-child-tree-open', props.expanded), _cls);

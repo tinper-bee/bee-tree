@@ -173,6 +173,12 @@ $treePrefixCls : "u-tree";
     border: 0 none;
     cursor: pointer;
     outline: none;
+    i.uf{
+      padding: 0px;
+    }
+    + .u-tree-title{
+      margin-left: 2px;
+    }
   }
   li span.u-tree-icon_loading:after {
     display: inline-block;

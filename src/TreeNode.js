@@ -320,8 +320,24 @@ class TreeNode extends React.Component {
     };
     const selectHandle = () => {
       const titleClass=props.titleClass?prefixCls+'-title'+' '+props.className:prefixCls+'-title';
-      const icon = (props.showIcon || props.loadData && this.state.dataLoading) ?
-        <span className={classNames(iconEleCls)}></span> : null;
+      // const icon = (props.showIcon || props.loadData && this.state.dataLoading) ?
+      //   <span className={classNames(iconEleCls)}></span> : null;
+      let icon;
+      if(props.showIcon && props.icon){
+        icon = <span
+                  className={classNames(
+                    `${prefixCls}-iconEle`,
+                    `${prefixCls}-icon__customize`,
+                  )}
+                >
+                  {typeof currentIcon === 'function' ?
+                    React.createElement(props.icon, {
+                      ...this.props,
+                    }) : props.icon}
+                </span>
+      }else if(props.showIcon || props.loadData && this.state.dataLoading){
+        icon = <span className={classNames(iconEleCls)}></span>
+      }
       const title = <span className={titleClass} style={props.titleStyle} >{content}</span>;
       const wrap = `${prefixCls}-node-content-wrapper`;
       const domProps = {

@@ -5414,6 +5414,12 @@ a, .mdl-accordion, .mdl-button, .mdl-card, .mdl-checkbox, .mdl-dropdown-menu,
     border: 0 none;
     cursor: pointer;
     outline: none; }
+    .u-tree li span.u-tree-switcher i.uf,
+    .u-tree li span.u-tree-iconEle i.uf {
+      padding: 0px; }
+    .u-tree li span.u-tree-switcher + .u-tree-title,
+    .u-tree li span.u-tree-iconEle + .u-tree-title {
+      margin-left: 2px; }
   .u-tree li span.u-tree-icon_loading:after {
     display: inline-block;
     vertical-align: middle;

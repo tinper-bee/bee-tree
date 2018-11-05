@@ -10,7 +10,7 @@ import React, {
 	Component
 } from 'react';
 import Tree from '../../src';
-
+import Icon from 'bee-icon';
 const TreeNode = Tree.TreeNode;
 
 const defaultProps = {
@@ -50,16 +50,17 @@ class Demo1 extends Component {
 					defaultSelectedKeys={this.state.defaultSelectedKeys}
 					defaultCheckedKeys = {this.state.defaultCheckedKeys}
 					checkStrictly
+					showIcon
 					onSelect={this.onSelect} onCheck={this.onCheck}
 					onDoubleClick={this.onDoubleClick}
 	      >
-	        <TreeNode title="parent 1" key="0-0" >
-	          <TreeNode title="parent 1-0" key="0-0-0" disabled>
-	            <TreeNode title="leaf" key="0-0-0-0" disableCheckbox />
-	            <TreeNode title="leaf" key="0-0-0-1" />
+	        <TreeNode title="parent 1" key="0-0"  icon={<Icon type="uf-treefolder" />}>
+	          <TreeNode title="parent 1-0" key="0-0-0" disabled  icon={<Icon type="uf-treefolder" />}>
+	            <TreeNode title="leaf" key="0-0-0-0" disableCheckbox icon={<Icon type="uf-list-s-o" />}/>
+	            <TreeNode title="leaf" key="0-0-0-1" icon={<Icon type="uf-list-s-o" />}/>
 	          </TreeNode>
-	          <TreeNode title="parent 1-1" key="0-0-1">
-	            <TreeNode title={<span style={{ color: '#08c' }}>sss</span>} key="0-0-1-0" />
+	          <TreeNode title="parent 1-1" key="0-0-1" icon={<Icon type="uf-treefolder" />}>
+	            <TreeNode title={<span style={{ color: '#08c' }}>sss</span>} key="0-0-1-0" icon={<Icon type="uf-list-s-o" />}/>
 	          </TreeNode>
 	        </TreeNode>
 	      </Tree>

@@ -308,16 +308,28 @@ var Tree = function (_React$Component) {
     var eventKey = treeNode.props.eventKey;
     var index = selectedKeys.indexOf(eventKey);
     var selected = void 0;
-    if (index !== -1) {
-      selected = false;
-      selectedKeys.splice(index, 1);
-    } else {
-      selected = true;
-      if (!props.multiple) {
-        selectedKeys.length = 0;
+    //cancelUnSelect为true时第二次点击时不取消选中
+    if (props.cancelUnSelect) {
+      if (index == -1) {
+        selected = true;
+        if (!props.multiple) {
+          selectedKeys.length = 0;
+        }
+        selectedKeys.push(eventKey);
       }
-      selectedKeys.push(eventKey);
+    } else {
+      if (index !== -1) {
+        selected = false;
+        selectedKeys.splice(index, 1);
+      } else {
+        selected = true;
+        if (!props.multiple) {
+          selectedKeys.length = 0;
+        }
+        selectedKeys.push(eventKey);
+      }
     }
+
     var selectedNodes = [];
     if (selectedKeys.length) {
       (0, _util.loopAllChildren)(this.props.children, function (item) {

@@ -357,7 +357,20 @@ var TreeNode = function (_React$Component) {
     var iconEleCls = (_iconEleCls = {}, _defineProperty(_iconEleCls, prefixCls + '-iconEle', true), _defineProperty(_iconEleCls, prefixCls + '-icon_loading', this.state.dataLoading), _defineProperty(_iconEleCls, prefixCls + '-icon__' + iconState, true), _iconEleCls);
     var selectHandle = function selectHandle() {
       var titleClass = props.titleClass ? prefixCls + '-title' + ' ' + props.className : prefixCls + '-title';
-      var icon = props.showIcon || props.loadData && _this4.state.dataLoading ? _react2["default"].createElement('span', { className: (0, _classnames2["default"])(iconEleCls) }) : null;
+      // const icon = (props.showIcon || props.loadData && this.state.dataLoading) ?
+      //   <span className={classNames(iconEleCls)}></span> : null;
+      var icon = void 0;
+      if (props.showIcon && props.icon) {
+        icon = _react2["default"].createElement(
+          'span',
+          {
+            className: (0, _classnames2["default"])(prefixCls + '-iconEle', prefixCls + '-icon__customize')
+          },
+          typeof currentIcon === 'function' ? _react2["default"].createElement(props.icon, _extends({}, _this4.props)) : props.icon
+        );
+      } else if (props.showIcon || props.loadData && _this4.state.dataLoading) {
+        icon = _react2["default"].createElement('span', { className: (0, _classnames2["default"])(iconEleCls) });
+      }
       var title = _react2["default"].createElement(
         'span',
         { className: titleClass, style: props.titleStyle },

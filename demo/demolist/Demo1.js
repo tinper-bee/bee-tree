@@ -51,6 +51,7 @@ class Demo1 extends Component {
 					defaultCheckedKeys = {this.state.defaultCheckedKeys}
 					checkStrictly
 					showIcon
+					cancelUnSelect={true}
 					onSelect={this.onSelect} onCheck={this.onCheck}
 					onDoubleClick={this.onDoubleClick}
 	      >

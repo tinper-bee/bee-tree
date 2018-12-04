@@ -279,16 +279,28 @@ class Tree extends React.Component {
     const eventKey = treeNode.props.eventKey;
     const index = selectedKeys.indexOf(eventKey);
     let selected;
-    if (index !== -1) {
-      selected = false;
-      selectedKeys.splice(index, 1);
-    } else {
-      selected = true;
-      if (!props.multiple) {
-        selectedKeys.length = 0;
+    //cancelUnSelect为true时第二次点击时不取消选中
+    if(props.cancelUnSelect){
+      if (index == -1) {
+        selected = true;
+        if (!props.multiple) {
+          selectedKeys.length = 0;
+        }
+        selectedKeys.push(eventKey);
       }
-      selectedKeys.push(eventKey);
+    }else{
+      if (index !== -1) {
+        selected = false;
+        selectedKeys.splice(index, 1);
+      } else {
+        selected = true;
+        if (!props.multiple) {
+          selectedKeys.length = 0;
+        }
+        selectedKeys.push(eventKey);
+      }
     }
+    
     const selectedNodes = [];
     if (selectedKeys.length) {
       loopAllChildren(this.props.children, (item) => {

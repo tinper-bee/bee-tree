@@ -18,6 +18,7 @@
 |checkStrictly|精细的检查每个节点|bool|false
 |defaultSelectedKeys|指定选中的节点key|String[]|[]
 |selectedKeys|指定选中的节点keys(controlled)|String[]|-
+|cancelUnSelect|选中的节点第二次点击时还是选中，不自动取消选中|bool|false
 |showLine|是否显示连接线|bool|false
 |openIcon|自定义展开节点图标的名称[参考这里](http://bee.tinper.org/bee-icon)String[]|-
 |closeIcon|自定义关闭节点图标的名称[参考这里](http://bee.tinper.org/bee-icon)String[]|-

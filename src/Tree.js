@@ -1,5 +1,6 @@
 /* eslint no-console:0 */
 import React from 'react';
+
 import classNames from 'classnames';
 import {
   loopAllChildren,
@@ -12,7 +13,7 @@ import {
   arraysEqual,
 } from './util';
 import PropTypes from 'prop-types';
-
+import { KeyCode } from 'tinper-bee-core';
 
 function noop() {}
 
@@ -172,12 +173,26 @@ class Tree extends React.Component {
       node: treeNode
     });
   }
-
-  onExpand(treeNode) {
-    const expanded = !treeNode.props.expanded;
+/**
+ *
+ *
+ * @param {*} treeNode 当前操作的节点
+ * @param {*} keyType 键盘事件通用的key类型 left 为收起，right为展开
+ * @returns
+ * @memberof Tree
+ */
+onExpand(treeNode,keyType) {
+    let expanded = !treeNode.props.expanded;
     const controlled = 'expandedKeys' in this.props;
     const expandedKeys = [...this.state.expandedKeys];
     const index = expandedKeys.indexOf(treeNode.props.eventKey);
+
+    if(keyType == 'left'){
+      expanded = false;
+    }else if(keyType == 'right'){
+      expanded = true;
+    }
+  
     if (expanded && index === -1) {
       expandedKeys.push(treeNode.props.eventKey);
     } else if (!expanded && index > -1) {
@@ -276,7 +291,7 @@ class Tree extends React.Component {
   onSelect(treeNode) {
     const props = this.props;
     const selectedKeys = [...this.state.selectedKeys];
-    const eventKey = treeNode.props.eventKey;
+    const eventKey = treeNode.props.eventKey || treeNode.key;
     const index = selectedKeys.indexOf(eventKey);
     let selected;
     //cancelUnSelect为true时第二次点击时不取消选中
@@ -372,11 +387,66 @@ class Tree extends React.Component {
     });
   }
 
+  getTreeNode(){
+    const props = this.props;
+ 
+  }
   // all keyboard events callbacks run from here at first
-  onKeyDown(e) {
-    e.preventDefault();
+  onKeyDown(e,treeNode) {
+    event.preventDefault()
+    // console.log('-----'+e.keyCode);
+    const props = this.props;
+    const currentPos = treeNode.props.pos;
+    const currentIndex = currentPos.substr(currentPos.lastIndexOf('-')+1);
+    //向下键down
+    if(e.keyCode == KeyCode.DOWN){
+      const nextIndex =  parseInt(currentIndex) + 1;
+        const nextPos = currentPos.substr(0,currentPos.lastIndexOf('-')+1)+nextIndex;
+        let nextTreeNode;
+      //选中下一个相邻的节点
+      loopAllChildren(props.children,function(item,index,pos,newKey){
+        if(pos == nextPos){
+          nextTreeNode = item;
+        }
+      })
+      //查询的下一个节点不为空的话，则选中
+      if(nextTreeNode){
+        
+        e.target.parentElement.nextElementSibling.querySelector('a').focus()
+        this.onSelect(nextTreeNode);
+      }
+    }else if(e.keyCode == KeyCode.UP && currentIndex>0){
+      // 向上键Up
+      const preIndex =  parseInt(currentIndex) - 1;
+      const prePos = currentPos.substr(0,currentPos.lastIndexOf('-')+1)+preIndex;
+      let prevTreeNode;
+      //选中上一个相邻的节点
+      loopAllChildren(props.children,function(item,index,pos,newKey){
+        if(pos == prePos){
+          prevTreeNode = item;
+        }
+      })
+      //查询的上一个节点不为空的话，则选中
+      if(prevTreeNode){
+      
+        e.target.parentElement.previousElementSibling.querySelector('a').focus()
+        this.onSelect(prevTreeNode);
+      }
+   
+    }else if(e.keyCode == KeyCode.LEFT){
+      // 收起树节点
+      this.onExpand(treeNode,'left');
+    }else if (e.keyCode == KeyCode.RIGHT){
+      // 展开树节点
+      this.onExpand(treeNode,'right');
+    }else if (e.keyCode == KeyCode.SPACE && props.checkable){
+      // 如果是多选tree则进行选中或者反选该节点
+      this.onCheck(treeNode);
+    }
+    // e.preventDefault();
   }
 
+  
   getFilterExpandedKeys(props, expandKeyProp, expandAll) {
     const keys = props[expandKeyProp];
     if (!expandAll && !props.autoExpandParent) {
@@ -515,7 +585,7 @@ class Tree extends React.Component {
     if(child.props.hasOwnProperty('draggable')){
       draggable = child.props.draggable;
     }
-
+  
     const cloneProps = {
       ref: `treeNode-${key}`,
       root: this,
@@ -527,6 +597,7 @@ class Tree extends React.Component {
       onMouseLeave: props.onMouseLeave,
       onRightClick: props.onRightClick,
       onDoubleClick:props.onDoubleClick,
+      onKeyDown:props.onKeyDown,
       prefixCls: props.prefixCls,
       showLine: props.showLine,
       showIcon: props.showIcon,
@@ -541,7 +612,9 @@ class Tree extends React.Component {
       openAnimation: props.openAnimation,
       filterTreeNode: this.filterTreeNode.bind(this),
       openIcon: props.openIcon,
-      closeIcon: props.closeIcon
+      closeIcon: props.closeIcon,
+      focusable:props.focusable,
+      tabIndexKey: state.selectedKeys[0]
     };
     if (props.checkable) {
       cloneProps.checkable = props.checkable;
@@ -579,8 +652,8 @@ class Tree extends React.Component {
     };
 
     if (props.focusable) {
-      domProps.tabIndex = '0';
-      domProps.onKeyDown = this.onKeyDown;
+      // domProps.tabIndex = '0';//需求改成了默认选择第一个节点或者选中的节点
+      // domProps.onKeyDown = this.onKeyDown;//添加到具体的treeNode上了
     }
     const getTreeNodesStates = () => {
       this.treeNodesStates = {};
@@ -680,6 +753,7 @@ Tree.propTypes = {
   onDragEnd: PropTypes.func,
   filterTreeNode: PropTypes.func,
   openTransitionName: PropTypes.string,
+  focusable: PropTypes.bool,
   openAnimation: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
 };
 

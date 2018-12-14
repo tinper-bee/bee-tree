@@ -1,4 +1,5 @@
 import React from 'react';
+import ReactDOM from 'react-dom'
 import classNames from 'classnames';
 import Animate from 'bee-animate';
 import {
@@ -28,7 +29,8 @@ class TreeNode extends React.Component {
       'onDragLeave',
       'onDrop',
       'onDragEnd',
-      'onDoubleClick'
+      'onDoubleClick',
+      'onKeyDown'
     ].forEach((m) => {
       this[m] = this[m].bind(this);
     });
@@ -165,6 +167,7 @@ class TreeNode extends React.Component {
 
   // keyboard event support
   onKeyDown(e) {
+    this.props.root.onKeyDown(e,this);
     e.preventDefault();
   }
 
@@ -373,6 +376,7 @@ class TreeNode extends React.Component {
         if (props.onMouseLeave) {
           domProps.onMouseLeave = this.onMouseLeave;
         }
+        
 
         if (props.draggable) {
           domProps.className += ' draggable';
@@ -385,6 +389,21 @@ class TreeNode extends React.Component {
           domProps.onDragStart = this.onDragStart;
         }
       }
+      //设置tabIndex
+      if(props.focusable){
+        domProps.onKeyDown = this.onKeyDown;
+        domProps.tabIndex = -1;
+        if(props.tabIndexKey){
+          if(props.eventKey == props.tabIndexKey){
+            domProps.tabIndex = 0;
+          }
+        }else if(props.pos == '0-0'){
+          domProps.tabIndex = 0;
+        }
+      }
+     
+
+    
       return (
         <a ref="selectHandle" title={typeof content === 'string' ? content : ''} {...domProps}>
           {icon}{title}

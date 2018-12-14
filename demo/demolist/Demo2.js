@@ -8,8 +8,8 @@
 import React, { Component } from 'react';
 import Tree from '../../src';
 
-const x = 3;
-const y = 2;
+const x = 6;
+const y = 5;
 const z = 1;
 const gData = [];
 
@@ -85,10 +85,11 @@ class Demo2 extends Component{
     return (
       <Tree
         checkable
+        focusable
         onExpand={this.onExpand} expandedKeys={this.state.expandedKeys}
         autoExpandParent={this.state.autoExpandParent}
-        onCheck={this.onCheck} checkedKeys={this.state.checkedKeys}
-        onSelect={this.onSelect} selectedKeys={this.state.selectedKeys}
+        onCheck={this.onCheck} 
+        onSelect={this.onSelect} 
       >
         {loop(gData)}
       </Tree>

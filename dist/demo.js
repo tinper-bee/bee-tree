@@ -6878,6 +6878,94 @@
 	  Tree.prototype.getTreeNode = function getTreeNode() {
 	    var props = this.props;
 	  };
+	
+	  Tree.prototype.goDown = function goDown(currentPos, currentIndex, e, treeNode) {
+	    var props = this.props;
+	    var nextIndex = parseInt(currentIndex) + 1;
+	
+	    var nextPos = void 0,
+	        backNextPos = void 0;
+	    var nextTreeNode = void 0,
+	        backNextTreeNode = void 0;
+	    //是否为展开的节点，如果展开获取第一个子节点的信息，如果没有取相邻节点，若也没有相邻节点则获取父节点的下一个节点
+	    if (props.expandedKeys.indexOf(treeNode.props.eventKey) > -1) {
+	      nextPos = currentPos + '-0';
+	    } else {
+	      nextPos = currentPos.substr(0, currentPos.lastIndexOf('-') + 1) + nextIndex;
+	      //若向下的节点没有了，找到父级相邻节点
+	      var tempPosArr = currentPos.split('-');
+	      var tempPosArrLength = tempPosArr.length;
+	      backNextPos = tempPosArrLength > 2 && tempPosArr.slice(0, tempPosArrLength - 2).join('-') + '-' + (parseInt(tempPosArr[tempPosArrLength - 2]) + 1);
+	    }
+	    //选中下一个相邻的节点
+	    (0, _util.loopAllChildren)(props.children, function (item, index, pos, newKey) {
+	      if (pos == nextPos) {
+	        nextTreeNode = item;
+	      } else if (backNextPos && pos == backNextPos) {
+	        backNextTreeNode = item;
+	      }
+	    });
+	    //如果没有下一个节点，则获取父节点的下一个节点
+	    if (!nextTreeNode) {
+	      nextTreeNode = backNextTreeNode;
+	      nextPos = backNextPos;
+	    }
+	
+	    //查询的下一个节点不为空的话，则选中
+	    if (nextTreeNode) {
+	      var queryInfo = 'a[pos="' + nextPos + '"]';
+	      var focusEle = e.target.parentElement.parentElement.parentElement.parentElement.querySelector(queryInfo);
+	      focusEle && focusEle.focus();
+	      this.onSelect(nextTreeNode);
+	    }
+	  };
+	
+	  Tree.prototype.goUp = function goUp(currentPos, currentIndex, e, treeNode) {
+	    var props = this.props;
+	    if (currentIndex == 0 && currentPos.length === 3) {
+	      return;
+	    }
+	    // 向上键Up
+	    var preIndex = parseInt(currentIndex) - 1;
+	    var prePos = void 0;
+	    if (preIndex >= 0) {
+	      prePos = currentPos.substr(0, currentPos.lastIndexOf('-') + 1) + preIndex;
+	    } else {
+	      prePos = currentPos.substr(0, currentPos.lastIndexOf('-'));
+	    }
+	
+	    var prevTreeNode = void 0,
+	        preElement = void 0;
+	    //选中上一个相邻的节点
+	    (0, _util.loopAllChildren)(props.children, function (item, index, pos, newKey) {
+	      if (pos == prePos) {
+	        prevTreeNode = item;
+	      }
+	    });
+	    //查询的上一个节点不为空的话，则选中
+	    if (prevTreeNode) {
+	      if (preIndex >= 0) {
+	        //如果上面的节点展开则默认选择最后一个子节点
+	        if (props.expandedKeys.indexOf(prevTreeNode.key) > -1) {
+	          preElement = e.target.parentElement.previousElementSibling.querySelector('ul li:last-child a');
+	          prePos = preElement.getAttribute('pos');
+	          (0, _util.loopAllChildren)(props.children, function (item, index, pos, newKey) {
+	            if (pos == prePos) {
+	              prevTreeNode = item;
+	            }
+	          });
+	        } else {
+	          //上一个节点没有展开
+	          preElement = e.target.parentElement.previousElementSibling.querySelector('a');
+	        }
+	      } else {
+	        // 不存在上一个节点时，选中它的父节点
+	        preElement = e.target.parentElement.parentElement.parentElement.querySelector('a');
+	      }
+	    }
+	    preElement && preElement.focus();
+	    this.onSelect(prevTreeNode);
+	  };
 	  // all keyboard events callbacks run from here at first
 	
 	
@@ -6889,38 +6977,9 @@
 	    var currentIndex = currentPos.substr(currentPos.lastIndexOf('-') + 1);
 	    //向下键down
 	    if (e.keyCode == _tinperBeeCore.KeyCode.DOWN) {
-	      var nextIndex = parseInt(currentIndex) + 1;
-	      var nextPos = currentPos.substr(0, currentPos.lastIndexOf('-') + 1) + nextIndex;
-	      var nextTreeNode = void 0;
-	      //选中下一个相邻的节点
-	      (0, _util.loopAllChildren)(props.children, function (item, index, pos, newKey) {
-	        if (pos == nextPos) {
-	          nextTreeNode = item;
-	        }
-	      });
-	      //查询的下一个节点不为空的话，则选中
-	      if (nextTreeNode) {
-	
-	        e.target.parentElement.nextElementSibling.querySelector('a').focus();
-	        this.onSelect(nextTreeNode);
-	      }
-	    } else if (e.keyCode == _tinperBeeCore.KeyCode.UP && currentIndex > 0) {
-	      // 向上键Up
-	      var preIndex = parseInt(currentIndex) - 1;
-	      var prePos = currentPos.substr(0, currentPos.lastIndexOf('-') + 1) + preIndex;
-	      var prevTreeNode = void 0;
-	      //选中上一个相邻的节点
-	      (0, _util.loopAllChildren)(props.children, function (item, index, pos, newKey) {
-	        if (pos == prePos) {
-	          prevTreeNode = item;
-	        }
-	      });
-	      //查询的上一个节点不为空的话，则选中
-	      if (prevTreeNode) {
-	
-	        e.target.parentElement.previousElementSibling.querySelector('a').focus();
-	        this.onSelect(prevTreeNode);
-	      }
+	      this.goDown(currentPos, currentIndex, e, treeNode);
+	    } else if (e.keyCode == _tinperBeeCore.KeyCode.UP) {
+	      this.goUp(currentPos, currentIndex, e, treeNode);
 	    } else if (e.keyCode == _tinperBeeCore.KeyCode.LEFT) {
 	      // 收起树节点
 	      this.onExpand(treeNode, 'left');
@@ -8047,7 +8106,7 @@
 	
 	      return _react2['default'].createElement(
 	        'a',
-	        _extends({ ref: 'selectHandle', title: typeof content === 'string' ? content : '' }, domProps),
+	        _extends({ ref: 'selectHandle', pos: props.pos, title: typeof content === 'string' ? content : '' }, domProps),
 	        icon,
 	        title
 	      );

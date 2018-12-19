@@ -15,7 +15,7 @@
 |autoExpandParent|是否自定展开父节点|bool|true
 |defaultCheckedKeys|指定默认被选中的节点key|String[]|[]
 |checkedKeys|指定被选中的节点(controlled)（PS：当指定的是父节点，所有的子节点也会被指定；当指定的是子节点，父节点也会被选中。当checkable和checkStrictly都为true,子节点与父节点的选择情况都不会影响到对方|String[]/{checked:Array,halfChecked:Array}|[]
-|checkStrictly|精细的检查每个节点|bool|false
+|checkStrictly|checkable状态下节点选择完全受控（父子节点选中状态不再关联）|bool|false
 |defaultSelectedKeys|指定选中的节点key|String[]|[]
 |selectedKeys|指定选中的节点keys(controlled)|String[]|-
 |cancelUnSelect|选中的节点第二次点击时还是选中，不自动取消选中|bool|false

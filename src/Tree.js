@@ -391,6 +391,93 @@ onExpand(treeNode,keyType) {
     const props = this.props;
  
   }
+
+  goDown(currentPos,currentIndex,e,treeNode){
+    const props = this.props;
+    const nextIndex =  parseInt(currentIndex) + 1;
+      
+    let nextPos,backNextPos;
+    let nextTreeNode,backNextTreeNode;
+    //是否为展开的节点，如果展开获取第一个子节点的信息，如果没有取相邻节点，若也没有相邻节点则获取父节点的下一个节点
+    if(props.expandedKeys.indexOf(treeNode.props.eventKey)>-1){
+      nextPos = currentPos + '-0';
+    }else{
+      nextPos = currentPos.substr(0,currentPos.lastIndexOf('-')+1)+nextIndex;
+     //若向下的节点没有了，找到父级相邻节点
+      const tempPosArr = currentPos.split('-');
+      const tempPosArrLength = tempPosArr.length;
+      backNextPos = tempPosArrLength>2 && tempPosArr.slice(0,tempPosArrLength-2).join('-')+'-' + (parseInt(tempPosArr[tempPosArrLength-2])+1)
+    }
+    //选中下一个相邻的节点
+    loopAllChildren(props.children,function(item,index,pos,newKey){
+      if(pos == nextPos){
+        nextTreeNode = item;
+      }else if(backNextPos && pos == backNextPos){
+        backNextTreeNode = item;
+      }
+    })
+    //如果没有下一个节点，则获取父节点的下一个节点
+    if(!nextTreeNode){
+      nextTreeNode = backNextTreeNode;
+      nextPos = backNextPos;
+    }
+   
+    //查询的下一个节点不为空的话，则选中
+    if(nextTreeNode){
+      const queryInfo = `a[pos="${nextPos}"]`;
+      const focusEle =  e.target.parentElement.parentElement.parentElement.parentElement.querySelector(queryInfo);
+      focusEle && focusEle.focus()
+      this.onSelect(nextTreeNode);
+    }
+  }
+
+  goUp(currentPos,currentIndex,e,treeNode){
+    const props = this.props;
+    if(currentIndex == 0 && currentPos.length === 3){
+      return
+    }
+    // 向上键Up
+    const preIndex =  parseInt(currentIndex) - 1;
+    let prePos;
+    if(preIndex>= 0){
+      prePos = currentPos.substr(0,currentPos.lastIndexOf('-')+1)+preIndex;
+    }else{
+      prePos = currentPos.substr(0,currentPos.lastIndexOf('-'));
+    }
+    
+    let prevTreeNode,preElement;
+    //选中上一个相邻的节点
+    loopAllChildren(props.children,function(item,index,pos,newKey){
+      if(pos == prePos){
+        prevTreeNode = item;
+      }
+    })
+    //查询的上一个节点不为空的话，则选中
+    if(prevTreeNode){
+      if(preIndex >=0){
+        //如果上面的节点展开则默认选择最后一个子节点
+        if(props.expandedKeys.indexOf(prevTreeNode.key)>-1){
+          preElement =  e.target.parentElement.previousElementSibling.querySelector('ul li:last-child a');
+          prePos = preElement.getAttribute('pos');
+          loopAllChildren(props.children,function(item,index,pos,newKey){
+            if(pos == prePos){
+              prevTreeNode = item;
+            }
+          })
+        }else{
+          //上一个节点没有展开
+          preElement =  e.target.parentElement.previousElementSibling.querySelector('a')
+        }
+      }else{
+        // 不存在上一个节点时，选中它的父节点
+        preElement =  e.target.parentElement.parentElement.parentElement.querySelector('a')
+      }
+      
+      
+    }
+    preElement && preElement.focus();
+    this.onSelect(prevTreeNode);
+  }
   // all keyboard events callbacks run from here at first
   onKeyDown(e,treeNode) {
     event.preventDefault()
@@ -400,38 +487,9 @@ onExpand(treeNode,keyType) {
     const currentIndex = currentPos.substr(currentPos.lastIndexOf('-')+1);
     //向下键down
     if(e.keyCode == KeyCode.DOWN){
-      const nextIndex =  parseInt(currentIndex) + 1;
-        const nextPos = currentPos.substr(0,currentPos.lastIndexOf('-')+1)+nextIndex;
-        let nextTreeNode;
-      //选中下一个相邻的节点
-      loopAllChildren(props.children,function(item,index,pos,newKey){
-        if(pos == nextPos){
-          nextTreeNode = item;
-        }
-      })
-      //查询的下一个节点不为空的话，则选中
-      if(nextTreeNode){
-        
-        e.target.parentElement.nextElementSibling.querySelector('a').focus()
-        this.onSelect(nextTreeNode);
-      }
-    }else if(e.keyCode == KeyCode.UP && currentIndex>0){
-      // 向上键Up
-      const preIndex =  parseInt(currentIndex) - 1;
-      const prePos = currentPos.substr(0,currentPos.lastIndexOf('-')+1)+preIndex;
-      let prevTreeNode;
-      //选中上一个相邻的节点
-      loopAllChildren(props.children,function(item,index,pos,newKey){
-        if(pos == prePos){
-          prevTreeNode = item;
-        }
-      })
-      //查询的上一个节点不为空的话，则选中
-      if(prevTreeNode){
-      
-        e.target.parentElement.previousElementSibling.querySelector('a').focus()
-        this.onSelect(prevTreeNode);
-      }
+      this.goDown(currentPos,currentIndex,e,treeNode);
+    }else if(e.keyCode == KeyCode.UP){
+      this.goUp(currentPos,currentIndex,e,treeNode);
    
     }else if(e.keyCode == KeyCode.LEFT){
       // 收起树节点

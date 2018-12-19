@@ -20,6 +20,8 @@ var _propTypes = require('prop-types');
 
 var _propTypes2 = _interopRequireDefault(_propTypes);
 
+var _tinperBeeCore = require('tinper-bee-core');
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
 function _defaults(obj, defaults) { var keys = Object.getOwnPropertyNames(defaults); for (var i = 0; i < keys.length; i++) { var key = keys[i]; var value = Object.getOwnPropertyDescriptor(defaults, key); if (value && value.configurable && obj[key] === undefined) { Object.defineProperty(obj, key, value); } } return obj; }
@@ -197,14 +199,30 @@ var Tree = function (_React$Component) {
       node: treeNode
     });
   };
+  /**
+   *
+   *
+   * @param {*} treeNode 当前操作的节点
+   * @param {*} keyType 键盘事件通用的key类型 left 为收起，right为展开
+   * @returns
+   * @memberof Tree
+   */
 
-  Tree.prototype.onExpand = function onExpand(treeNode) {
+
+  Tree.prototype.onExpand = function onExpand(treeNode, keyType) {
     var _this2 = this;
 
     var expanded = !treeNode.props.expanded;
     var controlled = 'expandedKeys' in this.props;
     var expandedKeys = [].concat(_toConsumableArray(this.state.expandedKeys));
     var index = expandedKeys.indexOf(treeNode.props.eventKey);
+
+    if (keyType == 'left') {
+      expanded = false;
+    } else if (keyType == 'right') {
+      expanded = true;
+    }
+
     if (expanded && index === -1) {
       expandedKeys.push(treeNode.props.eventKey);
     } else if (!expanded && index > -1) {
@@ -305,7 +323,7 @@ var Tree = function (_React$Component) {
   Tree.prototype.onSelect = function onSelect(treeNode) {
     var props = this.props;
     var selectedKeys = [].concat(_toConsumableArray(this.state.selectedKeys));
-    var eventKey = treeNode.props.eventKey;
+    var eventKey = treeNode.props.eventKey || treeNode.key;
     var index = selectedKeys.indexOf(eventKey);
     var selected = void 0;
     //cancelUnSelect为true时第二次点击时不取消选中
@@ -400,11 +418,122 @@ var Tree = function (_React$Component) {
     });
   };
 
+  Tree.prototype.getTreeNode = function getTreeNode() {
+    var props = this.props;
+  };
+
+  Tree.prototype.goDown = function goDown(currentPos, currentIndex, e, treeNode) {
+    var props = this.props;
+    var nextIndex = parseInt(currentIndex) + 1;
+
+    var nextPos = void 0,
+        backNextPos = void 0;
+    var nextTreeNode = void 0,
+        backNextTreeNode = void 0;
+    //是否为展开的节点，如果展开获取第一个子节点的信息，如果没有取相邻节点，若也没有相邻节点则获取父节点的下一个节点
+    if (props.expandedKeys.indexOf(treeNode.props.eventKey) > -1) {
+      nextPos = currentPos + '-0';
+    } else {
+      nextPos = currentPos.substr(0, currentPos.lastIndexOf('-') + 1) + nextIndex;
+      //若向下的节点没有了，找到父级相邻节点
+      var tempPosArr = currentPos.split('-');
+      var tempPosArrLength = tempPosArr.length;
+      backNextPos = tempPosArrLength > 2 && tempPosArr.slice(0, tempPosArrLength - 2).join('-') + '-' + (parseInt(tempPosArr[tempPosArrLength - 2]) + 1);
+    }
+    //选中下一个相邻的节点
+    (0, _util.loopAllChildren)(props.children, function (item, index, pos, newKey) {
+      if (pos == nextPos) {
+        nextTreeNode = item;
+      } else if (backNextPos && pos == backNextPos) {
+        backNextTreeNode = item;
+      }
+    });
+    //如果没有下一个节点，则获取父节点的下一个节点
+    if (!nextTreeNode) {
+      nextTreeNode = backNextTreeNode;
+      nextPos = backNextPos;
+    }
+
+    //查询的下一个节点不为空的话，则选中
+    if (nextTreeNode) {
+      var queryInfo = 'a[pos="' + nextPos + '"]';
+      var focusEle = e.target.parentElement.parentElement.parentElement.parentElement.querySelector(queryInfo);
+      focusEle && focusEle.focus();
+      this.onSelect(nextTreeNode);
+    }
+  };
+
+  Tree.prototype.goUp = function goUp(currentPos, currentIndex, e, treeNode) {
+    var props = this.props;
+    if (currentIndex == 0 && currentPos.length === 3) {
+      return;
+    }
+    // 向上键Up
+    var preIndex = parseInt(currentIndex) - 1;
+    var prePos = void 0;
+    if (preIndex >= 0) {
+      prePos = currentPos.substr(0, currentPos.lastIndexOf('-') + 1) + preIndex;
+    } else {
+      prePos = currentPos.substr(0, currentPos.lastIndexOf('-'));
+    }
+
+    var prevTreeNode = void 0,
+        preElement = void 0;
+    //选中上一个相邻的节点
+    (0, _util.loopAllChildren)(props.children, function (item, index, pos, newKey) {
+      if (pos == prePos) {
+        prevTreeNode = item;
+      }
+    });
+    //查询的上一个节点不为空的话，则选中
+    if (prevTreeNode) {
+      if (preIndex >= 0) {
+        //如果上面的节点展开则默认选择最后一个子节点
+        if (props.expandedKeys.indexOf(prevTreeNode.key) > -1) {
+          preElement = e.target.parentElement.previousElementSibling.querySelector('ul li:last-child a');
+          prePos = preElement.getAttribute('pos');
+          (0, _util.loopAllChildren)(props.children, function (item, index, pos, newKey) {
+            if (pos == prePos) {
+              prevTreeNode = item;
+            }
+          });
+        } else {
+          //上一个节点没有展开
+          preElement = e.target.parentElement.previousElementSibling.querySelector('a');
+        }
+      } else {
+        // 不存在上一个节点时，选中它的父节点
+        preElement = e.target.parentElement.parentElement.parentElement.querySelector('a');
+      }
+    }
+    preElement && preElement.focus();
+    this.onSelect(prevTreeNode);
+  };
   // all keyboard events callbacks run from here at first
 
 
-  Tree.prototype.onKeyDown = function onKeyDown(e) {
-    e.preventDefault();
+  Tree.prototype.onKeyDown = function onKeyDown(e, treeNode) {
+    event.preventDefault();
+    // console.log('-----'+e.keyCode);
+    var props = this.props;
+    var currentPos = treeNode.props.pos;
+    var currentIndex = currentPos.substr(currentPos.lastIndexOf('-') + 1);
+    //向下键down
+    if (e.keyCode == _tinperBeeCore.KeyCode.DOWN) {
+      this.goDown(currentPos, currentIndex, e, treeNode);
+    } else if (e.keyCode == _tinperBeeCore.KeyCode.UP) {
+      this.goUp(currentPos, currentIndex, e, treeNode);
+    } else if (e.keyCode == _tinperBeeCore.KeyCode.LEFT) {
+      // 收起树节点
+      this.onExpand(treeNode, 'left');
+    } else if (e.keyCode == _tinperBeeCore.KeyCode.RIGHT) {
+      // 展开树节点
+      this.onExpand(treeNode, 'right');
+    } else if (e.keyCode == _tinperBeeCore.KeyCode.SPACE && props.checkable) {
+      // 如果是多选tree则进行选中或者反选该节点
+      this.onCheck(treeNode);
+    }
+    // e.preventDefault();
   };
 
   Tree.prototype.getFilterExpandedKeys = function getFilterExpandedKeys(props, expandKeyProp, expandAll) {
@@ -555,6 +684,7 @@ var Tree = function (_React$Component) {
       onMouseLeave: props.onMouseLeave,
       onRightClick: props.onRightClick,
       onDoubleClick: props.onDoubleClick,
+      onKeyDown: props.onKeyDown,
       prefixCls: props.prefixCls,
       showLine: props.showLine,
       showIcon: props.showIcon,
@@ -569,7 +699,9 @@ var Tree = function (_React$Component) {
       openAnimation: props.openAnimation,
       filterTreeNode: this.filterTreeNode.bind(this),
       openIcon: props.openIcon,
-      closeIcon: props.closeIcon
+      closeIcon: props.closeIcon,
+      focusable: props.focusable,
+      tabIndexKey: state.selectedKeys[0]
     };
     if (props.checkable) {
       cloneProps.checkable = props.checkable;
@@ -609,8 +741,8 @@ var Tree = function (_React$Component) {
     };
 
     if (props.focusable) {
-      domProps.tabIndex = '0';
-      domProps.onKeyDown = this.onKeyDown;
+      // domProps.tabIndex = '0';//需求改成了默认选择第一个节点或者选中的节点
+      // domProps.onKeyDown = this.onKeyDown;//添加到具体的treeNode上了
     }
     var getTreeNodesStates = function getTreeNodesStates() {
       _this4.treeNodesStates = {};
@@ -705,6 +837,7 @@ Tree.propTypes = {
   onDragEnd: _propTypes2["default"].func,
   filterTreeNode: _propTypes2["default"].func,
   openTransitionName: _propTypes2["default"].string,
+  focusable: _propTypes2["default"].bool,
   openAnimation: _propTypes2["default"].oneOfType([_propTypes2["default"].string, _propTypes2["default"].object])
 };
 

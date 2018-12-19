@@ -12,6 +12,10 @@ var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
 
+var _reactDom = require('react-dom');
+
+var _reactDom2 = _interopRequireDefault(_reactDom);
+
 var _classnames = require('classnames');
 
 var _classnames2 = _interopRequireDefault(_classnames);
@@ -53,7 +57,7 @@ var TreeNode = function (_React$Component) {
 
     var _this2 = _possibleConstructorReturn(this, _React$Component.call(this, props));
 
-    ['onExpand', 'onCheck', 'onContextMenu', 'onMouseEnter', 'onMouseLeave', 'onDragStart', 'onDragEnter', 'onDragOver', 'onDragLeave', 'onDrop', 'onDragEnd', 'onDoubleClick'].forEach(function (m) {
+    ['onExpand', 'onCheck', 'onContextMenu', 'onMouseEnter', 'onMouseLeave', 'onDragStart', 'onDragEnter', 'onDragOver', 'onDragLeave', 'onDrop', 'onDragEnd', 'onDoubleClick', 'onKeyDown'].forEach(function (m) {
       _this2[m] = _this2[m].bind(_this2);
     });
     _this2.state = {
@@ -191,6 +195,7 @@ var TreeNode = function (_React$Component) {
 
 
   TreeNode.prototype.onKeyDown = function onKeyDown(e) {
+    this.props.root.onKeyDown(e, this);
     e.preventDefault();
   };
 
@@ -422,9 +427,22 @@ var TreeNode = function (_React$Component) {
           domProps.onDragStart = _this4.onDragStart;
         }
       }
+      //设置tabIndex
+      if (props.focusable) {
+        domProps.onKeyDown = _this4.onKeyDown;
+        domProps.tabIndex = -1;
+        if (props.tabIndexKey) {
+          if (props.eventKey == props.tabIndexKey) {
+            domProps.tabIndex = 0;
+          }
+        } else if (props.pos == '0-0') {
+          domProps.tabIndex = 0;
+        }
+      }
+
       return _react2["default"].createElement(
         'a',
-        _extends({ ref: 'selectHandle', title: typeof content === 'string' ? content : '' }, domProps),
+        _extends({ ref: 'selectHandle', pos: props.pos, title: typeof content === 'string' ? content : '' }, domProps),
         icon,
         title
       );

@@ -168,7 +168,7 @@ class TreeNode extends React.Component {
   // keyboard event support
   onKeyDown(e) {
     this.props.root.onKeyDown(e,this);
-    e.preventDefault();
+    // e.preventDefault();
   }
 
   renderSwitcher(props, expandedState) {

@@ -80,7 +80,7 @@ class Demo2 extends Component{
           </TreeNode>
         );
       }
-      return <TreeNode key={item.key} title={item.key} />;
+      return <TreeNode key={item.key} title={item.key} isLeaf={true}/>;
     });
     return (
       <Tree

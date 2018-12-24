@@ -480,7 +480,7 @@ onExpand(treeNode,keyType) {
   }
   // all keyboard events callbacks run from here at first
   onKeyDown(e,treeNode) {
-    event.preventDefault()
+    // event.preventDefault()
     // console.log('-----'+e.keyCode);
     const props = this.props;
     const currentPos = treeNode.props.pos;
@@ -494,10 +494,10 @@ onExpand(treeNode,keyType) {
     }else if(e.keyCode == KeyCode.LEFT){
       // 收起树节点
       this.onExpand(treeNode,'left');
-    }else if (e.keyCode == KeyCode.RIGHT){
+    }else if (e.keyCode == KeyCode.RIGHT && !treeNode.props.isLeaf){
       // 展开树节点
       this.onExpand(treeNode,'right');
-    }else if (e.keyCode == KeyCode.SPACE && props.checkable){
+    }else if (e.keyCode == KeyCode.SPACE && props.checkable && !treeNode.props.isLeaf){
       // 如果是多选tree则进行选中或者反选该节点
       this.onCheck(treeNode);
     }

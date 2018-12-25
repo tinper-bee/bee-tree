@@ -196,7 +196,7 @@ var TreeNode = function (_React$Component) {
 
   TreeNode.prototype.onKeyDown = function onKeyDown(e) {
     this.props.root.onKeyDown(e, this);
-    e.preventDefault();
+    // e.preventDefault();
   };
 
   TreeNode.prototype.renderSwitcher = function renderSwitcher(props, expandedState) {

@@ -30,6 +30,8 @@ var _propTypes = require('prop-types');
 
 var _propTypes2 = _interopRequireDefault(_propTypes);
 
+var _tinperBeeCore = require('tinper-bee-core');
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
 function _defaults(obj, defaults) { var keys = Object.getOwnPropertyNames(defaults); for (var i = 0; i < keys.length; i++) { var key = keys[i]; var value = Object.getOwnPropertyDescriptor(defaults, key); if (value && value.configurable && obj[key] === undefined) { Object.defineProperty(obj, key, value); } } return obj; }
@@ -196,7 +198,9 @@ var TreeNode = function (_React$Component) {
 
   TreeNode.prototype.onKeyDown = function onKeyDown(e) {
     this.props.root.onKeyDown(e, this);
-    // e.preventDefault();
+    if (e.keyCode !== _tinperBeeCore.KeyCode.TAB) {
+      e.preventDefault();
+    }
   };
 
   TreeNode.prototype.renderSwitcher = function renderSwitcher(props, expandedState) {

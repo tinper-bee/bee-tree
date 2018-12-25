@@ -513,8 +513,7 @@ var Tree = function (_React$Component) {
 
 
   Tree.prototype.onKeyDown = function onKeyDown(e, treeNode) {
-    // event.preventDefault()
-    // console.log('-----'+e.keyCode);
+
     var props = this.props;
     var currentPos = treeNode.props.pos;
     var currentIndex = currentPos.substr(currentPos.lastIndexOf('-') + 1);
@@ -523,13 +522,13 @@ var Tree = function (_React$Component) {
       this.goDown(currentPos, currentIndex, e, treeNode);
     } else if (e.keyCode == _tinperBeeCore.KeyCode.UP) {
       this.goUp(currentPos, currentIndex, e, treeNode);
-    } else if (e.keyCode == _tinperBeeCore.KeyCode.LEFT) {
+    } else if (e.keyCode == _tinperBeeCore.KeyCode.LEFT && !treeNode.props.isLeaf) {
       // 收起树节点
       this.onExpand(treeNode, 'left');
     } else if (e.keyCode == _tinperBeeCore.KeyCode.RIGHT && !treeNode.props.isLeaf) {
       // 展开树节点
       this.onExpand(treeNode, 'right');
-    } else if (e.keyCode == _tinperBeeCore.KeyCode.SPACE && props.checkable && !treeNode.props.isLeaf) {
+    } else if (e.keyCode == _tinperBeeCore.KeyCode.SPACE && props.checkable) {
       // 如果是多选tree则进行选中或者反选该节点
       this.onCheck(treeNode);
     }

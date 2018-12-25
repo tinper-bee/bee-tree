@@ -6,7 +6,7 @@ import {
   browser
 } from './util';
 import PropTypes from 'prop-types';
-
+import { KeyCode } from 'tinper-bee-core';
 const browserUa = typeof window !== 'undefined' ? browser(window.navigator) : '';
 const ieOrEdge = /.*(IE|Edge).+/.test(browserUa);
 // const uaArray = browserUa.split(' ');
@@ -168,7 +168,10 @@ class TreeNode extends React.Component {
   // keyboard event support
   onKeyDown(e) {
     this.props.root.onKeyDown(e,this);
-    // e.preventDefault();
+    if(e.keyCode !== KeyCode.TAB){
+      e.preventDefault();
+    }
+    
   }
 
   renderSwitcher(props, expandedState) {

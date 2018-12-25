@@ -6980,13 +6980,13 @@
 	      this.goDown(currentPos, currentIndex, e, treeNode);
 	    } else if (e.keyCode == _tinperBeeCore.KeyCode.UP) {
 	      this.goUp(currentPos, currentIndex, e, treeNode);
-	    } else if (e.keyCode == _tinperBeeCore.KeyCode.LEFT) {
+	    } else if (e.keyCode == _tinperBeeCore.KeyCode.LEFT && !treeNode.props.isLeaf) {
 	      // 收起树节点
 	      this.onExpand(treeNode, 'left');
 	    } else if (e.keyCode == _tinperBeeCore.KeyCode.RIGHT && !treeNode.props.isLeaf) {
 	      // 展开树节点
 	      this.onExpand(treeNode, 'right');
-	    } else if (e.keyCode == _tinperBeeCore.KeyCode.SPACE && props.checkable && !treeNode.props.isLeaf) {
+	    } else if (e.keyCode == _tinperBeeCore.KeyCode.SPACE && props.checkable) {
 	      // 如果是多选tree则进行选中或者反选该节点
 	      this.onCheck(treeNode);
 	    }
@@ -7694,6 +7694,8 @@
 	
 	var _propTypes2 = _interopRequireDefault(_propTypes);
 	
+	var _tinperBeeCore = __webpack_require__(26);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 	
 	function _defaults(obj, defaults) { var keys = Object.getOwnPropertyNames(defaults); for (var i = 0; i < keys.length; i++) { var key = keys[i]; var value = Object.getOwnPropertyDescriptor(defaults, key); if (value && value.configurable && obj[key] === undefined) { Object.defineProperty(obj, key, value); } } return obj; }
@@ -7860,7 +7862,9 @@
 	
 	  TreeNode.prototype.onKeyDown = function onKeyDown(e) {
 	    this.props.root.onKeyDown(e, this);
-	    // e.preventDefault();
+	    if (e.keyCode !== _tinperBeeCore.KeyCode.TAB) {
+	      e.preventDefault();
+	    }
 	  };
 	
 	  TreeNode.prototype.renderSwitcher = function renderSwitcher(props, expandedState) {

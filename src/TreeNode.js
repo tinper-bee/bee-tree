@@ -168,7 +168,7 @@ class TreeNode extends React.Component {
   // keyboard event support
   onKeyDown(e) {
     this.props.root.onKeyDown(e,this);
-    if(e.keyCode !== KeyCode.TAB){
+    if(e.keyCode == KeyCode.SPACE || e.keyCode == KeyCode.DOWN || e.keyCode == KeyCode.LEFT || e.keyCode == KeyCode.RIGHT ||e.keyCode == KeyCode.UP){
       e.preventDefault();
     }
     

@@ -11,6 +11,7 @@ import {
   getCheck,
   getStrictlyValue,
   arraysEqual,
+  closest
 } from './util';
 import PropTypes from 'prop-types';
 import { KeyCode } from 'tinper-bee-core';
@@ -425,7 +426,8 @@ onExpand(treeNode,keyType) {
     //查询的下一个节点不为空的话，则选中
     if(nextTreeNode){
       const queryInfo = `a[pos="${nextPos}"]`;
-      const focusEle =  e.target.parentElement.parentElement.parentElement.parentElement.querySelector(queryInfo);
+      const parentEle = closest(e.target,".u-tree")
+      const focusEle = parentEle?parentEle.querySelector(queryInfo):null;
       focusEle && focusEle.focus()
       this.onSelect(nextTreeNode);
     }

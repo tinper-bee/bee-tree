@@ -10,7 +10,7 @@ import Tree from '../../src';
 
 const x = 6;
 const y = 5;
-const z = 1;
+const z = 2;
 const gData = [];
 
 const generateData = (_level, _preKey, _tns) => {

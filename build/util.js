@@ -12,6 +12,7 @@ exports.handleCheckState = handleCheckState;
 exports.getCheck = getCheck;
 exports.getStrictlyValue = getStrictlyValue;
 exports.arraysEqual = arraysEqual;
+exports.closest = closest;
 
 var _react = require('react');
 
@@ -324,4 +325,17 @@ function arraysEqual(a, b) {
     if (a[i] !== b[i]) return false;
   }
   return true;
+}
+
+function closest(el, selector) {
+  var matchesSelector = el.matches || el.webkitMatchesSelector || el.mozMatchesSelector || el.msMatchesSelector;
+
+  while (el) {
+    if (matchesSelector.call(el, selector)) {
+      return el;
+    } else {
+      el = el.parentElement;
+    }
+  }
+  return null;
 }

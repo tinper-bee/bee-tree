@@ -457,7 +457,8 @@ var Tree = function (_React$Component) {
     //查询的下一个节点不为空的话，则选中
     if (nextTreeNode) {
       var queryInfo = 'a[pos="' + nextPos + '"]';
-      var focusEle = e.target.parentElement.parentElement.parentElement.parentElement.querySelector(queryInfo);
+      var parentEle = (0, _util.closest)(e.target, ".u-tree");
+      var focusEle = parentEle ? parentEle.querySelector(queryInfo) : null;
       focusEle && focusEle.focus();
       this.onSelect(nextTreeNode);
     }

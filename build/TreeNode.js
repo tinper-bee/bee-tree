@@ -198,7 +198,7 @@ var TreeNode = function (_React$Component) {
 
   TreeNode.prototype.onKeyDown = function onKeyDown(e) {
     this.props.root.onKeyDown(e, this);
-    if (e.keyCode !== _tinperBeeCore.KeyCode.TAB) {
+    if (e.keyCode == _tinperBeeCore.KeyCode.SPACE || e.keyCode == _tinperBeeCore.KeyCode.DOWN || e.keyCode == _tinperBeeCore.KeyCode.LEFT || e.keyCode == _tinperBeeCore.KeyCode.RIGHT || e.keyCode == _tinperBeeCore.KeyCode.UP) {
       e.preventDefault();
     }
   };

@@ -399,28 +399,49 @@ onExpand(treeNode,keyType) {
       
     let nextPos,backNextPos;
     let nextTreeNode,backNextTreeNode;
+    const backNextPosArr=[],backNextTreeNodeArr = [],tempBackNextPosArr=[];
     //是否为展开的节点，如果展开获取第一个子节点的信息，如果没有取相邻节点，若也没有相邻节点则获取父节点的下一个节点
     if(props.expandedKeys.indexOf(treeNode.props.eventKey)>-1){
       nextPos = currentPos + '-0';
     }else{
       nextPos = currentPos.substr(0,currentPos.lastIndexOf('-')+1)+nextIndex;
      //若向下的节点没有了，找到父级相邻节点
-      const tempPosArr = currentPos.split('-');
-      const tempPosArrLength = tempPosArr.length;
-      backNextPos = tempPosArrLength>2 && tempPosArr.slice(0,tempPosArrLength-2).join('-')+'-' + (parseInt(tempPosArr[tempPosArrLength-2])+1)
+      let tempPosArr = currentPos.split('-');
+      let tempPosArrLength = tempPosArr.length;
+      //将可能是下一个节点的的位置都备份一遍
+      while(tempPosArrLength>1){
+        backNextPos = tempPosArrLength>1 && tempPosArr.slice(0,tempPosArrLength-1).join('-')+'-' + (parseInt(tempPosArr[tempPosArrLength-1])+1)
+        tempBackNextPosArr.push(backNextPos);
+        tempPosArr = tempPosArr.slice(0,tempPosArrLength-1)
+        tempPosArrLength = tempPosArr.length;
+      }
+      
     }
     //选中下一个相邻的节点
-    loopAllChildren(props.children,function(item,index,pos,newKey){
+    loopAllChildren(props.children,function(itemNode,index,pos,newKey){
       if(pos == nextPos){
-        nextTreeNode = item;
-      }else if(backNextPos && pos == backNextPos){
-        backNextTreeNode = item;
+        nextTreeNode = itemNode;
       }
+      tempBackNextPosArr.forEach(item=>{
+        if(item && item == pos){
+          // backNextTreeNode = item;
+          backNextTreeNodeArr.push(itemNode);
+          backNextPosArr.push(pos);
+        }
+      })
+      
     })
     //如果没有下一个节点，则获取父节点的下一个节点
     if(!nextTreeNode){
-      nextTreeNode = backNextTreeNode;
-      nextPos = backNextPos;
+     for(let i=0;i<backNextTreeNodeArr.length;i++){
+       if(backNextTreeNodeArr[i]){
+        nextTreeNode = backNextTreeNodeArr[i];
+        nextPos = backNextPosArr[i];
+        break;
+       }
+     }
+
+   
     }
    
     //查询的下一个节点不为空的话，则选中
@@ -459,7 +480,8 @@ onExpand(treeNode,keyType) {
       if(preIndex >=0){
         //如果上面的节点展开则默认选择最后一个子节点
         if(props.expandedKeys.indexOf(prevTreeNode.key)>-1){
-          preElement =  e.target.parentElement.previousElementSibling.querySelector('ul li:last-child a');
+          const preElementArr =  e.target.parentElement.previousElementSibling.querySelectorAll('a');
+          preElement = preElementArr[preElementArr.length-1];
           prePos = preElement.getAttribute('pos');
           loopAllChildren(props.children,function(item,index,pos,newKey){
             if(pos == prePos){

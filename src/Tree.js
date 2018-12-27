@@ -405,17 +405,18 @@ onExpand(treeNode,keyType) {
       nextPos = currentPos + '-0';
     }else{
       nextPos = currentPos.substr(0,currentPos.lastIndexOf('-')+1)+nextIndex;
-     //若向下的节点没有了，找到父级相邻节点
-      let tempPosArr = currentPos.split('-');
-      let tempPosArrLength = tempPosArr.length;
-      //将可能是下一个节点的的位置都备份一遍
-      while(tempPosArrLength>1){
-        backNextPos = tempPosArrLength>1 && tempPosArr.slice(0,tempPosArrLength-1).join('-')+'-' + (parseInt(tempPosArr[tempPosArrLength-1])+1)
-        tempBackNextPosArr.push(backNextPos);
-        tempPosArr = tempPosArr.slice(0,tempPosArrLength-1)
-        tempPosArrLength = tempPosArr.length;
-      }
+     
       
+    }
+    //若向下的节点没有了，找到父级相邻节点
+    let tempPosArr = currentPos.split('-');
+    let tempPosArrLength = tempPosArr.length;
+    //将可能是下一个节点的的位置都备份一遍
+    while(tempPosArrLength>1){
+      backNextPos = tempPosArrLength>1 && tempPosArr.slice(0,tempPosArrLength-1).join('-')+'-' + (parseInt(tempPosArr[tempPosArrLength-1])+1)
+      tempBackNextPosArr.push(backNextPos);
+      tempPosArr = tempPosArr.slice(0,tempPosArrLength-1)
+      tempPosArrLength = tempPosArr.length;
     }
     //选中下一个相邻的节点
     loopAllChildren(props.children,function(itemNode,index,pos,newKey){

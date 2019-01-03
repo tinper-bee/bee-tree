@@ -131,6 +131,18 @@ titleClass|名称类名|String|-
 titleStyle|名称样式|Object|-
 switcherClass|switcher类名|String|-
 switcherStyle|switcher样式|Object|-
+
+
+## 快捷键API
+
+| 快捷键 | 类型 |快捷键说明 | 
+|  --- | :---: | --- |
+| focusable | function |  是否开启快捷键 |
+| tab | - |  tab 进入焦点，且选中第一行。|
+| ↑、↓ | - | ↑(上箭)、↓(下箭) 选中上一行、选中下一行。 |
+| ←、→ | - |  ←(左箭)、→(右箭) 收起、展开。 |
+
+
 #### 开发调试
 
 ```sh

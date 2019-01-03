@@ -523,6 +523,8 @@ onExpand(treeNode,keyType) {
     }else if (e.keyCode == KeyCode.SPACE && props.checkable){
       // 如果是多选tree则进行选中或者反选该节点
       this.onCheck(treeNode);
+    }else if(e.keyCode == KeyCode.ENTER){
+      this.onDoubleClick(treeNode);
     }
     // e.preventDefault();
   }
@@ -695,7 +697,8 @@ onExpand(treeNode,keyType) {
       openIcon: props.openIcon,
       closeIcon: props.closeIcon,
       focusable:props.focusable,
-      tabIndexKey: state.selectedKeys[0]
+      tabIndexKey: state.selectedKeys[0],
+      tabIndexValue:props.tabIndexValue
     };
     if (props.checkable) {
       cloneProps.checkable = props.checkable;
@@ -861,6 +864,7 @@ Tree.defaultProps = {
   onDragLeave: noop,
   onDrop: noop,
   onDragEnd: noop,
+  onDoubleClick:noop
 };
 
 export default Tree;

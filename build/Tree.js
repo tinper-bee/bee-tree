@@ -552,6 +552,8 @@ var Tree = function (_React$Component) {
     } else if (e.keyCode == _tinperBeeCore.KeyCode.SPACE && props.checkable) {
       // 如果是多选tree则进行选中或者反选该节点
       this.onCheck(treeNode);
+    } else if (e.keyCode == _tinperBeeCore.KeyCode.ENTER) {
+      this.onDoubleClick(treeNode);
     }
     // e.preventDefault();
   };
@@ -721,7 +723,8 @@ var Tree = function (_React$Component) {
       openIcon: props.openIcon,
       closeIcon: props.closeIcon,
       focusable: props.focusable,
-      tabIndexKey: state.selectedKeys[0]
+      tabIndexKey: state.selectedKeys[0],
+      tabIndexValue: props.tabIndexValue
     };
     if (props.checkable) {
       cloneProps.checkable = props.checkable;
@@ -883,7 +886,8 @@ Tree.defaultProps = {
   onDragOver: noop,
   onDragLeave: noop,
   onDrop: noop,
-  onDragEnd: noop
+  onDragEnd: noop,
+  onDoubleClick: noop
 };
 
 exports["default"] = Tree;

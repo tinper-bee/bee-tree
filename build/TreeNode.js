@@ -437,10 +437,10 @@ var TreeNode = function (_React$Component) {
         domProps.tabIndex = -1;
         if (props.tabIndexKey) {
           if (props.eventKey == props.tabIndexKey) {
-            domProps.tabIndex = 0;
+            domProps.tabIndex = props.tabIndexValue;
           }
         } else if (props.pos == '0-0') {
-          domProps.tabIndex = 0;
+          domProps.tabIndex = props.tabIndexValue;
         }
       }
 
@@ -525,7 +525,8 @@ TreeNode.propTypes = {
 };
 
 TreeNode.defaultProps = {
-  title: defaultTitle
+  title: defaultTitle,
+  tabIndexValue: 0
 };
 
 exports["default"] = TreeNode;

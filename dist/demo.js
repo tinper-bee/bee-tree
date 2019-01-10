@@ -8740,7 +8740,6 @@
 	      // 如果是多选tree则进行选中或者反选该节点
 	      this.onCheck(treeNode);
 	    } else if (e.keyCode == _tinperBeeCore.KeyCode.ENTER) {
-	      console.log('keyCode***' + e.keyCode);
 	      this.onDoubleClick(treeNode);
 	    }
 	    // e.preventDefault();
@@ -9100,6 +9099,10 @@
 	exports.getStrictlyValue = getStrictlyValue;
 	exports.arraysEqual = arraysEqual;
 	exports.closest = closest;
+	exports.isTreeNode = isTreeNode;
+	exports.toArray = toArray;
+	exports.getNodeChildren = getNodeChildren;
+	exports.warnOnlyTreeNode = warnOnlyTreeNode;
 	
 	var _react = __webpack_require__(4);
 	
@@ -9426,6 +9429,31 @@
 	  }
 	  return null;
 	}
+	
+	function isTreeNode(node) {
+	  return node && node.type && node.type.isTreeNode;
+	}
+	
+	function toArray(children) {
+	  var ret = [];
+	  _react2['default'].Children.forEach(children, function (c) {
+	    ret.push(c);
+	  });
+	  return ret;
+	}
+	
+	function getNodeChildren(children) {
+	  return toArray(children).filter(isTreeNode);
+	}
+	
+	var onlyTreeNodeWarned = false;
+	
+	function warnOnlyTreeNode() {
+	  if (onlyTreeNodeWarned) return;
+	
+	  onlyTreeNodeWarned = true;
+	  warning(false, 'Tree only accept TreeNode as children.');
+	}
 
 /***/ }),
 /* 88 */
@@ -9491,6 +9519,21 @@
 	    _classCallCheck(this, TreeNode);
 	
 	    var _this2 = _possibleConstructorReturn(this, _React$Component.call(this, props));
+	
+	    _this2.getNodeChildren = function () {
+	      var children = _this2.props.children;
+	
+	      var originList = (0, _util.toArray)(children).filter(function (node) {
+	        return node;
+	      });
+	      var targetList = (0, _util.getNodeChildren)(originList);
+	
+	      if (originList.length !== targetList.length) {
+	        (0, _util.warnOnlyTreeNode)();
+	      }
+	
+	      return targetList;
+	    };
 	
 	    ['onExpand', 'onCheck', 'onContextMenu', 'onMouseEnter', 'onMouseLeave', 'onDragStart', 'onDragEnter', 'onDragOver', 'onDragLeave', 'onDrop', 'onDragEnd', 'onDoubleClick', 'onKeyDown'].forEach(function (m) {
 	      _this2[m] = _this2[m].bind(_this2);
@@ -9763,6 +9806,27 @@
 	    return newChildren;
 	  };
 	
+	  /**
+	   *判断是否为叶子节点，isLeaf的优先级>props.children。如果是异步加载是根据isLeaf的值进行判断的
+	   *
+	   * @returns
+	   * @memberof TreeNode
+	   */
+	  TreeNode.prototype.checkIsLeaf = function checkIsLeaf() {
+	    var _props = this.props,
+	        isLeaf = _props.isLeaf,
+	        loadData = _props.loadData;
+	
+	
+	    var hasChildren = this.getNodeChildren().length !== 0;
+	
+	    if (isLeaf === false) {
+	      return false;
+	    }
+	
+	    return isLeaf || !loadData && !hasChildren;
+	  };
+	
 	  TreeNode.prototype.render = function render() {
 	    var _iconEleCls,
 	        _this4 = this;
@@ -9783,13 +9847,17 @@
 	    var delay = 500;
 	    var prevent = false;
 	
-	    if (!newChildren || newChildren === props.children) {
-	      // content = newChildren;
-	      newChildren = null;
-	      if (!props.loadData || props.isLeaf) {
-	        canRenderSwitcher = false;
-	        iconState = 'docu';
-	      }
+	    // if (!newChildren || newChildren === props.children) {
+	    //   // content = newChildren;
+	    //   newChildren = null;
+	    //   if (!props.loadData || props.isLeaf) {
+	    //     canRenderSwitcher = false;
+	    //     iconState = 'docu';
+	    //   }
+	    // }
+	    if (this.checkIsLeaf()) {
+	      canRenderSwitcher = false;
+	      iconState = 'docu';
 	    }
 	    // For performance, does't render children into dom when `!props.expanded` (move to Animate)
 	    // if (!props.expanded) {

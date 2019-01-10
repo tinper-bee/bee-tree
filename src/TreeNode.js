@@ -3,7 +3,10 @@ import ReactDOM from 'react-dom'
 import classNames from 'classnames';
 import Animate from 'bee-animate';
 import {
-  browser
+  browser,
+  getNodeChildren,
+  toArray,
+  warnOnlyTreeNode
 } from './util';
 import PropTypes from 'prop-types';
 import { KeyCode } from 'tinper-bee-core';
@@ -251,6 +254,7 @@ class TreeNode extends React.Component {
           break;
         }
       }
+      
     }else if(children && children.type && children.type.isTreeNode == 1){
       allTreeNode = true;
     }
@@ -289,6 +293,36 @@ class TreeNode extends React.Component {
     return newChildren;
   }
 
+  getNodeChildren = () => {
+    const { children } = this.props;
+    const originList = toArray(children).filter(node => node);
+    const targetList = getNodeChildren(originList);
+
+    if (originList.length !== targetList.length) {
+      warnOnlyTreeNode();
+    }
+
+    return targetList;
+  };
+  /**
+   *判断是否为叶子节点，isLeaf的优先级>props.children。如果是异步加载是根据isLeaf的值进行判断的
+   *
+   * @returns
+   * @memberof TreeNode
+   */
+  checkIsLeaf(){
+    const { isLeaf, loadData } = this.props;
+
+    const hasChildren = this.getNodeChildren().length !== 0;
+
+    if (isLeaf === false) {
+      return false;
+    }
+
+    return (
+      isLeaf || (!loadData && !hasChildren) 
+    );
+  }
   render() {
     const props = this.props;
     const prefixCls = props.prefixCls;
@@ -306,13 +340,17 @@ class TreeNode extends React.Component {
     let delay = 500;
     let prevent = false;
 
-    if (!newChildren || newChildren === props.children) {
-      // content = newChildren;
-      newChildren = null;
-      if (!props.loadData || props.isLeaf) {
-        canRenderSwitcher = false;
-        iconState = 'docu';
-      }
+    // if (!newChildren || newChildren === props.children) {
+    //   // content = newChildren;
+    //   newChildren = null;
+    //   if (!props.loadData || props.isLeaf) {
+    //     canRenderSwitcher = false;
+    //     iconState = 'docu';
+    //   }
+    // }
+    if(this.checkIsLeaf()){
+      canRenderSwitcher = false;
+      iconState = 'docu';
     }
     // For performance, does't render children into dom when `!props.expanded` (move to Animate)
     // if (!props.expanded) {

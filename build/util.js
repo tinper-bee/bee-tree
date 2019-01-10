@@ -13,6 +13,10 @@ exports.getCheck = getCheck;
 exports.getStrictlyValue = getStrictlyValue;
 exports.arraysEqual = arraysEqual;
 exports.closest = closest;
+exports.isTreeNode = isTreeNode;
+exports.toArray = toArray;
+exports.getNodeChildren = getNodeChildren;
+exports.warnOnlyTreeNode = warnOnlyTreeNode;
 
 var _react = require('react');
 
@@ -338,4 +342,29 @@ function closest(el, selector) {
     }
   }
   return null;
+}
+
+function isTreeNode(node) {
+  return node && node.type && node.type.isTreeNode;
+}
+
+function toArray(children) {
+  var ret = [];
+  _react2["default"].Children.forEach(children, function (c) {
+    ret.push(c);
+  });
+  return ret;
+}
+
+function getNodeChildren(children) {
+  return toArray(children).filter(isTreeNode);
+}
+
+var onlyTreeNodeWarned = false;
+
+function warnOnlyTreeNode() {
+  if (onlyTreeNodeWarned) return;
+
+  onlyTreeNodeWarned = true;
+  warning(false, 'Tree only accept TreeNode as children.');
 }

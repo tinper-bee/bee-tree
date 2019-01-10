@@ -298,3 +298,29 @@ export function closest(el, selector) {
   }
   return null;
 }
+
+export function isTreeNode(node) {
+  return node && node.type && node.type.isTreeNode;
+}
+
+export function toArray(children) {
+  const ret = [];
+  React.Children.forEach(children, (c) => {
+    ret.push(c);
+  });
+  return ret;
+}
+
+export function getNodeChildren(children) {
+  return toArray(children).filter(isTreeNode);
+}
+
+let onlyTreeNodeWarned = false;
+
+export function warnOnlyTreeNode() {
+  if (onlyTreeNodeWarned) return;
+
+  onlyTreeNodeWarned = true;
+  warning(false, 'Tree only accept TreeNode as children.');
+}
+

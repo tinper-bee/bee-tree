@@ -38,6 +38,7 @@
 |onDoubleClick|当双击发生触发的方法|function(checkedKeys, e:{node, event})|-
 |focusable|是否开启快捷键功能，使用Tab 键导航获取焦点↓↑选中下、上一个节点，→←展开或者收起一个节点,enter键为节点双击事件|bool|-
 |tabIndexValue|节点获取焦点时，自定义tabIndex的值|Number|0
+|Children|必填，TreeNode组件|node|-
 
 ## TreeNode
 |参数|说明|类型|默认值|
@@ -51,6 +52,7 @@
 |titleStyle|名称样式|Object|-
 |switcherClass|switcher类名|String|-
 |switcherStyle|switcher样式|Object|-
+|Children|TreeNode组件/无|node|-
 
 
 

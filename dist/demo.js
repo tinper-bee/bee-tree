@@ -8950,10 +8950,10 @@
 	      role: 'tree-node'
 	    };
 	
-	    if (props.focusable) {
-	      // domProps.tabIndex = '0';//需求改成了默认选择第一个节点或者选中的节点
-	      // domProps.onKeyDown = this.onKeyDown;//添加到具体的treeNode上了
-	    }
+	    // if (props.focusable) {
+	    //   // domProps.tabIndex = '0';//需求改成了默认选择第一个节点或者选中的节点
+	    //   // domProps.onKeyDown = this.onKeyDown;//添加到具体的treeNode上了
+	    // }
 	    var getTreeNodesStates = function getTreeNodesStates() {
 	      _this4.treeNodesStates = {};
 	      (0, _util.loopAllChildren)(props.children, function (item, index, pos, keyOrPos, siblingPosition) {
@@ -9450,9 +9450,8 @@
 	
 	function warnOnlyTreeNode() {
 	  if (onlyTreeNodeWarned) return;
-	
 	  onlyTreeNodeWarned = true;
-	  warning(false, 'Tree only accept TreeNode as children.');
+	  console.warn('Tree only accept TreeNode as children.');
 	}
 
 /***/ }),

@@ -735,10 +735,10 @@ onExpand(treeNode,keyType) {
       role: 'tree-node',
     };
 
-    if (props.focusable) {
-      // domProps.tabIndex = '0';//需求改成了默认选择第一个节点或者选中的节点
-      // domProps.onKeyDown = this.onKeyDown;//添加到具体的treeNode上了
-    }
+    // if (props.focusable) {
+    //   // domProps.tabIndex = '0';//需求改成了默认选择第一个节点或者选中的节点
+    //   // domProps.onKeyDown = this.onKeyDown;//添加到具体的treeNode上了
+    // }
     const getTreeNodesStates = () => {
       this.treeNodesStates = {};
       loopAllChildren(props.children, (item, index, pos, keyOrPos, siblingPosition) => {

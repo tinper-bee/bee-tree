@@ -319,8 +319,7 @@ let onlyTreeNodeWarned = false;
 
 export function warnOnlyTreeNode() {
   if (onlyTreeNodeWarned) return;
-
   onlyTreeNodeWarned = true;
-  warning(false, 'Tree only accept TreeNode as children.');
+  console.warn('Tree only accept TreeNode as children.');
 }
 

@@ -118,6 +118,7 @@ onDragLeave|当拖拽离开触发的方法|function({event,node})|-
 onDragEnd当拖拽结束触发的方法|function({event,node})|-
 onDrop|当节点放下触发方法function({event, node, dragNode, dragNodesKeys})|-
 onDoubleClick|当双击发生触发的方法|function(checkedKeys, e:{node, event})|-
+Children|必填，TreeNode组件|node|-
 
 ## TreeNode
 |参数|说明|类型|默认值|
@@ -131,6 +132,7 @@ titleClass|名称类名|String|-
 titleStyle|名称样式|Object|-
 switcherClass|switcher类名|String|-
 switcherStyle|switcher样式|Object|-
+Children|TreeNode组件/无|node|-
 
 
 ## 快捷键API

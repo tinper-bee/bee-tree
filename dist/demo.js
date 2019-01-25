@@ -8254,6 +8254,8 @@
 	    var checkedKeys = this.getDefaultCheckedKeys(nextProps, true);
 	    var selectedKeys = this.getDefaultSelectedKeys(nextProps, true);
 	    var st = {};
+	    // 用于记录这次data内容有没有变化
+	    this.dataChange = false;
 	    if (expandedKeys) {
 	      st.expandedKeys = expandedKeys;
 	    }
@@ -8267,6 +8269,9 @@
 	    }
 	    if (selectedKeys) {
 	      st.selectedKeys = selectedKeys;
+	    }
+	    if (nextProps.children !== this.props.children) {
+	      this.dataChange = true;
 	    }
 	    this.setState(st);
 	  };
@@ -8962,7 +8967,7 @@
 	        };
 	      });
 	    };
-	    if (props.showLine && !props.checkable) {
+	    if (props.showLine && !props.checkable || this.dataChange) {
 	      getTreeNodesStates();
 	    }
 	    if (props.checkable && (this.checkedKeysChange || props.loadData)) {

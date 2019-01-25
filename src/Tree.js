@@ -42,6 +42,8 @@ class Tree extends React.Component {
     const checkedKeys = this.getDefaultCheckedKeys(nextProps, true);
     const selectedKeys = this.getDefaultSelectedKeys(nextProps, true);
     const st = {};
+    // 用于记录这次data内容有没有变化
+    this.dataChange = false;
     if (expandedKeys) {
       st.expandedKeys = expandedKeys;
     }
@@ -55,6 +57,9 @@ class Tree extends React.Component {
     }
     if (selectedKeys) {
       st.selectedKeys = selectedKeys;
+    }
+    if(nextProps.children !== this.props.children){
+      this.dataChange = true;
     }
     this.setState(st);
   }
@@ -747,7 +752,7 @@ onExpand(treeNode,keyType) {
         };
       });
     };
-    if (props.showLine && !props.checkable) {
+    if (props.showLine && !props.checkable ||  this.dataChange) {
       getTreeNodesStates();
     }
     if (props.checkable && (this.checkedKeysChange || props.loadData)) {

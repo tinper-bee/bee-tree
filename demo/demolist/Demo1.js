@@ -23,20 +23,21 @@ class Demo1 extends Component {
 		this.state = {
 			defaultExpandedKeys: keys,
 			defaultSelectedKeys: keys,
-			defaultCheckedKeys:keys
-			// checkedKeys: {checked:keys},
+			defaultCheckedKeys:keys,
+			checkedKeys: {checked:keys},
 		};
 	}
 	onSelect(info) {
 		console.log('selected', info);
 	}
-	onCheck = (checkedKeys) => {
-		let self = this;
+	onCheck = (checkedKeys,newst) => {
+		//用户可以自定义当前选中和半选中的节点。
 		console.log('onCheck', checkedKeys);
 		const cks = {
 			checked: checkedKeys.checked || checkedKeys,
+			halfChecked:checkedKeys.halfChecked
 		};
-		// this.setState({checkedKeys:cks});
+		this.setState({checkedKeys:cks});
 	}
 
 	onDoubleClick=(key,treeNode)=>{

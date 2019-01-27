@@ -752,10 +752,10 @@ onExpand(treeNode,keyType) {
         };
       });
     };
-    if (props.showLine && !props.checkable ||  this.dataChange) {
+    if (props.showLine && !props.checkable ) {
       getTreeNodesStates();
     }
-    if (props.checkable && (this.checkedKeysChange || props.loadData)) {
+    if (props.checkable && (this.checkedKeysChange || props.loadData ||  this.dataChange)) {
       if (props.checkStrictly) {
         getTreeNodesStates();
       } else if (props._treeNodesStates) {

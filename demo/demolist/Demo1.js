@@ -62,7 +62,7 @@ class Demo1 extends Component {
 	            <TreeNode title="leaf" key="0-0-0-1" icon={<Icon type="uf-list-s-o" />}/>
 	          </TreeNode>
 	          <TreeNode title="parent 1-1" key="0-0-1" icon={<Icon type="uf-treefolder" />}>
-	            <TreeNode title={<span style={{ color: '#08c' }}>sss</span>} key="0-0-1-0" icon={<Icon type="uf-list-s-o" />}/>
+	            <TreeNode title={<span>sss</span>} key="0-0-1-0" icon={<Icon type="uf-list-s-o" />}/>
 	          </TreeNode>
 	        </TreeNode>
 	      </Tree>

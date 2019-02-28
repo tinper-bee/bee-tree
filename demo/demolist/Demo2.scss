@@ -7,6 +7,9 @@
   }
   li a.u-tree-node-content-wrapper.u-tree-node-selected {
     color: #fff;
+    .u-tree-title{
+        color: #fff;
+    }
     background: transparent;
     &::before {
       background: #1890ff;

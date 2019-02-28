@@ -1,3 +1,8 @@
+<a name="2.0.0"></a>
+# [2.0.0](https://github.com/tinper-bee/bee-tree/compare/v1.1.16...v2.0.0) (2019-02-16)
+
+
+
 <a name="1.1.16"></a>
 ## [1.1.16](https://github.com/tinper-bee/bee-tree/compare/v1.1.15...v1.1.16) (2019-01-27)
 

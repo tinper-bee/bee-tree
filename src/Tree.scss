@@ -111,6 +111,12 @@ $treePrefixCls : "u-tree";
     list-style: none;
     white-space: nowrap;
     outline: 0;
+    &:first-child {
+      padding-top: 8px;
+    }
+    &:last-child {
+      padding-bottom: 0;
+  }
   }
   li a[draggable],
   li a[draggable="true"] {
@@ -143,16 +149,19 @@ $treePrefixCls : "u-tree";
   }
   li a {
     display: inline-block;
-    padding: 1px 5px;
+    padding: 0px 5px;
     border-radius: 2px;
     margin: 0;
     cursor: pointer;
     text-decoration: none;
-    vertical-align: top;
+    vertical-align: middle;
     color: #666;
     -webkit-transition: all 0.3s ease;
     transition: all 0.3s ease;
-    // outline: 5px #cfe8fb;
+    // a 标签hover宽度调整
+   &.u-tree-node-content-wrapper {
+      width: calc(100% - 18px);
+    }
    
   }
   li a:hover {

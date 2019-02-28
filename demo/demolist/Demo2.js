@@ -2,7 +2,7 @@
 *
 * @title Tree数据可控示例
 * @description
-*
+* 
 */
 
 import React, { Component } from 'react';
@@ -86,6 +86,7 @@ class Demo2 extends Component{
       <Tree
         checkable
         focusable
+        className={'demo2'}
         onExpand={this.onExpand} expandedKeys={this.state.expandedKeys}
         autoExpandParent={this.state.autoExpandParent}
         onCheck={this.onCheck} 

@@ -528,11 +528,11 @@ var TreeNode = function (_React$Component) {
       }
       return _react2["default"].createElement('span', { className: (0, _classnames2["default"])(cls) });
     };
-
+    var selectedCls = props.selected ? prefixCls + '-treenode-selected' : '';
     return _react2["default"].createElement(
       'li',
       _extends({}, liProps, { ref: 'li', style: props.style,
-        className: (0, _classnames2["default"])(props.className, disabledCls, dragOverCls, filterCls)
+        className: (0, _classnames2["default"])(props.className, disabledCls, dragOverCls, filterCls, selectedCls)
       }),
       canRenderSwitcher ? this.renderSwitcher(props, expandedState) : noopSwitcher(),
       props.checkable ? this.renderCheckbox(props) : null,

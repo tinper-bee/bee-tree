@@ -5424,6 +5424,10 @@ a, .mdl-accordion, .mdl-button, .mdl-card, .mdl-checkbox, .mdl-dropdown-menu,
     list-style: none;
     white-space: nowrap;
     outline: 0; }
+    .u-tree li:first-child {
+      padding-top: 8px; }
+    .u-tree li:last-child {
+      padding-bottom: 0; }
   .u-tree li a[draggable],
   .u-tree li a[draggable="true"] {
     -webkit-user-select: none;
@@ -5449,14 +5453,16 @@ a, .mdl-accordion, .mdl-button, .mdl-card, .mdl-checkbox, .mdl-dropdown-menu,
     padding: 0 0 0 18px; }
   .u-tree li a {
     display: inline-block;
-    padding: 1px 5px;
+    padding: 0px 5px;
     border-radius: 2px;
     margin: 0;
     cursor: pointer;
     text-decoration: none;
-    vertical-align: top;
+    vertical-align: middle;
     color: #666;
     transition: all 0.3s ease; }
+    .u-tree li a.u-tree-node-content-wrapper {
+      width: calc(100% - 18px); }
   .u-tree li a:hover {
     background-color: #e7f4fd; }
   .u-tree li a.u-tree-node-selected {
@@ -6671,6 +6677,30 @@ input.u-button[type="submit"] {
     line-height: 0;
     right: 7px;
     color: rgba(0, 0, 0, 0.65); }
+
+.demo2.u-tree li a.u-tree-node-content-wrapper:hover::before {
+  background: #e6f7ff; }
+
+.demo2.u-tree li.u-tree-treenode-selected > span.u-tree-switcher::after {
+  color: #fff; }
+
+.demo2.u-tree li a.u-tree-node-content-wrapper.u-tree-node-selected {
+  color: #fff;
+  background: transparent; }
+  .demo2.u-tree li a.u-tree-node-content-wrapper.u-tree-node-selected::before {
+    background: #1890ff; }
+
+.demo2.u-tree li a.u-tree-node-content-wrapper::before {
+  position: absolute;
+  right: 0;
+  left: 0;
+  height: 20px;
+  transition: all 0.3s;
+  content: ""; }
+
+.demo2.u-tree li span {
+  position: relative;
+  z-index: 1; }
 
 .u-tree-searchable-filter {
   color: #f50;

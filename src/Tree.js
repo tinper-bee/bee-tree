@@ -21,12 +21,12 @@ function noop() {}
 class Tree extends React.Component {
   constructor(props) {
     super(props);
-    ['onKeyDown', 'onCheck'].forEach((m) => {
+    ['onKeyDown', 'onCheck',"onUlFocus","_focusDom"].forEach((m) => {
       this[m] = this[m].bind(this);
     });
     this.contextmenuKeys = [];
     this.checkedKeysChange = true;
-
+    this.selectKeyDomPos = '0-0';
     this.state = {
       expandedKeys: this.getDefaultExpandedKeys(props),
       checkedKeys: this.getDefaultCheckedKeys(props),
@@ -355,7 +355,7 @@ onExpand(treeNode,keyType) {
     props.onDoubleClick(eventKey,newSt);
   }
 
-  onMouseEnter(e, treeNode) {
+  on1Enter(e, treeNode) {
     this.props.onMouseEnter({
       event: e,
       node: treeNode
@@ -368,6 +368,8 @@ onExpand(treeNode,keyType) {
       node: treeNode
     });
   }
+
+
 
   onContextMenu(e, treeNode) {
     const selectedKeys = [...this.state.selectedKeys];
@@ -510,7 +512,7 @@ onExpand(treeNode,keyType) {
   }
   // all keyboard events callbacks run from here at first
   onKeyDown(e,treeNode) {
-   
+    e.stopPropagation();
     const props = this.props;
     const currentPos = treeNode.props.pos;
     const currentIndex = currentPos.substr(currentPos.lastIndexOf('-')+1);
@@ -532,8 +534,49 @@ onExpand(treeNode,keyType) {
       this.onDoubleClick(treeNode);
     }
     // e.preventDefault();
+   
   }
 
+  _focusDom(selectKeyDomPos,targetDom){
+    const queryInfo = `a[pos="${selectKeyDomPos}"]`;
+    const parentEle = closest(targetDom,".u-tree")
+    const focusEle = parentEle?parentEle.querySelector(queryInfo):null;
+    focusEle && focusEle.focus();
+  }
+
+  onUlFocus(e){ 
+    const targetDom = e.target;
+    if(this.refs.tree == e.target){
+      const {onFocus} = this.props;
+      const {selectedKeys=[]} = this.state;
+      let tabIndexKey = selectedKeys[0]
+      let isExist = false;
+      if((this.selectKeyDomExist && tabIndexKey) || !tabIndexKey){
+        isExist = true;
+        const queryInfo = `a[pos="${this.selectKeyDomPos}"]`;
+        const parentEle = closest(e.target,".u-tree")
+        const focusEle = parentEle?parentEle.querySelector(queryInfo):null;
+        focusEle && focusEle.focus();
+      }
+      let onFocusRes = onFocus && onFocus(isExist);
+        if(onFocusRes instanceof Promise){
+          onFocusRes.then(()=>{
+            if(!isExist){
+                this._focusDom(this.selectKeyDomPos,targetDom);
+              }
+          });
+        }else{
+          this._focusDom(this.selectKeyDomPos,targetDom);
+        } 
+      }
+
+    
+    
+    
+  }
+  onUlMouseDown(e){
+    e.preventDefault();
+  }
   
   getFilterExpandedKeys(props, expandKeyProp, expandAll) {
     const keys = props[expandKeyProp];
@@ -661,9 +704,15 @@ onExpand(treeNode,keyType) {
   renderTreeNode(child, index, level = 0) {
     const pos = `${level}-${index}`;
     const key = child.key || pos;
+    
     const state = this.state;
     const props = this.props;
-
+    const {selectedKeys=[]} = this.state;
+    let tabIndexKey = selectedKeys[0]
+    if(tabIndexKey && key == tabIndexKey){
+       this.selectKeyDomExist = true;
+       this.selectKeyDomPos = pos;
+    }
     // prefer to child's own selectable property if passed
     let selectable = props.selectable;
     if (child.props.hasOwnProperty('selectable')) {
@@ -793,9 +842,9 @@ onExpand(treeNode,keyType) {
         this.checkedKeys = checkKeys.checkedKeys;
       }
     }
-
+    this.selectKeyDomExist = false;
     return (
-      <ul {...domProps} unselectable="true" ref="tree">
+      <ul {...domProps} unselectable="true" ref="tree" onFocus = {this.onUlFocus} tabIndex={props.focusable && props.tabIndexValue}  onMouseDown={this.onUlMouseDown}>
         {React.Children.map(props.children, this.renderTreeNode, this)}
       </ul>
     );
@@ -869,7 +918,8 @@ Tree.defaultProps = {
   onDragLeave: noop,
   onDrop: noop,
   onDragEnd: noop,
-  onDoubleClick:noop
+  onDoubleClick:noop,
+  tabIndexValue:0
 };
 
 export default Tree;

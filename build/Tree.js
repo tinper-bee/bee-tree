@@ -45,12 +45,12 @@ var Tree = function (_React$Component) {
 
     var _this = _possibleConstructorReturn(this, _React$Component.call(this, props));
 
-    ['onKeyDown', 'onCheck'].forEach(function (m) {
+    ['onKeyDown', 'onCheck', "onUlFocus"].forEach(function (m) {
       _this[m] = _this[m].bind(_this);
     });
     _this.contextmenuKeys = [];
     _this.checkedKeysChange = true;
-
+    _this.selectKeyDomPos = '0-0';
     _this.state = {
       expandedKeys: _this.getDefaultExpandedKeys(props),
       checkedKeys: _this.getDefaultCheckedKeys(props),
@@ -393,6 +393,7 @@ var Tree = function (_React$Component) {
   };
 
   Tree.prototype.onMouseLeave = function onMouseLeave(e, treeNode) {
+    console.log('***leave**');
     this.props.onMouseLeave({
       event: e,
       node: treeNode
@@ -539,7 +540,8 @@ var Tree = function (_React$Component) {
 
 
   Tree.prototype.onKeyDown = function onKeyDown(e, treeNode) {
-
+    console.log('keydownNode----', e.keyCode);
+    e.stopPropagation();
     var props = this.props;
     var currentPos = treeNode.props.pos;
     var currentIndex = currentPos.substr(currentPos.lastIndexOf('-') + 1);
@@ -561,6 +563,53 @@ var Tree = function (_React$Component) {
       this.onDoubleClick(treeNode);
     }
     // e.preventDefault();
+  };
+
+  Tree.prototype.onUlFocus = function onUlFocus(e) {
+    var _this4 = this;
+
+    var targetDom = e.target;
+    console.log('target******************', e.target, e.currentTarget);
+    if (this.refs.tree == e.target) {
+      var onFocus = this.props.onFocus;
+      var _state$selectedKeys = this.state.selectedKeys,
+          selectedKeys = _state$selectedKeys === undefined ? [] : _state$selectedKeys;
+
+      var tabIndexKey = selectedKeys[0];
+      var isExist = false;
+      if (this.selectKeyDomExist && tabIndexKey || !tabIndexKey) {
+        isExist = true;
+        var queryInfo = 'a[pos="' + this.selectKeyDomPos + '"]';
+        var parentEle = (0, _util.closest)(e.target, ".u-tree");
+        var focusEle = parentEle ? parentEle.querySelector(queryInfo) : null;
+        focusEle && focusEle.focus();
+      }
+      var onFocusRes = onFocus && onFocus(isExist);
+      // onFocus && onFocus(isExist,(isExist)=>{
+      //     if(!isExist){
+      //       const queryInfo = `a[pos="${this.selectKeyDomPos}"]`;
+      //       const parentEle = closest(targetDom,".u-tree")
+      //       const focusEle = parentEle?parentEle.querySelector(queryInfo):null;
+      //       focusEle && focusEle.focus();
+      //     }
+      // })
+
+      if (onFocusRes instanceof Promise) {
+        onFocusRes.then(function () {
+          if (!isExist) {
+            var _queryInfo = 'a[pos="' + _this4.selectKeyDomPos + '"]';
+            var _parentEle = (0, _util.closest)(targetDom, ".u-tree");
+            var _focusEle = _parentEle ? _parentEle.querySelector(_queryInfo) : null;
+            _focusEle && _focusEle.focus();
+          }
+        });
+      } else {
+        var _queryInfo2 = 'a[pos="' + this.selectKeyDomPos + '"]';
+        var _parentEle2 = (0, _util.closest)(targetDom, ".u-tree");
+        var _focusEle2 = _parentEle2 ? _parentEle2.querySelector(_queryInfo2) : null;
+        _focusEle2 && _focusEle2.focus();
+      }
+    }
   };
 
   Tree.prototype.getFilterExpandedKeys = function getFilterExpandedKeys(props, expandKeyProp, expandAll) {
@@ -687,9 +736,18 @@ var Tree = function (_React$Component) {
 
     var pos = level + '-' + index;
     var key = child.key || pos;
+
     var state = this.state;
     var props = this.props;
+    var _state$selectedKeys2 = this.state.selectedKeys,
+        selectedKeys = _state$selectedKeys2 === undefined ? [] : _state$selectedKeys2;
 
+    var tabIndexKey = selectedKeys[0];
+    if (tabIndexKey && key == tabIndexKey) {
+      console.log('tabIndexKey', props.tabIndexKey);
+      this.selectKeyDomExist = true;
+      this.selectKeyDomPos = pos;
+    }
     // prefer to child's own selectable property if passed
     var selectable = props.selectable;
     if (child.props.hasOwnProperty('selectable')) {
@@ -756,7 +814,7 @@ var Tree = function (_React$Component) {
   };
 
   Tree.prototype.render = function render() {
-    var _this4 = this;
+    var _this5 = this;
 
     var props = this.props;
     var showLineCls = "";
@@ -773,9 +831,9 @@ var Tree = function (_React$Component) {
     //   // domProps.onKeyDown = this.onKeyDown;//添加到具体的treeNode上了
     // }
     var getTreeNodesStates = function getTreeNodesStates() {
-      _this4.treeNodesStates = {};
+      _this5.treeNodesStates = {};
       (0, _util.loopAllChildren)(props.children, function (item, index, pos, keyOrPos, siblingPosition) {
-        _this4.treeNodesStates[pos] = {
+        _this5.treeNodesStates[pos] = {
           siblingPosition: siblingPosition
         };
       });
@@ -800,7 +858,7 @@ var Tree = function (_React$Component) {
           var checkedPositions = [];
           this.treeNodesStates = {};
           (0, _util.loopAllChildren)(props.children, function (item, index, pos, keyOrPos, siblingPosition) {
-            _this4.treeNodesStates[pos] = {
+            _this5.treeNodesStates[pos] = {
               node: item,
               key: keyOrPos,
               checked: false,
@@ -808,7 +866,7 @@ var Tree = function (_React$Component) {
               siblingPosition: siblingPosition
             };
             if (checkedKeys.indexOf(keyOrPos) !== -1) {
-              _this4.treeNodesStates[pos].checked = true;
+              _this5.treeNodesStates[pos].checked = true;
               checkedPositions.push(pos);
             }
           });
@@ -820,10 +878,10 @@ var Tree = function (_React$Component) {
         this.checkedKeys = checkKeys.checkedKeys;
       }
     }
-
+    this.selectKeyDomExist = false;
     return _react2["default"].createElement(
       'ul',
-      _extends({}, domProps, { unselectable: 'true', ref: 'tree' }),
+      _extends({}, domProps, { unselectable: 'true', ref: 'tree', onFocus: this.onUlFocus, tabIndex: props.focusable && props.tabIndexValue }),
       _react2["default"].Children.map(props.children, this.renderTreeNode, this)
     );
   };
@@ -892,7 +950,8 @@ Tree.defaultProps = {
   onDragLeave: noop,
   onDrop: noop,
   onDragEnd: noop,
-  onDoubleClick: noop
+  onDoubleClick: noop,
+  tabIndexValue: 0
 };
 
 exports["default"] = Tree;

@@ -323,6 +323,9 @@ class TreeNode extends React.Component {
       isLeaf || (!loadData && !hasChildren) 
     );
   }
+  onFocus(e){
+    e.stopPropagation();
+  }
   render() {
     const props = this.props;
     const prefixCls = props.prefixCls;
@@ -460,7 +463,7 @@ class TreeNode extends React.Component {
       liProps.onDrop = this.onDrop;
       liProps.onDragEnd = this.onDragEnd;
     }
-
+    liProps.onFocus = this.onFocus;
     let disabledCls = '';
     let dragOverCls = '';
     if (props.disabled) {

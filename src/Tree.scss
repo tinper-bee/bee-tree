@@ -257,6 +257,9 @@ $treePrefixCls : "u-tree";
   .u-tree-treenode-disabled > a span {
     color: #ccc;
     cursor: not-allowed;
+    &:hover{
+      background: transparent;
+    }
   }
   .u-tree-icon__open {
     margin-right: 2px;
@@ -383,7 +386,7 @@ $treePrefixCls : "u-tree";
   }
 
   :focus {
-      outline: #cfe8fb auto 1px;
+      outline: none;
   }
 }
  

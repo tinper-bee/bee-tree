@@ -21,7 +21,7 @@ function noop() {}
 class Tree extends React.Component {
   constructor(props) {
     super(props);
-    ['onKeyDown', 'onCheck',"onUlFocus","_focusDom","onUlMouseDown","onUlMouseEnter","onUlMouseLeave"].forEach((m) => {
+    ['onKeyDown', 'onCheck',"onUlFocus","_focusDom","onUlMouseEnter","onUlMouseLeave"].forEach((m) => {
       this[m] = this[m].bind(this);
     });
     this.contextmenuKeys = [];
@@ -574,13 +574,7 @@ onExpand(treeNode,keyType) {
     
     
   }
-  onUlMouseDown(e){
-    // const targetDom = e.target;
-    // console.log('mouseDown************',e.target);
-    // if(this.refs.tree !== targetDom){
-    //   e.preventDefault();
-    // }
-  }
+
 
   onUlMouseEnter(e){
     this.isIn = true;

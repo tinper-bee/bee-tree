@@ -86,7 +86,7 @@ class Demo2 extends Component{
       <Tree
         checkable
         focusable
-        className={'demo2'}
+        className="demo2 myCls"
         onExpand={this.onExpand} expandedKeys={this.state.expandedKeys}
         autoExpandParent={this.state.autoExpandParent}
         onCheck={this.onCheck} 

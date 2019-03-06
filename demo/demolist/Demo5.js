@@ -141,7 +141,7 @@ class Demo5 extends Component {
     });
     const treeNodes = loop(this.state.treeData);
     return (
-      <Tree onSelect={this.onSelect} loadData={this.onLoadData} >
+      <Tree className="myCls" onSelect={this.onSelect} loadData={this.onLoadData} >
         {treeNodes}
       </Tree>
     );

@@ -45,7 +45,7 @@ var Tree = function (_React$Component) {
 
     var _this = _possibleConstructorReturn(this, _React$Component.call(this, props));
 
-    ['onKeyDown', 'onCheck', "onUlFocus", "_focusDom"].forEach(function (m) {
+    ['onKeyDown', 'onCheck', "onUlFocus", "_focusDom", "onUlMouseDown", "onUlMouseEnter", "onUlMouseLeave"].forEach(function (m) {
       _this[m] = _this[m].bind(_this);
     });
     _this.contextmenuKeys = [];
@@ -385,7 +385,7 @@ var Tree = function (_React$Component) {
     props.onDoubleClick(eventKey, newSt);
   };
 
-  Tree.prototype.on1Enter = function on1Enter(e, treeNode) {
+  Tree.prototype.onMouseEnter = function onMouseEnter(e, treeNode) {
     this.props.onMouseEnter({
       event: e,
       node: treeNode
@@ -574,7 +574,7 @@ var Tree = function (_React$Component) {
     var _this4 = this;
 
     var targetDom = e.target;
-    if (this.refs.tree == e.target) {
+    if (this.refs.tree == targetDom && !this.isIn) {
       var onFocus = this.props.onFocus;
       var _state$selectedKeys = this.state.selectedKeys,
           selectedKeys = _state$selectedKeys === undefined ? [] : _state$selectedKeys;
@@ -602,7 +602,19 @@ var Tree = function (_React$Component) {
   };
 
   Tree.prototype.onUlMouseDown = function onUlMouseDown(e) {
-    e.preventDefault();
+    // const targetDom = e.target;
+    // console.log('mouseDown************',e.target);
+    // if(this.refs.tree !== targetDom){
+    //   e.preventDefault();
+    // }
+  };
+
+  Tree.prototype.onUlMouseEnter = function onUlMouseEnter(e) {
+    this.isIn = true;
+  };
+
+  Tree.prototype.onUlMouseLeave = function onUlMouseLeave(e) {
+    this.isIn = false;
   };
 
   Tree.prototype.getFilterExpandedKeys = function getFilterExpandedKeys(props, expandKeyProp, expandAll) {
@@ -818,6 +830,9 @@ var Tree = function (_React$Component) {
       role: 'tree-node'
     };
 
+    domProps.onFocus = this.onUlFocus;
+    domProps.onMouseEnter = this.onUlMouseEnter;
+    domProps.onMouseLeave = this.onUlMouseLeave;
     // if (props.focusable) {
     //   // domProps.tabIndex = '0';//需求改成了默认选择第一个节点或者选中的节点
     //   // domProps.onKeyDown = this.onKeyDown;//添加到具体的treeNode上了
@@ -873,7 +888,7 @@ var Tree = function (_React$Component) {
     this.selectKeyDomExist = false;
     return _react2["default"].createElement(
       'ul',
-      _extends({}, domProps, { unselectable: 'true', ref: 'tree', onFocus: this.onUlFocus, tabIndex: props.focusable && props.tabIndexValue, onMouseDown: this.onUlMouseDown }),
+      _extends({}, domProps, { unselectable: 'true', ref: 'tree', tabIndex: props.focusable && props.tabIndexValue }),
       _react2["default"].Children.map(props.children, this.renderTreeNode, this)
     );
   };

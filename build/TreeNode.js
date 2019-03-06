@@ -366,10 +366,6 @@ var TreeNode = function (_React$Component) {
     return isLeaf || !loadData && !hasChildren;
   };
 
-  TreeNode.prototype.onFocus = function onFocus(e) {
-    e.stopPropagation();
-  };
-
   TreeNode.prototype.render = function render() {
     var _iconEleCls,
         _this4 = this;
@@ -504,7 +500,6 @@ var TreeNode = function (_React$Component) {
       liProps.onDrop = this.onDrop;
       liProps.onDragEnd = this.onDragEnd;
     }
-    liProps.onFocus = this.onFocus;
     var disabledCls = '';
     var dragOverCls = '';
     if (props.disabled) {

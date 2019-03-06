@@ -21,7 +21,7 @@ function noop() {}
 class Tree extends React.Component {
   constructor(props) {
     super(props);
-    ['onKeyDown', 'onCheck',"onUlFocus","_focusDom"].forEach((m) => {
+    ['onKeyDown', 'onCheck',"onUlFocus","_focusDom","onUlMouseDown","onUlMouseEnter","onUlMouseLeave"].forEach((m) => {
       this[m] = this[m].bind(this);
     });
     this.contextmenuKeys = [];
@@ -355,7 +355,7 @@ onExpand(treeNode,keyType) {
     props.onDoubleClick(eventKey,newSt);
   }
 
-  on1Enter(e, treeNode) {
+  onMouseEnter(e, treeNode) {
     this.props.onMouseEnter({
       event: e,
       node: treeNode
@@ -546,7 +546,7 @@ onExpand(treeNode,keyType) {
 
   onUlFocus(e){ 
     const targetDom = e.target;
-    if(this.refs.tree == e.target){
+    if(this.refs.tree == targetDom && !this.isIn){
       const {onFocus} = this.props;
       const {selectedKeys=[]} = this.state;
       let tabIndexKey = selectedKeys[0]
@@ -575,7 +575,18 @@ onExpand(treeNode,keyType) {
     
   }
   onUlMouseDown(e){
-    e.preventDefault();
+    // const targetDom = e.target;
+    // console.log('mouseDown************',e.target);
+    // if(this.refs.tree !== targetDom){
+    //   e.preventDefault();
+    // }
+  }
+
+  onUlMouseEnter(e){
+    this.isIn = true;
+  }
+  onUlMouseLeave(e){
+    this.isIn = false;
   }
   
   getFilterExpandedKeys(props, expandKeyProp, expandAll) {
@@ -789,6 +800,9 @@ onExpand(treeNode,keyType) {
       role: 'tree-node',
     };
 
+    domProps.onFocus = this.onUlFocus;
+    domProps.onMouseEnter = this.onUlMouseEnter;
+    domProps.onMouseLeave = this.onUlMouseLeave;
     // if (props.focusable) {
     //   // domProps.tabIndex = '0';//需求改成了默认选择第一个节点或者选中的节点
     //   // domProps.onKeyDown = this.onKeyDown;//添加到具体的treeNode上了
@@ -844,7 +858,7 @@ onExpand(treeNode,keyType) {
     }
     this.selectKeyDomExist = false;
     return (
-      <ul {...domProps} unselectable="true" ref="tree" onFocus = {this.onUlFocus} tabIndex={props.focusable && props.tabIndexValue}  onMouseDown={this.onUlMouseDown}>
+      <ul {...domProps} unselectable="true" ref="tree"  tabIndex={props.focusable && props.tabIndexValue}>
         {React.Children.map(props.children, this.renderTreeNode, this)}
       </ul>
     );

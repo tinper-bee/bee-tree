@@ -67,7 +67,7 @@ class Demo10 extends Component {
                     <TreeNode title="leaf" key="0-0-0-1" />
                 </TreeNode>
                 <TreeNode title="parent 1-1" key="0-0-1">
-                    <TreeNode title={<span style={{ color: '#08c' }}>sss</span>} key="0-0-1-0" />
+                    <TreeNode title={<span>sss</span>} key="0-0-1-0" />
                 </TreeNode>
                 <TreeNode title="parent 1-2" key="0-0-2" >
                     <TreeNode title="leaf" key="0-0-2-0" />

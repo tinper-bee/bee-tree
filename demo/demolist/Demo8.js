@@ -108,7 +108,7 @@ class Demo8 extends Component {
 		});
 		const treeNodes = loop(this.state.treeData);
 		return (
-			<Tree onMouseLeave={this.onMouseLeave} onMouseEnter={this.onMouseEnter}>
+			<Tree onMouseLeave={this.onMouseLeave} onMouseEnter={this.onMouseEnter} className="myCls">
 				{treeNodes}
 			</Tree>
 

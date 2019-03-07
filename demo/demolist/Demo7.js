@@ -139,10 +139,10 @@ class Demo7 extends Component {
     console.log('defaultKeys--' + this.state.defaultExpandedKeys);
     return (
       <div>
-        <Tree onSelect={this.onSelect} defaultExpandedKeys={this.state.defaultExpandedKeys}>
+        <Tree onSelect={this.onSelect} defaultExpandedKeys={this.state.defaultExpandedKeys} className="myCls">
           {treeNodes}
         </Tree>
-        <Button colors="success" onClick={this.clickFun}>
+        <Button colors="primary" onClick={this.clickFun}>
         增加节点
         </Button>
       </div>

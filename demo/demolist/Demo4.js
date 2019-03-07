@@ -146,6 +146,7 @@ class Demo4 extends Component {
           onChange={this.onChange}
         />
         <Tree
+          className="myCls"
           onExpand={this.onExpand}
           expandedKeys={expandedKeys}
           autoExpandParent={autoExpandParent}

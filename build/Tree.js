@@ -45,7 +45,7 @@ var Tree = function (_React$Component) {
 
     var _this = _possibleConstructorReturn(this, _React$Component.call(this, props));
 
-    ['onKeyDown', 'onCheck', "onUlFocus", "_focusDom", "onUlMouseDown", "onUlMouseEnter", "onUlMouseLeave"].forEach(function (m) {
+    ['onKeyDown', 'onCheck', "onUlFocus", "_focusDom", "onUlMouseEnter", "onUlMouseLeave"].forEach(function (m) {
       _this[m] = _this[m].bind(_this);
     });
     _this.contextmenuKeys = [];
@@ -599,14 +599,6 @@ var Tree = function (_React$Component) {
         this._focusDom(this.selectKeyDomPos, targetDom);
       }
     }
-  };
-
-  Tree.prototype.onUlMouseDown = function onUlMouseDown(e) {
-    // const targetDom = e.target;
-    // console.log('mouseDown************',e.target);
-    // if(this.refs.tree !== targetDom){
-    //   e.preventDefault();
-    // }
   };
 
   Tree.prototype.onUlMouseEnter = function onUlMouseEnter(e) {

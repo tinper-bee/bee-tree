@@ -106,6 +106,7 @@ class Demo3 extends Component{
     });
     return (
       <Tree
+        className="myCls"
         defaultExpandedKeys={this.state.expandedKeys}
         draggable
         onDragEnter={this.onDragEnter}

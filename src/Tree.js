@@ -926,7 +926,6 @@ Tree.defaultProps = {
   onDragLeave: noop,
   onDrop: noop,
   onDragEnd: noop,
-  onDoubleClick:noop,
   tabIndexValue:0
 };
 

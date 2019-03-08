@@ -1,3 +1,18 @@
+<a name="2.0.5"></a>
+## [2.0.5](https://github.com/tinper-bee/bee-tree/compare/v2.0.4...v2.0.5) (2019-03-08)
+
+
+### Bug Fixes
+
+* **fix 单击事件（onSelect）延迟问题:** fix 单击事件（onSelect）延迟问题 ([bfc5796](https://github.com/tinper-bee/bee-tree/commit/bfc5796))
+
+
+
+<a name="2.0.4"></a>
+## [2.0.4](https://github.com/tinper-bee/bee-tree/compare/v2.0.3...v2.0.4) (2019-03-07)
+
+
+
 <a name="2.0.3"></a>
 ## [2.0.3](https://github.com/tinper-bee/bee-tree/compare/v2.0.2...v2.0.3) (2019-03-06)
 

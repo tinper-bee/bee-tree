@@ -156,7 +156,7 @@ $treePrefixCls : "u-tree";
     cursor: pointer;
     text-decoration: none;
     vertical-align: middle;
-    color: #666;
+    color: $font-color-base;
     -webkit-transition: all 0.3s ease;
     transition: all 0.3s ease;
     // a 标签hover宽度调整
@@ -169,9 +169,9 @@ $treePrefixCls : "u-tree";
     background-color: $tree-node-bg-color;
   }
   li a.u-tree-node-selected {
-    background-color: $tree-node-bg-color;
+    background-color: $selected-bg-color-base;
     .u-tree-title{
-      color: unquote("rgb(#{$primary-color})");
+      color: $brand-primary;
     }
   }
   li span.u-checkbox {
@@ -256,7 +256,7 @@ $treePrefixCls : "u-tree";
   .u-tree-treenode-disabled > span,
   .u-tree-treenode-disabled > a,
   .u-tree-treenode-disabled > a span {
-    color: #ccc;
+    color: #909090;
     cursor: not-allowed;
     &:hover{
       background: transparent;

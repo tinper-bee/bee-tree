@@ -263,14 +263,14 @@
     cursor: pointer;
     text-decoration: none;
     vertical-align: middle;
-    color: #666;
+    color: #212121;
     transition: all 0.3s ease; }
     .u-tree li a.u-tree-node-content-wrapper {
       width: calc(100% - 18px); }
   .u-tree li a:hover {
     background-color: rgb(235, 236, 240); }
   .u-tree li a.u-tree-node-selected {
-    background-color: rgb(235, 236, 240); }
+    background-color: rgb(255, 247, 231); }
     .u-tree li a.u-tree-node-selected .u-tree-title {
       color: rgb(245, 60, 50); }
   .u-tree li span.u-checkbox {
@@ -335,7 +335,7 @@
   .u-tree .u-tree-treenode-disabled > span,
   .u-tree .u-tree-treenode-disabled > a,
   .u-tree .u-tree-treenode-disabled > a span {
-    color: #ccc;
+    color: #909090;
     cursor: not-allowed; }
     .u-tree .u-tree-treenode-disabled > span:hover,
     .u-tree .u-tree-treenode-disabled > a:hover,

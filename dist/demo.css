@@ -5422,9 +5422,6 @@ a, .mdl-accordion, .mdl-button, .mdl-card, .mdl-checkbox, .mdl-dropdown-menu,
     line-height: 1;
     position: relative;
     vertical-align: middle; }
-  .u-tree .u-tree-checkbox-checked .u-tree-checkbox-inner, .u-tree .u-tree-checkbox-indeterminate .u-tree-checkbox-inner {
-    background-color: rgb(245, 60, 50);
-    border-color: rgb(245, 60, 50); }
   .u-tree .u-tree-checkbox-inner {
     position: relative;
     top: 0;
@@ -5436,9 +5433,6 @@ a, .mdl-accordion, .mdl-button, .mdl-card, .mdl-checkbox, .mdl-dropdown-menu,
     border-radius: 3px;
     background-color: #fff;
     transition: all .3s; }
-  .u-tree .u-tree-checkbox-checked .u-tree-checkbox-inner, .u-tree .u-tree-checkbox-indeterminate .u-tree-checkbox-inner {
-    background-color: rgb(245, 60, 50);
-    border-color: rgb(245, 60, 50); }
   .u-tree .u-tree-checkbox-disabled .u-tree-checkbox-inner {
     border-color: #d9d9d9;
     background-color: #f3f3f3; }
@@ -5464,7 +5458,7 @@ a, .mdl-accordion, .mdl-button, .mdl-card, .mdl-checkbox, .mdl-dropdown-menu,
     display: table;
     width: 5px;
     height: 8px;
-    border: 2px solid #fff;
+    border: 2px solid rgb(245, 60, 50);
     border-top: 0;
     border-left: 0;
     content: ' ';
@@ -5477,7 +5471,7 @@ a, .mdl-accordion, .mdl-button, .mdl-card, .mdl-checkbox, .mdl-dropdown-menu,
     display: table;
     width: 5px;
     height: 8px;
-    border: 2px solid #fff;
+    border: 2px solid rgb(245, 60, 50);
     border-top: 0;
     border-left: 0;
     content: ' ';
@@ -6439,7 +6433,7 @@ a, .mdl-accordion, .mdl-button, .mdl-card, .mdl-checkbox, .mdl-dropdown-menu,
   .u-button::-moz-focus-inner {
     border: 0; }
   .u-button:hover {
-    background-color: rgb(238,238,238);
+    background-color: rgb(189,189,189);
     border-color: rgb(238,238,238); }
   .u-button:active {
     background-color: rgb(189,189,189);
@@ -6447,7 +6441,7 @@ a, .mdl-accordion, .mdl-button, .mdl-card, .mdl-checkbox, .mdl-dropdown-menu,
   .u-button.colored {
     color: rgb(245, 60, 50); }
     .u-button.colored:focus:not(:active) {
-      background-color: rgb(238,238,238);
+      background-color: rgb(189,189,189);
       border-color: rgb(189,189,189); }
   .u-button.disable, .u-button.u-button[disabled] {
     cursor: not-allowed;
@@ -6459,7 +6453,6 @@ a, .mdl-accordion, .mdl-button, .mdl-card, .mdl-checkbox, .mdl-dropdown-menu,
       border-color: #DFE1E6;
       color: #fff; }
   .u-button:not(.u-button-icon) i.uf {
-    padding-left: 0;
     line-height: normal; }
 
 input.u-button[type="submit"] {
@@ -6506,11 +6499,11 @@ input.u-button[type="submit"] {
   background: rgb(255,255,255); }
   .u-button-border:hover {
     color: rgb(33,33,33);
-    background-color: rgb(238,238,238);
+    background-color: rgb(189,189,189);
     border-color: rgb(165, 173, 186); }
   .u-button-border:active {
     color: rgb(33,33,33);
-    background-color: rgb(238,238,238);
+    background-color: rgb(189,189,189);
     border-color: rgb(165, 173, 186); }
 
 .u-button.u-button-primary {

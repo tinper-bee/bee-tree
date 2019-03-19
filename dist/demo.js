@@ -8851,9 +8851,7 @@
 	      var onFocusRes = onFocus && onFocus(isExist);
 	      if (onFocusRes instanceof Promise) {
 	        onFocusRes.then(function () {
-	          if (!isExist) {
-	            _this4._focusDom(_this4.selectKeyDomPos, targetDom);
-	          }
+	          _this4._focusDom(_this4.selectKeyDomPos, targetDom);
 	        });
 	      } else {
 	        this._focusDom(this.selectKeyDomPos, targetDom);

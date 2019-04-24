@@ -1,4 +1,4 @@
-# Tree
+# 树形控件 Tree
 
 ## 何时使用
 文件夹、组织架构、生物分类、国家地区等等，世间万物的大多数结构都是树形结构。使用树控件可以完整展现其中的层级关系，并具有展开收起选择等交互功能。
@@ -10,7 +10,7 @@ import { Tree } from 'tinper-bee';
 or
 
 import Tree from 'bee-tree';
-import bee-tree/build/Tree.css;
+import 'bee-tree/build/Tree.css';
 
 ```
 

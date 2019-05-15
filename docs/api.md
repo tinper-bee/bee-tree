@@ -37,7 +37,7 @@ import 'bee-tree/build/Tree.css';
 |openIcon|自定义展开节点图标的名称[参考这里](http://bee.tinper.org/bee-icon)String[]|-
 |closeIcon|自定义关闭节点图标的名称[参考这里](http://bee.tinper.org/bee-icon)String[]|-
 |onExpand|当打开或关闭树节点触发的方法|function(expandedKeys, {expanded: bool, node})|-
-|onCheck|当选择事件发生触发的方法|function(checkedKeys, e:{checked: bool, checkedNodes, node, event})|-
+|onCheck|当用户点击复选框checkbox触发的回调方法|function(checkedKeys, e:{checked: bool, checkedNodes, node, event})|-
 |onSelect|当用户选择树节点触发的回调函数|function(selectedKeys, e:{selected: bool, selectedNodes, node, event})|-
 |filterTreeNode|过滤树节点的方法（highlight）,当返回true,相关联的节点会高亮|function(node)|-
 |loadData|异步加载数据|function(node)|-

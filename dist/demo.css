@@ -306,4 +306,11 @@
 .title-con {
   min-width: 150px; }
 
+.demo2.u-tree {
+  height: 300px;
+  overflow: scroll; }
+
+.u-modal {
+  height: 500px; }
+
 /*# sourceMappingURL=demo.css.map */

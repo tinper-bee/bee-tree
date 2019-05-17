@@ -311,17 +311,16 @@ class TreeNode extends React.Component {
    * @memberof TreeNode
    */
   checkIsLeaf(){
-    const { isLeaf, loadData } = this.props;
-
-    const hasChildren = this.getNodeChildren().length !== 0;
-
-    if (isLeaf === false) {
-      return false;
+    const { isLeaf, loadData } = this.props;  
+    let rs = isLeaf
+    if (rs === false || rs === true) {
+      return rs;
+    }else{
+      const hasChildren = this.getNodeChildren().length !== 0;
+      return (!loadData && !hasChildren);
     }
 
-    return (
-      isLeaf || (!loadData && !hasChildren) 
-    );
+    
   }
 
   render() {

@@ -356,14 +356,13 @@ var TreeNode = function (_React$Component) {
         isLeaf = _props.isLeaf,
         loadData = _props.loadData;
 
-
-    var hasChildren = this.getNodeChildren().length !== 0;
-
-    if (isLeaf === false) {
-      return false;
+    var rs = isLeaf;
+    if (rs === false || rs === true) {
+      return rs;
+    } else {
+      var hasChildren = this.getNodeChildren().length !== 0;
+      return !loadData && !hasChildren;
     }
-
-    return isLeaf || !loadData && !hasChildren;
   };
 
   TreeNode.prototype.render = function render() {

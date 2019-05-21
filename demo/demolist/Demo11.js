@@ -1,7 +1,7 @@
 /**
 *
-* @title Tree数据可控示例
-* @description
+* @title 用户自定义节点属性ext
+* @description 业务中扩展的数据可以定义在ext属性中，用户可以在TreeNode节点中获取ext属性。此例中将treeNode的数据存放在了ext中，方便用户获取。
 * 
 */
 
@@ -39,7 +39,7 @@ generateData(z);
 const TreeNode = Tree.TreeNode;
 
 
-class Demo2 extends Component{
+class Demo11 extends Component{
   constructor(props) {
   	super(props);
     this.state = {
@@ -52,10 +52,9 @@ class Demo2 extends Component{
     this.onCheck = this.onCheck.bind(this);
     this.onSelect = this.onSelect.bind(this);
   }
-  onExpand(expandedKeys) {
-    console.log('onExpand', arguments);
-    // if not set autoExpandParent to false, if children expanded, parent can not collapse.
-    // or, you can remove all expanded children keys.
+  onExpand(expandedKeys,nodeInfo) {
+    console.log('onExpand---显示ext数据', nodeInfo.node.props.ext.data);
+
     this.setState({
       expandedKeys,
       autoExpandParent: false,
@@ -80,7 +79,7 @@ class Demo2 extends Component{
     const loop = data => data.map((item) => {
       if (item.children) {
         return (
-          <TreeNode key={item.key} title={item.key} disableCheckbox={item.key === '0-0-0'} ext={{'as':'sdfa'}}>
+          <TreeNode key={item.key} title={item.key} disableCheckbox={item.key === '0-0-0'} ext={{'data':item}}>
             {loop(item.children)}
           </TreeNode>
         );
@@ -105,4 +104,4 @@ class Demo2 extends Component{
 };
 
 
-export default Demo2;
+export default Demo11;

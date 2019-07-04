@@ -1,3 +1,13 @@
+<a name="2.0.15"></a>
+## [2.0.15](https://github.com/tinper-bee/bee-tree/compare/v2.0.14...v2.0.15) (2019-07-04)
+
+
+### Bug Fixes
+
+* ul获取焦点兼容处理,防止已选中的节点再次选中 ([a369c85](https://github.com/tinper-bee/bee-tree/commit/a369c85))
+
+
+
 <a name="2.0.14"></a>
 ## [2.0.14](https://github.com/tinper-bee/bee-tree/compare/v2.0.13...v2.0.14) (2019-06-26)
 

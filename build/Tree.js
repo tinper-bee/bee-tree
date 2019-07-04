@@ -571,14 +571,24 @@ var Tree = function (_React$Component) {
     var queryInfo = 'a[pos="' + selectKeyDomPos + '"]';
     var parentEle = (0, _util.closest)(targetDom, ".u-tree");
     var focusEle = parentEle ? parentEle.querySelector(queryInfo) : null;
-    focusEle && focusEle.focus();
+    if (document.activeElement !== focusEle) {
+      focusEle && focusEle.focus();
+    }
   };
+
+  /**
+   * 此方法为了解决树快捷键，当有的元素隐藏，按tab键也要显示的问题
+   * @param {*} e 
+   */
+
 
   Tree.prototype.onUlFocus = function onUlFocus(e) {
     var _this4 = this;
 
     var targetDom = e.target;
-    if (this.tree == targetDom && !this.isIn) {
+
+    // 如果当前tree节点不包括上一个焦点节点会触发此方法
+    if (this.tree == targetDom && !this.isIn && !this.tree.contains(e.relatedTarget)) {
       var onFocus = this.props.onFocus;
       var _state$selectedKeys = this.state.selectedKeys,
           selectedKeys = _state$selectedKeys === undefined ? [] : _state$selectedKeys;
@@ -605,10 +615,12 @@ var Tree = function (_React$Component) {
 
   Tree.prototype.onUlMouseEnter = function onUlMouseEnter(e) {
     this.isIn = true;
+    console.log('onUlMouseEnter----isIn-----', this.isIn);
   };
 
   Tree.prototype.onUlMouseLeave = function onUlMouseLeave(e) {
     this.isIn = false;
+    console.log('onUlMouseLeave----isIn-----', this.isIn);
   };
 
   Tree.prototype.getFilterExpandedKeys = function getFilterExpandedKeys(props, expandKeyProp, expandAll) {
@@ -825,9 +837,12 @@ var Tree = function (_React$Component) {
       role: 'tree-node'
     };
 
-    domProps.onFocus = this.onUlFocus;
-    domProps.onMouseEnter = this.onUlMouseEnter;
-    domProps.onMouseLeave = this.onUlMouseLeave;
+    if (props.focusable) {
+      domProps.onFocus = this.onUlFocus;
+      domProps.onMouseEnter = this.onUlMouseEnter;
+      domProps.onMouseLeave = this.onUlMouseLeave;
+    }
+
     // if (props.focusable) {
     //   // domProps.tabIndex = '0';//需求改成了默认选择第一个节点或者选中的节点
     //   // domProps.onKeyDown = this.onKeyDown;//添加到具体的treeNode上了

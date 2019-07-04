@@ -288,6 +288,9 @@
 .myCls.u-tree {
   max-width: 240px; }
 
+.demo2.u-tree {
+  height: 200px;
+  overflow: scroll; }
 
 .u-tree-searchable-filter {
   color: #f50;

@@ -57,7 +57,8 @@ var Tree = function (_React$Component) {
       selectedKeys: _this.getDefaultSelectedKeys(props),
       dragNodesKeys: '',
       dragOverNodeKey: '',
-      dropNodeKey: ''
+      dropNodeKey: '',
+      focusKey: '' //上下箭头选择树节点时，用于标识focus状态
     };
     return _this;
   }
@@ -486,7 +487,11 @@ var Tree = function (_React$Component) {
       var parentEle = (0, _util.closest)(e.target, ".u-tree");
       var focusEle = parentEle ? parentEle.querySelector(queryInfo) : null;
       focusEle && focusEle.focus();
-      this.onSelect(nextTreeNode);
+      var eventKey = nextTreeNode.props.eventKey || nextTreeNode.key;
+      this.setState({
+        focusKey: eventKey
+      });
+      // this.onSelect(nextTreeNode);
     }
   };
 
@@ -535,7 +540,11 @@ var Tree = function (_React$Component) {
       }
     }
     preElement && preElement.focus();
-    this.onSelect(prevTreeNode);
+    var eventKey = prevTreeNode.props.eventKey || prevTreeNode.key;
+    this.setState({
+      focusKey: eventKey
+    });
+    // this.onSelect(prevTreeNode);
   };
   // all keyboard events callbacks run from here at first
 
@@ -558,6 +567,7 @@ var Tree = function (_React$Component) {
       // 展开树节点
       this.onExpand(treeNode, 'right');
     } else if (e.keyCode == _tinperBeeCore.KeyCode.SPACE && props.checkable) {
+      this.onSelect(treeNode);
       // 如果是多选tree则进行选中或者反选该节点
       this.onCheck(treeNode);
     } else if (e.keyCode == _tinperBeeCore.KeyCode.ENTER) {
@@ -777,6 +787,7 @@ var Tree = function (_React$Component) {
       _dropTrigger: this._dropTrigger,
       expanded: state.expandedKeys.indexOf(key) !== -1,
       selected: state.selectedKeys.indexOf(key) !== -1,
+      focused: state.focusKey === key,
       openTransitionName: this.getOpenTransitionName(),
       openAnimation: props.openAnimation,
       filterTreeNode: this.filterTreeNode.bind(this),

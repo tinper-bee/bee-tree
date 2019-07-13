@@ -34248,7 +34248,8 @@
 	      selectedKeys: _this.getDefaultSelectedKeys(props),
 	      dragNodesKeys: '',
 	      dragOverNodeKey: '',
-	      dropNodeKey: ''
+	      dropNodeKey: '',
+	      focusKey: '' //上下箭头选择树节点时，用于标识focus状态
 	    };
 	    return _this;
 	  }
@@ -34677,7 +34678,11 @@
 	      var parentEle = (0, _util.closest)(e.target, ".u-tree");
 	      var focusEle = parentEle ? parentEle.querySelector(queryInfo) : null;
 	      focusEle && focusEle.focus();
-	      this.onSelect(nextTreeNode);
+	      var eventKey = nextTreeNode.props.eventKey || nextTreeNode.key;
+	      this.setState({
+	        focusKey: eventKey
+	      });
+	      // this.onSelect(nextTreeNode);
 	    }
 	  };
 	
@@ -34726,7 +34731,11 @@
 	      }
 	    }
 	    preElement && preElement.focus();
-	    this.onSelect(prevTreeNode);
+	    var eventKey = prevTreeNode.props.eventKey || prevTreeNode.key;
+	    this.setState({
+	      focusKey: eventKey
+	    });
+	    // this.onSelect(prevTreeNode);
 	  };
 	  // all keyboard events callbacks run from here at first
 	
@@ -34749,6 +34758,7 @@
 	      // 展开树节点
 	      this.onExpand(treeNode, 'right');
 	    } else if (e.keyCode == _tinperBeeCore.KeyCode.SPACE && props.checkable) {
+	      this.onSelect(treeNode);
 	      // 如果是多选tree则进行选中或者反选该节点
 	      this.onCheck(treeNode);
 	    } else if (e.keyCode == _tinperBeeCore.KeyCode.ENTER) {
@@ -34980,6 +34990,7 @@
 	      _dropTrigger: this._dropTrigger,
 	      expanded: state.expandedKeys.indexOf(key) !== -1,
 	      selected: state.selectedKeys.indexOf(key) !== -1,
+	      focused: state.focusKey === key,
 	      openTransitionName: this.getOpenTransitionName(),
 	      openAnimation: props.openAnimation,
 	      filterTreeNode: this.filterTreeNode.bind(this),
@@ -36078,10 +36089,11 @@
 	      return _react2['default'].createElement('span', { className: (0, _classnames2['default'])(cls) });
 	    };
 	    var selectedCls = props.selected ? prefixCls + '-treenode-selected' : '';
+	    var focusedCls = props.focused ? prefixCls + '-treenode-focused' : '';
 	    return _react2['default'].createElement(
 	      'li',
 	      _extends({}, liProps, { style: props.style,
-	        className: (0, _classnames2['default'])(props.className, disabledCls, dragOverCls, filterCls, selectedCls)
+	        className: (0, _classnames2['default'])(props.className, disabledCls, dragOverCls, filterCls, selectedCls, focusedCls)
 	      }),
 	      canRenderSwitcher ? this.renderSwitcher(props, expandedState) : noopSwitcher(),
 	      props.checkable ? this.renderCheckbox(props) : null,

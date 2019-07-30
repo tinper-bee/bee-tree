@@ -40,7 +40,7 @@
   "babel-runtime": "^6.23.0",
   "bee-animate": "^1.0.0",
   "bee-checkbox": "latest",
-  "bee-modal": "^2.0.13",
+  "bee-modal": "^2.0.20",
   "classnames": "^2.2.5",
   "tinper-bee-core": "latest"
  },

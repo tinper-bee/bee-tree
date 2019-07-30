@@ -36,6 +36,7 @@ class Tree extends React.Component {
       dropNodeKey: '',
       focusKey: '', //上下箭头选择树节点时，用于标识focus状态
     };
+    this.autoFocus = false;
   }
 
   componentWillReceiveProps(nextProps) {
@@ -61,6 +62,9 @@ class Tree extends React.Component {
     }
     if(nextProps.children !== this.props.children){
       this.dataChange = true;
+    }
+    if(nextProps.autoFocus !== this.props.autoFocus) {
+      this.autoFocus = nextProps.autoFocus;
     }
     this.setState(st);
   }
@@ -579,7 +583,10 @@ onExpand(treeNode,keyType) {
         const queryInfo = `a[pos="${this.selectKeyDomPos}"]`;
         const parentEle = closest(e.target,".u-tree")
         const focusEle = parentEle?parentEle.querySelector(queryInfo):null;
-        focusEle && focusEle.focus();
+        //fix NCC bug: 在树渲染完成前，将鼠标移入Tree区域，点击一个树节点的复选框，会导致焦点跑到第一个树节点上
+        if(!this.autoFocus){ 
+          focusEle && focusEle.focus();
+        }
       }
       let onFocusRes = onFocus && onFocus(isExist);
         if(onFocusRes instanceof Promise){
@@ -590,12 +597,7 @@ onExpand(treeNode,keyType) {
           this._focusDom(this.selectKeyDomPos,targetDom);
         } 
       }
-
-    
-    
-    
   }
-
 
   onUlMouseEnter(e){
     this.isIn = true;

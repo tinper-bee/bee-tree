@@ -540,10 +540,10 @@ onExpand(treeNode,keyType) {
     }else if (e.keyCode == KeyCode.RIGHT && !treeNode.props.isLeaf){
       // 展开树节点
       this.onExpand(treeNode,'right');
-    }else if (e.keyCode == KeyCode.SPACE && props.checkable){
+    }else if (e.keyCode == KeyCode.SPACE){
       this.onSelect(treeNode);
       // 如果是多选tree则进行选中或者反选该节点
-      this.onCheck(treeNode);
+      props.checkable && this.onCheck(treeNode);
     }else if(e.keyCode == KeyCode.ENTER){
       this.onDoubleClick(treeNode);
     }

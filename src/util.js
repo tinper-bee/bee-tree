@@ -323,3 +323,57 @@ export function warnOnlyTreeNode() {
   console.warn('Tree only accept TreeNode as children.');
 }
 
+/**
+ * Use `rc-util` `toArray` to get the children list which keeps the key.
+ * And return single node if children is only one(This can avoid `key` missing check).
+ */
+export function mapChildren(children,func) {
+  const list = toArray(children).map(func);
+  if (list.length === 1) {
+    return list[0];
+  }
+  return list;
+}
+
+/**
+ * 将一维数组转换为树结构
+ * @param {*} treeData 
+ * @param {*} attr 
+ */
+export function convertListToTree(treeData, attr) {
+    let tree = [];
+    let resData = treeData;
+    for (let i = 0; i < resData.length; i++) {
+        if (resData[i].parentKey === attr.rootId) {
+            let obj = {
+                key: resData[i][attr.id],
+                title: resData[i][attr.name],
+                children: []
+            };
+            tree.push(obj);
+            resData.splice(i, 1);
+            i--;
+        }
+    }
+    var run = function(treeArrs) {
+        if (resData.length > 0) {
+            for (let i = 0; i < treeArrs.length; i++) {
+                for (let j = 0; j < resData.length; j++) {
+                    if (treeArrs[i].key === resData[j][attr.parendId]) {
+                        let obj = {
+                            key: resData[j][attr.id],
+                            title: resData[j][attr.name],
+                            children: []
+                        };
+                        treeArrs[i].children.push(obj);
+                        resData.splice(j, 1);
+                        j--;
+                    }
+                }
+                run(treeArrs[i].children);
+            }
+        }
+    };
+    run(tree);
+    return tree;
+}

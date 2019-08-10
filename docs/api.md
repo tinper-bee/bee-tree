@@ -18,7 +18,8 @@ import 'bee-tree/build/Tree.css';
 
 ## API
 
-## Tree
+### Tree
+
 |参数|说明|类型|默认值|
 |:---|:-----|:----|:------|
 |multiple|是否允许选择多个树节点|bool|false
@@ -34,8 +35,8 @@ import 'bee-tree/build/Tree.css';
 |selectedKeys|指定选中的节点keys(controlled)|String[]|-
 |cancelUnSelect|选中的节点第二次点击时还是选中，不自动取消选中|bool|false
 |showLine|是否显示连接线|bool|false
-|openIcon|自定义展开节点图标的名称[参考这里](http://bee.tinper.org/bee-icon)String[]|-
-|closeIcon|自定义关闭节点图标的名称[参考这里](http://bee.tinper.org/bee-icon)String[]|-
+|openIcon|自定义展开节点图标的名称[参考这里](http://bee.tinper.org/tinper-bee/bee-icon)String[]|-
+|closeIcon|自定义关闭节点图标的名称[参考这里](http://bee.tinper.org/tinper-bee/bee-icon)String[]|-
 |onExpand|当打开或关闭树节点触发的方法|function(expandedKeys, {expanded: bool, node})|-
 |onCheck|当用户点击复选框checkbox触发的回调方法|function(checkedKeys, e:{checked: bool, checkedNodes, node, event})|-
 |onSelect|当用户选择树节点触发的回调函数|function(selectedKeys, e:{selected: bool, selectedNodes, node, event})|-
@@ -56,7 +57,8 @@ import 'bee-tree/build/Tree.css';
 |mustExpandable|支持disabled的节点可以自定义展开收起，默认disabled的节点不可以展开收起|bool|false
 
 
-## TreeNode
+### TreeNode
+
 |参数|说明|类型|默认值|
 |:---|:-----|:----|:------|
 |disabled|节点是否不可用|bool|false
@@ -72,7 +74,7 @@ import 'bee-tree/build/Tree.css';
 
 
 
-## 快捷键API
+### 快捷键API
 
 | 快捷键 | 类型 |快捷键说明 | 
 |  --- | :---: | --- |

@@ -1,9 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-
-const defaultHeight = 24; //树节点行高
-const loadBuffer = 3; //缓冲区数据量
-const defaultRowsInView = 10; //可视区数据量
+import {debounce} from './util';
+import CONFIG from './config';
 
 export default class InfiniteScroll extends Component {
   static propTypes = {
@@ -44,11 +42,11 @@ export default class InfiniteScroll extends Component {
     super(props);
 
     //默认显示20条，rowsInView根据定高算的。在非固定高下，这个只是一个大概的值。
-    // this.rowsInView = defaultRowsInView;
+    this.rowsInView = CONFIG.defaultRowsInView;
     //一维数组
     this.treeList = props.treeList;
     //一次加载多少数据
-    // this.loadCount = loadBuffer ? this.rowsInView + loadBuffer * 2 : 16; 
+    this.loadCount = CONFIG.loadBuffer ? this.rowsInView + CONFIG.loadBuffer * 2 : 16; 
     //可视区第一条数据的 index
     this.currentIndex = 0;
     this.startIndex = this.currentIndex; //数据开始位置
@@ -176,7 +174,7 @@ export default class InfiniteScroll extends Component {
     let scrollY = scrollEl && scrollEl.clientHeight;
 
     //默认显示20条，rowsInView根据定高算的。在非固定高下，这个只是一个大概的值。
-    this.rowsInView = scrollY ? Math.floor(scrollY / defaultHeight) : defaultRowsInView;
+    this.rowsInView = scrollY ? Math.floor(scrollY / CONFIG.defaultHeight) : CONFIG.defaultRowsInView;
 
     scrollEl.addEventListener(
       'mousewheel',
@@ -207,124 +205,99 @@ export default class InfiniteScroll extends Component {
     }
   }
   /**
-   * 
+   * 滚动事件监听
    */
   scrollListener = () => {
     const el = this.scrollComponent;
-    let currentIndex = this.currentIndex,
-        startIndex = this.startIndex,
-        endIndex = this.endIndex;
 
-    // const scrollEl = window;
     const parentNode = this.getParentElement(el);
 
     this.scrollTop = parentNode.scrollTop;
-    console.log('===scrollTop===',this.scrollTop)
+
+    setInterval(debounce(this.handleScrollY, 300), 500)
+  }
+
+  /**
+   * @description 根据返回的scrollTop计算当前的索引。
+   */
+  handleScrollY = () => {
+    let currentIndex = this.currentIndex,
+        startIndex = this.startIndex,
+        endIndex = this.endIndex,
+        treeList = this.treeList,
+        loadCount = this.loadCount,
+        rowsInView = this.rowsInView;
 
     let index = 0;
     let tempScrollTop = this.scrollTop;
     //根据 scrollTop 计算 currentIndex
     while (tempScrollTop > 0) {
-      tempScrollTop -= defaultHeight;
+      tempScrollTop -= CONFIG.defaultHeight;
       if (tempScrollTop > 0) {
         index += 1;
       }
     }
 
     //true 为向下滚动， false 为向上滚动
-    const isScrollDown = index - currentIndex > 0 ? true : false;
+    let isScrollDown = index - currentIndex > 0 ? true : false;
 
     if (index < 0) index = 0;
     //如果之前的索引和下一次的不一样则重置索引和滚动的位置
-    currentIndex = currentIndex !== index && index;
-    console.log('currentIndex****', currentIndex);
+    this.currentIndex = currentIndex !== index ? index : currentIndex;
 
-    let rowsInView = Math.floor(parentNode.clientHeight/defaultHeight);
-    {/* 
+    // 如果rowsInView 小于 缓存的数据则重新render
     // 向下滚动 下临界值超出缓存的endIndex则重新渲染
-    if (isScrollDown && rowsInView + index > endIndex - rowDiff) {
-      startIndex = index - loadBuffer > 0 ? index - loadBuffer : 0;
-      // endIndex = startIndex + rowsInView + loadBuffer*2;
+    if (isScrollDown && rowsInView + index > endIndex - CONFIG.rowDiff) {
+      startIndex = index - CONFIG.loadBuffer > 0 ? index - CONFIG.loadBuffer : 0;
       endIndex = startIndex + loadCount;
-      if (endIndex > data.length) {
-        endIndex = data.length;
+      if (endIndex > treeList.length) {
+        endIndex = treeList.length;
       }
       if (endIndex > this.endIndex ) {
         this.startIndex = startIndex;
         this.endIndex = endIndex;
-        this.setState({ needRender: !needRender });
+        // console.log(
+        //   "**currentIndex**" + this.currentIndex,
+        //   "**startIndex**" + this.startIndex,
+        //   "**endIndex**" + this.endIndex
+        // );
+        this.sliceTreeList(this.startIndex, this.endIndex);
       }
     }
     // 向上滚动，当前的index是否已经加载（currentIndex），若干上临界值小于startIndex则重新渲染
-    if (!isScrollDown && index < startIndex + rowDiff) {
-      startIndex = index - loadBuffer;
+    if (!isScrollDown && index < startIndex + CONFIG.rowDiff) {
+      startIndex = index - CONFIG.loadBuffer;
       if (startIndex < 0) {
         startIndex = 0;
       }
       if (startIndex < this.startIndex) {
         this.startIndex = startIndex;
         this.endIndex = this.startIndex + loadCount;
-        this.setState({ needRender: !needRender });
+        // console.log(
+        //   "**index**" + index,
+        //   "**startIndex**" + this.startIndex,
+        //   "**endIndex**" + this.endIndex
+        // );
+        this.sliceTreeList(this.startIndex, this.endIndex);
       }
-      // console.log(
-      //   "**index**" + index,
-      //   "**startIndex**" + this.startIndex,
-      //   "**endIndex**" + this.endIndex
-      // );
     }
-    */}
-
-    // let offset;
-    // if (this.props.useWindow) {
-    //   const doc =
-    //     document.documentElement || document.body.parentNode || document.body;
-    //   const scrollTop =
-    //     scrollEl.pageYOffset !== undefined
-    //       ? scrollEl.pageYOffset
-    //       : doc.scrollTop;
-    //   if (this.props.isReverse) {
-    //     offset = scrollTop;
-    //   } else {
-    //     offset = this.calculateOffset(el, scrollTop);
-    //   }
-    // } else if (this.props.isReverse) {
-    //   offset = parentNode.scrollTop;
-    // } else {
-    //   offset = el.scrollHeight - parentNode.scrollTop - parentNode.clientHeight;
-    // }
-
-    // Here we make sure the element is visible as well as checking the offset
-    // if (
-    //   offset < Number(this.props.threshold) &&
-    //   (el && el.offsetParent !== null)
-    // ) {
-    //   this.detachScrollListener();
-    //   this.beforeScrollHeight = parentNode.scrollHeight;
-    //   this.beforeScrollTop = parentNode.scrollTop;
-      // Call loadMore after detachScrollListener to allow for non-async loadMore functions
-    //   if (typeof this.props.loadMore === 'function') {
-    //     this.props.loadMore((this.pageLoaded += 1));
-    //     this.loadMore = true;
-    //   }
-    // }
   }
 
-  calculateOffset(el, scrollTop) {
-    if (!el) {
-      return 0;
-    }
-
-    return (
-      this.calculateTopPosition(el) +
-      (el.offsetHeight - scrollTop - window.innerHeight)
-    );
-  }
-
-  calculateTopPosition(el) {
-    if (!el) {
-      return 0;
-    }
-    return el.offsetTop + this.calculateTopPosition(el.offsetParent);
+  /**
+   * 根据 startIndex 和 endIndex 截取数据
+   * @param startIndex
+   * @param endIndex
+   */
+  sliceTreeList = (startIndex, endIndex) => {
+    let flatTreeData = JSON.parse(JSON.stringify(this.treeList)),
+        newTreeList = []; //存储截取后的新数据
+    // console.log(
+    //   "**startIndex**" + startIndex,
+    //   "**endIndex**" + endIndex
+    // );
+    newTreeList = flatTreeData.slice(startIndex,endIndex);
+    // console.log('截取后', JSON.stringify(newTreeList))
+    this.props.handleTreeListChange && this.props.handleTreeListChange(newTreeList, startIndex, endIndex);
   }
 
   render() {
@@ -355,15 +328,7 @@ export default class InfiniteScroll extends Component {
     };
 
     const childrenArray = [children];
-    // if (hasMore) {
-    //   if (loader) {
-    //     isReverse ? childrenArray.unshift(loader) : childrenArray.push(loader);
-    //   } else if (this.defaultLoader) {
-    //     isReverse
-    //       ? childrenArray.unshift(this.defaultLoader)
-    //       : childrenArray.push(this.defaultLoader);
-    //   }
-    // }
+
     return React.createElement(element, props, childrenArray);
   }
 }

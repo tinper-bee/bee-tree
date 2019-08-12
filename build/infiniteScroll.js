@@ -25,8 +25,9 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : _defaults(subClass, superClass); }
 
 var defaultHeight = 24; //树节点行高
-var loadBuffer = 3; //缓冲区数据量
+var loadBuffer = 5; //缓冲区数据量
 var defaultRowsInView = 10; //可视区数据量
+var rowDiff = 3; //行差值
 
 var InfiniteScroll = function (_Component) {
   _inherits(InfiniteScroll, _Component);
@@ -35,8 +36,6 @@ var InfiniteScroll = function (_Component) {
     _classCallCheck(this, InfiniteScroll);
 
     //默认显示20条，rowsInView根据定高算的。在非固定高下，这个只是一个大概的值。
-    // this.rowsInView = defaultRowsInView;
-    //一维数组
     var _this = _possibleConstructorReturn(this, _Component.call(this, props));
 
     _this.eventListenerOptions = function () {
@@ -61,7 +60,11 @@ var InfiniteScroll = function (_Component) {
 
     _this.scrollListener = function () {
       var el = _this.scrollComponent;
-      var currentIndex = _this.currentIndex;
+      var currentIndex = _this.currentIndex,
+          startIndex = _this.startIndex,
+          endIndex = _this.endIndex,
+          treeList = _this.treeList,
+          loadCount = _this.loadCount;
 
       // const scrollEl = window;
       var parentNode = _this.getParentElement(el);
@@ -81,26 +84,32 @@ var InfiniteScroll = function (_Component) {
 
       //true 为向下滚动， false 为向上滚动
       var isScrollDown = index - currentIndex > 0 ? true : false;
+      // console.log('isScrollDown',isScrollDown)
 
       if (index < 0) index = 0;
       //如果之前的索引和下一次的不一样则重置索引和滚动的位置
-      currentIndex = currentIndex !== index && index;
-      console.log('currentIndex****', currentIndex);
+      _this.currentIndex = currentIndex !== index ? index : currentIndex;
+      // console.log('currentIndex****', currentIndex);
 
       var rowsInView = Math.floor(parentNode.clientHeight / defaultHeight);
 
+      // 如果rowsInView 小于 缓存的数据则重新render
       // 向下滚动 下临界值超出缓存的endIndex则重新渲染
       if (isScrollDown && rowsInView + index > endIndex - rowDiff) {
         startIndex = index - loadBuffer > 0 ? index - loadBuffer : 0;
-        // endIndex = startIndex + rowsInView + loadBuffer*2;
         endIndex = startIndex + loadCount;
-        if (endIndex > data.length) {
-          endIndex = data.length;
-        }
+        // if (endIndex > treeList.length) {
+        //   endIndex = treeList.length;
+        // }
         if (endIndex > _this.endIndex) {
           _this.startIndex = startIndex;
           _this.endIndex = endIndex;
-          _this.setState({ needRender: !needRender });
+          // console.log(
+          //   "**currentIndex**" + this.currentIndex,
+          //   "**startIndex**" + this.startIndex,
+          //   "**endIndex**" + this.endIndex
+          // );
+          _this.sliceTreeList(_this.startIndex, _this.endIndex);
         }
       }
       // 向上滚动，当前的index是否已经加载（currentIndex），若干上临界值小于startIndex则重新渲染
@@ -112,7 +121,12 @@ var InfiniteScroll = function (_Component) {
         if (startIndex < _this.startIndex) {
           _this.startIndex = startIndex;
           _this.endIndex = _this.startIndex + loadCount;
-          _this.setState({ needRender: !needRender });
+          // console.log(
+          //   "**index**" + index,
+          //   "**startIndex**" + this.startIndex,
+          //   "**endIndex**" + this.endIndex
+          // );
+          _this.sliceTreeList(_this.startIndex, _this.endIndex);
         }
         // console.log(
         //   "**index**" + index,
@@ -156,9 +170,20 @@ var InfiniteScroll = function (_Component) {
       // }
     };
 
+    _this.sliceTreeList = function (startIndex, endIndex) {
+      var flatTreeData = JSON.parse(JSON.stringify(_this.treeList)),
+          newTreeList = []; //存储截取后的新数据
+      // console.log('startIndex' , startIndex, 'endIndex', endIndex)
+      newTreeList = flatTreeData.slice(startIndex, endIndex);
+      // console.log('截取后', JSON.stringify(newTreeList))
+      _this.props.handleTreeListChange && _this.props.handleTreeListChange(newTreeList, _this.scrollTop);
+    };
+
+    _this.rowsInView = defaultRowsInView;
+    //一维数组
     _this.treeList = props.treeList;
     //一次加载多少数据
-    // this.loadCount = loadBuffer ? this.rowsInView + loadBuffer * 2 : 16; 
+    _this.loadCount = loadBuffer ? _this.rowsInView + loadBuffer * 2 : 16;
     //可视区第一条数据的 index
     _this.currentIndex = 0;
     _this.startIndex = _this.currentIndex; //数据开始位置
@@ -279,6 +304,13 @@ var InfiniteScroll = function (_Component) {
   };
   /**
    * 
+   */
+
+
+  /**
+   * 根据 startIndex 和 endIndex 截取数据
+   * @param startIndex
+   * @param endIndex
    */
 
 

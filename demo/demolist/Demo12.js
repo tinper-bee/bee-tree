@@ -7,7 +7,7 @@
 import React, { Component } from 'react';
 import Tree from '../../src';
 
-const x = 10;
+const x = 50;
 const y = 5;
 const z = 1;
 const gData = [];

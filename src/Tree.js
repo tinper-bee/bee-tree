@@ -18,12 +18,9 @@ import {
 } from './util';
 import PropTypes from 'prop-types';
 import { KeyCode } from 'tinper-bee-core';
+import CONFIG from './config';
 
 function noop() {}
-
-const defaultHeight = 24; //树节点行高
-const loadBuffer = 3; //缓冲区数据量
-const defaultRowsInView = 10; //可视区数据量
 
 class Tree extends React.Component {
   constructor(props) {
@@ -42,35 +39,35 @@ class Tree extends React.Component {
       dragOverNodeKey: '',
       dropNodeKey: '',
       focusKey: '', //上下箭头选择树节点时，用于标识focus状态
-      treeData: [], //Tree结构数组
-      flatTreeData: [], //一维数组
+      treeData: [], //Tree结构数组(全量)
+      flatTreeData: [], //一维数组(全量)
     };
     //默认显示20条，rowsInView根据定高算的。在非固定高下，这个只是一个大概的值。
-    this.rowsInView = defaultRowsInView;
+    this.rowsInView = CONFIG.defaultRowsInView;
     //一次加载多少数据
-    this.loadCount = loadBuffer ? this.rowsInView + loadBuffer * 2 : 16; 
+    this.loadCount = CONFIG.loadBuffer ? this.rowsInView + CONFIG.loadBuffer * 2 : 16;
+    this.flatTreeKeysMap = {}; //存储所有 key-value 的映射，方便获取各节点信息
+    this.startIndex = 0;
+    this.endIndex = this.startIndex + this.loadCount;
   }
 
   componentWillMount() {
     const { treeData,lazyLoad } = this.props;
-    let flatTreeData = [],
-        sliceTreeList = [];
+    let sliceTreeList = [];
     //启用懒加载，把 Tree 结构拍平，为后续动态截取数据做准备
     if(lazyLoad) {
-      flatTreeData = this.deepTraversal(treeData);
-      // console.log('flatTreeData', JSON.stringify(flatTreeData));
+      let flatTreeData = this.deepTraversal(treeData);
       flatTreeData.forEach((element) => {
         if(sliceTreeList.length >= this.loadCount) return;
-        //该节点的父节点是展开状态 或 该节点是根节点
-        if(element.isShown || element.parentKey === null){
-          sliceTreeList.push(element);
-        }
+        sliceTreeList.push(element);
       });
       this.handleTreeListChange(sliceTreeList);
-    }else {
       this.setState({
-        treeData,
         flatTreeData
+      })
+    } else {
+      this.setState({
+        treeData
       })
     }
   }
@@ -265,6 +262,12 @@ onExpand(treeNode,keyType) {
           });
         }
       });
+    }
+    if(this.props.lazyLoad){
+      let flatTreeData = this.deepTraversal(treeData);
+      this.setState({
+        flatTreeData
+      })
     }
   }
 
@@ -774,7 +777,7 @@ onExpand(treeNode,keyType) {
   /**
    * 将截取后的 List 数组转换为 Tree 结构，并更新 state
    */
-  handleTreeListChange = (treeList) => {
+  handleTreeListChange = (treeList, startIndex, endIndex) => {
     // 属性配置设置
     let attr = {
       id: 'key',
@@ -782,48 +785,26 @@ onExpand(treeNode,keyType) {
       name: 'title',
       rootId: null
     };
-    let treeData = convertListToTree(treeList, attr);
+    let treeData = convertListToTree(treeList, attr, this.flatTreeKeysMap);
+
+    this.startIndex = typeof(startIndex) !== "undefined" ? startIndex : this.startIndex;
+    this.endIndex = typeof(endIndex) !== "undefined" ? endIndex : this.endIndex;
+
     this.setState({
       treeData : treeData
     })
   }
-
-  /**
-   * 把 treeData 拍平，变为一维数组
-   * @param {*} treeData 
-   */
-  // beatFlatTreeData = (treeData) => {
-    // console.log('treeData: ',treeData);
-    // let flatTreeData = this.deepTraversal(treeData);
-    // console.log('flatTreeData: ', JSON.stringify(flatTreeData) );
-    // 属性配置设置
-    // let attr = {
-    //   id: 'key',
-    //   parendId: 'parentKey',
-    //   name: 'title',
-    //   rootId: null
-    // };
-    // let treeData = convertFlatDataToTree(flatTreeData, attr);
-    // this.renderTreefromData(treeData);
-  // }
-
   
   /**
    * 深度遍历 treeData，把Tree数据拍平，变为一维数组
    * @param {*} treeData 
    * @param {*} parentKey 标识父节点
-   * 转换成如下结构
-   *  {
-        "title":"0-0",     //显示的值
-        "key":"0-0",       //唯一标识（必须）
-        "isExpanded":true, //是否展开
-        "hasChildren":true,//false 是叶子节点
-        "parentKey":null,  //父节点的 key 值
-      }
+   * @param {*} isShown 该节点是否显示在页面中，当节点的父节点是展开状态 或 该节点是根节点时，该值为 true
    */
-  deepTraversal = (treeData, parentKey, isShown) => {
+  deepTraversal = (treeData, parentKey=null, isShown) => {
     let {expandedKeys} = this.state,
         flatTreeData = [],
+        flatTreeKeysMap = this.flatTreeKeysMap, //存储所有 key-value 的映射，方便获取各节点信息
         dataCopy = JSON.parse(JSON.stringify(treeData));
     if(Array.isArray(dataCopy)){
       for (let i=0, l=dataCopy.length; i<l; i++) {
@@ -832,7 +813,11 @@ onExpand(treeNode,keyType) {
         dataCopy[i].isExpanded = isExpanded;
         dataCopy[i].parentKey = parentKey || null;
         dataCopy[i].isShown = isShown;
-        flatTreeData.push(dataCopy[i]); // 取每项数据放入一个新数组
+        //该节点的父节点是展开状态 或 该节点是根节点
+        if(isShown || parentKey === null){
+          flatTreeData.push(dataCopy[i]); // 取每项数据放入一个新数组
+          flatTreeKeysMap[key] = dataCopy[i];
+        }
         if (Array.isArray(dataCopy[i]["children"]) && dataCopy[i]["children"].length > 0){
           // 若存在children则递归调用，把数据拼接到新数组中，并且删除该children
           flatTreeData = flatTreeData.concat(this.deepTraversal(dataCopy[i]["children"], key, isExpanded));
@@ -848,8 +833,19 @@ onExpand(treeNode,keyType) {
   /**
    * 根据 treeData 渲染树节点
    * @param data 树形结构的数组
+   * @param preHeight 前置占位高度
+   * @param sufHeight 后置占位高度
    */
-  renderTreefromData = (data) => {
+  renderTreefromData = (data, preHeight, sufHeight) => {
+    let treeNodes = [];
+    let {lazyLoad} = this.props;
+    // 前置占位
+    if(lazyLoad){
+      treeNodes.push(
+        <li style={{height : preHeight}} className='u-treenode-start' key={'tree_node_start'}></li>
+      )
+    }
+    // 渲染真实树节点
     const loop = data => data.map((item) => {
       if (item.children) {
         return (
@@ -860,7 +856,30 @@ onExpand(treeNode,keyType) {
       }
       return <TreeNode key={item.key} title={item.key} isLeaf={true}/>;
     });
-    return loop(data);
+    treeNodes = treeNodes.concat(loop(data));
+    // 后置占位
+    if(lazyLoad){
+      treeNodes.push(
+        <li style={{height : sufHeight}} className='u-treenode-end' key={'tree_node_end'}></li>
+      )
+    }
+
+    return treeNodes;
+  }
+
+  /**
+   * @description 计算懒加载时的前置占位和后置占位
+   * @param start {Number} 开始截取数据的位置
+   * @param end {Number} 结束截取数据的位置
+   * @return sumHeight {Number} 空白占位的高度
+   */
+  getSumHeight = (start, end) => {
+    let sumHeight = 0;
+    let span = Math.abs(end - start);
+    if(span) {
+      sumHeight = span * CONFIG.defaultHeight;
+    }
+    return sumHeight;
   }
 
   renderTreeNode(child, index, level = 0) {
@@ -944,18 +963,26 @@ onExpand(treeNode,keyType) {
 
   render() {
     const props = this.props;
+    const { showLine, prefixCls, className, focusable, checkable, loadData, checkStrictly, tabIndexValue, lazyLoad } = this.props;
     const { treeData,flatTreeData } = this.state;
+    let { startIndex, endIndex } = this,
+        preHeight = 0,
+        sufHeight = 0;
+    if(lazyLoad){
+      preHeight = this.getSumHeight(0, startIndex);
+      sufHeight = this.getSumHeight(endIndex, flatTreeData.length);
+    }
     let treeNode = []; //根据传入的 treeData 生成的 treeNode 节点数组
     let showLineCls = "";
-    if (props.showLine) {
-      showLineCls = `${props.prefixCls}-show-line`;
+    if (showLine) {
+      showLineCls = `${prefixCls}-show-line`;
     }
     const domProps = {
-      className: classNames(props.className, props.prefixCls, showLineCls),
+      className: classNames(className, prefixCls, showLineCls),
       role: 'tree-node',
     };
 
-    if (props.focusable) {
+    if (focusable) {
       domProps.onFocus = this.onUlFocus;
       domProps.onMouseEnter = this.onUlMouseEnter;
       domProps.onMouseLeave = this.onUlMouseLeave;
@@ -973,11 +1000,11 @@ onExpand(treeNode,keyType) {
         };
       });
     };
-    if (props.showLine && !props.checkable ) {
+    if (showLine && !checkable ) {
       getTreeNodesStates();
     }
-    if (props.checkable && (this.checkedKeysChange || props.loadData ||  this.dataChange)) {
-      if (props.checkStrictly) {
+    if (checkable && (this.checkedKeysChange || loadData ||  this.dataChange)) {
+      if (checkStrictly) {
         getTreeNodesStates();
       } else if (props._treeNodesStates) {
         this.treeNodesStates = props._treeNodesStates.treeNodesStates;
@@ -986,7 +1013,7 @@ onExpand(treeNode,keyType) {
       } else {
         const checkedKeys = this.state.checkedKeys;
         let checkKeys;
-        if (!props.loadData && this.checkKeys && this._checkedKeys &&
+        if (!loadData && this.checkKeys && this._checkedKeys &&
           arraysEqual(this._checkedKeys, checkedKeys) && !this.dataChange) {
           // if checkedKeys the same as _checkedKeys from onCheck, use _checkedKeys.
           checkKeys = this.checkKeys;
@@ -1015,17 +1042,18 @@ onExpand(treeNode,keyType) {
       }
     }
     if(treeData) {
-      treeNode = this.renderTreefromData(treeData);
-      console.log('render', treeNode);
+      treeNode = this.renderTreefromData(treeData, preHeight, sufHeight);
+      // console.log('render', treeNode);
     }
     this.selectKeyDomExist = false;
     return (
-      props.lazyLoad ? 
+      lazyLoad ? 
         <InfiniteScroll
           className="u-tree-infinite-scroll"
           treeList={flatTreeData}
+          handleTreeListChange={this.handleTreeListChange}
         >
-          <ul {...domProps} unselectable="true" ref={(el)=>{this.tree = el}}  tabIndex={props.focusable && props.tabIndexValue}>
+          <ul {...domProps} unselectable="true" ref={(el)=>{this.tree = el}}  tabIndex={focusable && tabIndexValue}>
             {/* {React.Children.map(props.children, this.renderTreeNode, this)} */}
             {
               treeData ? 
@@ -1036,7 +1064,7 @@ onExpand(treeNode,keyType) {
           </ul>
         </InfiniteScroll>
         :
-        <ul {...domProps} unselectable="true" ref={(el)=>{this.tree = el}}  tabIndex={props.focusable && props.tabIndexValue}>
+        <ul {...domProps} unselectable="true" ref={(el)=>{this.tree = el}}  tabIndex={focusable && tabIndexValue}>
             {/* {React.Children.map(props.children, this.renderTreeNode, this)} */}
             {
               treeData ? 

@@ -17,6 +17,8 @@ exports.isTreeNode = isTreeNode;
 exports.toArray = toArray;
 exports.getNodeChildren = getNodeChildren;
 exports.warnOnlyTreeNode = warnOnlyTreeNode;
+exports.mapChildren = mapChildren;
+exports.convertListToTree = convertListToTree;
 
 var _react = require('react');
 
@@ -367,3 +369,104 @@ function warnOnlyTreeNode() {
   onlyTreeNodeWarned = true;
   console.warn('Tree only accept TreeNode as children.');
 }
+
+/**
+ * Use `rc-util` `toArray` to get the children list which keeps the key.
+ * And return single node if children is only one(This can avoid `key` missing check).
+ */
+function mapChildren(children, func) {
+  var list = toArray(children).map(func);
+  if (list.length === 1) {
+    return list[0];
+  }
+  return list;
+}
+
+/**
+ * 将一维数组转换为树结构
+ * @param {*} treeData  扁平结构的 List 数组
+ * @param {*} attr 属性配置设置
+ * @param {*} flatTreeKeysMap 存储所有 key-value 的映射，方便获取各节点信息
+ */
+function convertListToTree(treeData, attr, flatTreeKeysMap) {
+  var tree = [];
+  var resData = treeData,
+      resKeysMap = {};
+  resData.map(function (element) {
+    resKeysMap[element.key] = element;
+  });
+
+  var findParentNode = function findParentNode(node) {
+    var parentKey = node[attr.parendId];
+    if (!resKeysMap.hasOwnProperty(parentKey)) {
+      var obj = {
+        key: flatTreeKeysMap[parentKey][attr.id],
+        title: flatTreeKeysMap[parentKey][attr.name],
+        children: []
+      };
+      tree.unshift(obj);
+      resKeysMap[obj.key] = obj;
+    }
+    return flatTreeKeysMap[parentKey];
+  };
+
+  for (var i = 0; i < resData.length; i++) {
+    if (resData[i].parentKey === attr.rootId) {
+      var obj = {
+        key: resData[i][attr.id],
+        title: resData[i][attr.name],
+        children: []
+      };
+      tree.push(obj);
+      resData.splice(i, 1);
+      i--;
+    } else {
+      var parentNode = flatTreeKeysMap[resData[i][attr.id]],
+          parentKey = parentNode[attr.parendId];
+      while (parentKey !== attr.rootId) {
+        parentNode = findParentNode(parentNode, attr, resKeysMap, flatTreeKeysMap, tree);
+        parentKey = parentNode[attr.parendId];
+      }
+    }
+  }
+  console.log('tree', tree);
+  var run = function run(treeArrs) {
+    if (resData.length > 0) {
+      for (var _i2 = 0; _i2 < treeArrs.length; _i2++) {
+        for (var j = 0; j < resData.length; j++) {
+          if (treeArrs[_i2].key === resData[j][attr.parendId]) {
+            var _obj = {
+              key: resData[j][attr.id],
+              title: resData[j][attr.name],
+              children: []
+            };
+            treeArrs[_i2].children.push(_obj);
+            resData.splice(j, 1);
+            j--;
+          }
+        }
+        run(treeArrs[_i2].children);
+      }
+    }
+  };
+  run(tree);
+  return tree;
+}
+
+/**
+ * 查找父节点
+ * @param {*} node 
+ */
+// export function findParentNode(node,  attr, resKeysMap, flatTreeKeysMap, tree){
+//   let parentKey = node[attr.parendId];
+//   if (!resKeysMap.hasOwnProperty(parentKey) ) {
+//     let obj = {
+//       key: flatTreeKeysMap[parentKey][attr.id],
+//       title: flatTreeKeysMap[parentKey][attr.name],
+//       children: []
+//     };
+//     tree.push(obj);
+//     resKeysMap[obj.key] = obj;
+//   }
+//   return flatTreeKeysMap[parentKey];
+// }

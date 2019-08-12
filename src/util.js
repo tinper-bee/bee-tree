@@ -337,12 +337,32 @@ export function mapChildren(children,func) {
 
 /**
  * 将一维数组转换为树结构
- * @param {*} treeData 
- * @param {*} attr 
+ * @param {*} treeData  扁平结构的 List 数组
+ * @param {*} attr 属性配置设置
+ * @param {*} flatTreeKeysMap 存储所有 key-value 的映射，方便获取各节点信息
  */
-export function convertListToTree(treeData, attr) {
+export function convertListToTree(treeData, attr, flatTreeKeysMap) {
     let tree = [];
-    let resData = treeData;
+    let resData = treeData,
+        resKeysMap = {};
+    resData.map((element) => {
+        resKeysMap[element.key] = element;
+    });
+    // 查找父节点，为了补充不完整的数据结构
+    let findParentNode = (node) => {
+      let parentKey = node[attr.parendId];
+      if (!resKeysMap.hasOwnProperty(parentKey) ) {
+        let obj = {
+          key: flatTreeKeysMap[parentKey][attr.id],
+          title: flatTreeKeysMap[parentKey][attr.name],
+          children: []
+        };
+        tree.unshift(obj);
+        resKeysMap[obj.key] = obj;
+      }
+      return flatTreeKeysMap[parentKey];
+    }
+
     for (let i = 0; i < resData.length; i++) {
         if (resData[i].parentKey === attr.rootId) {
             let obj = {
@@ -353,8 +373,16 @@ export function convertListToTree(treeData, attr) {
             tree.push(obj);
             resData.splice(i, 1);
             i--;
+        }else {
+            let parentNode = flatTreeKeysMap[resData[i][attr.id]],
+                parentKey = parentNode[attr.parendId];
+            while(parentKey !== attr.rootId){
+              parentNode = findParentNode(parentNode);
+              parentKey = parentNode[attr.parendId];
+            }
         }
     }
+    // console.log('tree',tree);
     var run = function(treeArrs) {
         if (resData.length > 0) {
             for (let i = 0; i < treeArrs.length; i++) {
@@ -376,4 +404,64 @@ export function convertListToTree(treeData, attr) {
     };
     run(tree);
     return tree;
+}
+
+function isObject(value) {
+  const type = typeof value
+  return value != null && (type == 'object' || type == 'function')
+}
+
+/**
+ * 函数防抖
+ * @param {*} func 
+ * @param {*} wait 
+ * @param {*} immediate 
+ */
+export function debounce(func, wait, immediate) {
+  let timeout;
+  return function debounceFunc() {
+    const context = this;
+    const args = arguments;
+    // https://fb.me/react-event-pooling
+    if (args[0] && args[0].persist) {
+      args[0].persist();
+    }
+    const later = () => {
+      timeout = null;
+      if (!immediate) {
+        func.apply(context, args);
+      }
+    };
+    const callNow = immediate && !timeout;
+    clearTimeout(timeout);
+    timeout = setTimeout(later, wait);
+    if (callNow) {
+      func.apply(context, args);
+    }
+  };
+}
+
+/**
+ * 函数节流
+ * @param {*} func 延时调用函数
+ * @param {*} wait 延迟多长时间
+ * @param {*} options 至少多长时间触发一次
+ * @return Function 延迟执行的方法
+ */
+export function throttle(func, wait, options) {
+  let leading = true
+  let trailing = true
+
+  if (typeof func !== 'function') {
+    throw new TypeError('Expected a function')
+  }
+  if (isObject(options)) {
+    leading = 'leading' in options ? !!options.leading : leading
+    trailing = 'trailing' in options ? !!options.trailing : trailing
+  }
+  return debounce(func, wait, {
+    leading,
+    trailing,
+    'maxWait': wait,
+  })
 }

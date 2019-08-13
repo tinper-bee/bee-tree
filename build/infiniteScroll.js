@@ -12,6 +12,12 @@ var _propTypes = require('prop-types');
 
 var _propTypes2 = _interopRequireDefault(_propTypes);
 
+var _util = require('./util');
+
+var _config = require('./config');
+
+var _config2 = _interopRequireDefault(_config);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
 function _defaults(obj, defaults) { var keys = Object.getOwnPropertyNames(defaults); for (var i = 0; i < keys.length; i++) { var key = keys[i]; var value = Object.getOwnPropertyDescriptor(defaults, key); if (value && value.configurable && obj[key] === undefined) { Object.defineProperty(obj, key, value); } } return obj; }
@@ -22,12 +28,10 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : _defaults(subClass, superClass); }
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : _defaults(subClass, superClass); } /**
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * 处理滚动加载逻辑
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
 
-var defaultHeight = 24; //树节点行高
-var loadBuffer = 5; //缓冲区数据量
-var defaultRowsInView = 10; //可视区数据量
-var rowDiff = 3; //行差值
 
 var InfiniteScroll = function (_Component) {
   _inherits(InfiniteScroll, _Component);
@@ -60,23 +64,27 @@ var InfiniteScroll = function (_Component) {
 
     _this.scrollListener = function () {
       var el = _this.scrollComponent;
+
+      var parentNode = _this.getParentElement(el);
+
+      _this.scrollTop = parentNode.scrollTop;
+
+      setInterval((0, _util.debounce)(_this.handleScrollY, 300), 500);
+    };
+
+    _this.handleScrollY = function () {
       var currentIndex = _this.currentIndex,
           startIndex = _this.startIndex,
           endIndex = _this.endIndex,
           treeList = _this.treeList,
-          loadCount = _this.loadCount;
-
-      // const scrollEl = window;
-      var parentNode = _this.getParentElement(el);
-
-      _this.scrollTop = parentNode.scrollTop;
-      console.log('===scrollTop===', _this.scrollTop);
+          loadCount = _this.loadCount,
+          rowsInView = _this.rowsInView;
 
       var index = 0;
       var tempScrollTop = _this.scrollTop;
       //根据 scrollTop 计算 currentIndex
       while (tempScrollTop > 0) {
-        tempScrollTop -= defaultHeight;
+        tempScrollTop -= _config2["default"].defaultHeight;
         if (tempScrollTop > 0) {
           index += 1;
         }
@@ -84,106 +92,56 @@ var InfiniteScroll = function (_Component) {
 
       //true 为向下滚动， false 为向上滚动
       var isScrollDown = index - currentIndex > 0 ? true : false;
-      // console.log('isScrollDown',isScrollDown)
 
       if (index < 0) index = 0;
       //如果之前的索引和下一次的不一样则重置索引和滚动的位置
       _this.currentIndex = currentIndex !== index ? index : currentIndex;
-      // console.log('currentIndex****', currentIndex);
-
-      var rowsInView = Math.floor(parentNode.clientHeight / defaultHeight);
 
       // 如果rowsInView 小于 缓存的数据则重新render
       // 向下滚动 下临界值超出缓存的endIndex则重新渲染
-      if (isScrollDown && rowsInView + index > endIndex - rowDiff) {
-        startIndex = index - loadBuffer > 0 ? index - loadBuffer : 0;
+      if (isScrollDown && rowsInView + index > endIndex - _config2["default"].rowDiff) {
+        startIndex = index - _config2["default"].loadBuffer > 0 ? index - _config2["default"].loadBuffer : 0;
         endIndex = startIndex + loadCount;
-        // if (endIndex > treeList.length) {
-        //   endIndex = treeList.length;
-        // }
+        if (endIndex > treeList.length) {
+          endIndex = treeList.length;
+        }
         if (endIndex > _this.endIndex) {
           _this.startIndex = startIndex;
           _this.endIndex = endIndex;
-          // console.log(
-          //   "**currentIndex**" + this.currentIndex,
-          //   "**startIndex**" + this.startIndex,
-          //   "**endIndex**" + this.endIndex
-          // );
           _this.sliceTreeList(_this.startIndex, _this.endIndex);
         }
       }
       // 向上滚动，当前的index是否已经加载（currentIndex），若干上临界值小于startIndex则重新渲染
-      if (!isScrollDown && index < startIndex + rowDiff) {
-        startIndex = index - loadBuffer;
+      if (!isScrollDown && index < startIndex + _config2["default"].rowDiff) {
+        startIndex = index - _config2["default"].loadBuffer;
         if (startIndex < 0) {
           startIndex = 0;
         }
         if (startIndex < _this.startIndex) {
           _this.startIndex = startIndex;
           _this.endIndex = _this.startIndex + loadCount;
-          // console.log(
-          //   "**index**" + index,
-          //   "**startIndex**" + this.startIndex,
-          //   "**endIndex**" + this.endIndex
-          // );
           _this.sliceTreeList(_this.startIndex, _this.endIndex);
         }
-        // console.log(
-        //   "**index**" + index,
-        //   "**startIndex**" + this.startIndex,
-        //   "**endIndex**" + this.endIndex
-        // );
       }
-
-      // let offset;
-      // if (this.props.useWindow) {
-      //   const doc =
-      //     document.documentElement || document.body.parentNode || document.body;
-      //   const scrollTop =
-      //     scrollEl.pageYOffset !== undefined
-      //       ? scrollEl.pageYOffset
-      //       : doc.scrollTop;
-      //   if (this.props.isReverse) {
-      //     offset = scrollTop;
-      //   } else {
-      //     offset = this.calculateOffset(el, scrollTop);
-      //   }
-      // } else if (this.props.isReverse) {
-      //   offset = parentNode.scrollTop;
-      // } else {
-      //   offset = el.scrollHeight - parentNode.scrollTop - parentNode.clientHeight;
-      // }
-
-      // Here we make sure the element is visible as well as checking the offset
-      // if (
-      //   offset < Number(this.props.threshold) &&
-      //   (el && el.offsetParent !== null)
-      // ) {
-      //   this.detachScrollListener();
-      //   this.beforeScrollHeight = parentNode.scrollHeight;
-      //   this.beforeScrollTop = parentNode.scrollTop;
-      // Call loadMore after detachScrollListener to allow for non-async loadMore functions
-      //   if (typeof this.props.loadMore === 'function') {
-      //     this.props.loadMore((this.pageLoaded += 1));
-      //     this.loadMore = true;
-      //   }
-      // }
     };
 
     _this.sliceTreeList = function (startIndex, endIndex) {
       var flatTreeData = JSON.parse(JSON.stringify(_this.treeList)),
           newTreeList = []; //存储截取后的新数据
-      // console.log('startIndex' , startIndex, 'endIndex', endIndex)
+      // console.log(
+      //   "**startIndex**" + startIndex,
+      //   "**endIndex**" + endIndex
+      // );
       newTreeList = flatTreeData.slice(startIndex, endIndex);
       // console.log('截取后', JSON.stringify(newTreeList))
-      _this.props.handleTreeListChange && _this.props.handleTreeListChange(newTreeList, _this.scrollTop);
+      _this.props.handleTreeListChange && _this.props.handleTreeListChange(newTreeList, startIndex, endIndex);
     };
 
-    _this.rowsInView = defaultRowsInView;
+    _this.rowsInView = _config2["default"].defaultRowsInView;
     //一维数组
     _this.treeList = props.treeList;
     //一次加载多少数据
-    _this.loadCount = loadBuffer ? _this.rowsInView + loadBuffer * 2 : 16;
+    _this.loadCount = _config2["default"].loadBuffer ? _this.rowsInView + _config2["default"].loadBuffer * 2 : 16;
     //可视区第一条数据的 index
     _this.currentIndex = 0;
     _this.startIndex = _this.currentIndex; //数据开始位置
@@ -196,12 +154,16 @@ var InfiniteScroll = function (_Component) {
     this.attachScrollListener();
   };
 
+  // componentWillReceiveProps(nextProps){
+  //   let {treeList:newTreeList} = nextProps;
+  //   let {treeList:oldTreeList} = this.props;
+  //   if(newTreeList !== oldTreeList) {
+  //     debugger
+  //     this.treeList = newTreeList
+  //   }
+  // }
+
   InfiniteScroll.prototype.componentDidUpdate = function componentDidUpdate() {
-    if (this.props.isReverse && this.loadMore) {
-      var parentElement = this.getParentElement(this.scrollComponent);
-      parentElement.scrollTop = parentElement.scrollHeight - this.beforeScrollHeight + this.beforeScrollTop;
-      this.loadMore = false;
-    }
     this.attachScrollListener();
   };
 
@@ -228,15 +190,9 @@ var InfiniteScroll = function (_Component) {
     return passive;
   };
 
-  // Set a defaut loader for all your `InfiniteScroll` components
-  InfiniteScroll.prototype.setDefaultLoader = function setDefaultLoader(loader) {
-    this.defaultLoader = loader;
-  };
   /**
    * 解除mousewheel事件监听
    */
-
-
   InfiniteScroll.prototype.detachMousewheelListener = function detachMousewheelListener() {
     var scrollEl = window;
     if (this.props.useWindow === false) {
@@ -292,9 +248,8 @@ var InfiniteScroll = function (_Component) {
     var scrollY = scrollEl && scrollEl.clientHeight;
 
     //默认显示20条，rowsInView根据定高算的。在非固定高下，这个只是一个大概的值。
-    this.rowsInView = scrollY ? Math.floor(scrollY / defaultHeight) : defaultRowsInView;
+    this.rowsInView = scrollY ? Math.floor(scrollY / _config2["default"].defaultHeight) : _config2["default"].defaultRowsInView;
 
-    scrollEl.addEventListener('mousewheel', this.mousewheelListener, this.options ? this.options : this.props.useCapture);
     scrollEl.addEventListener('scroll', this.scrollListener, this.options ? this.options : this.props.useCapture);
     scrollEl.addEventListener('resize', this.scrollListener, this.options ? this.options : this.props.useCapture);
 
@@ -303,7 +258,12 @@ var InfiniteScroll = function (_Component) {
     }
   };
   /**
-   * 
+   * 滚动事件监听
+   */
+
+
+  /**
+   * @description 根据返回的scrollTop计算当前的索引。
    */
 
 
@@ -314,41 +274,16 @@ var InfiniteScroll = function (_Component) {
    */
 
 
-  InfiniteScroll.prototype.calculateOffset = function calculateOffset(el, scrollTop) {
-    if (!el) {
-      return 0;
-    }
-
-    return this.calculateTopPosition(el) + (el.offsetHeight - scrollTop - window.innerHeight);
-  };
-
-  InfiniteScroll.prototype.calculateTopPosition = function calculateTopPosition(el) {
-    if (!el) {
-      return 0;
-    }
-    return el.offsetTop + this.calculateTopPosition(el.offsetParent);
-  };
-
   InfiniteScroll.prototype.render = function render() {
     var _this2 = this;
 
-    var renderProps = this.filterProps(this.props);
-
-    var children = renderProps.children,
-        element = renderProps.element,
-        hasMore = renderProps.hasMore,
-        initialLoad = renderProps.initialLoad,
-        isReverse = renderProps.isReverse,
-        loader = renderProps.loader,
-        loadMore = renderProps.loadMore,
-        pageStart = renderProps.pageStart,
-        ref = renderProps.ref,
-        threshold = renderProps.threshold,
-        useCapture = renderProps.useCapture,
-        useWindow = renderProps.useWindow,
-        getScrollParent = renderProps.getScrollParent,
-        treeList = renderProps.treeList,
-        props = _objectWithoutProperties(renderProps, ['children', 'element', 'hasMore', 'initialLoad', 'isReverse', 'loader', 'loadMore', 'pageStart', 'ref', 'threshold', 'useCapture', 'useWindow', 'getScrollParent', 'treeList']);
+    var _props = this.props,
+        children = _props.children,
+        element = _props.element,
+        ref = _props.ref,
+        getScrollParent = _props.getScrollParent,
+        treeList = _props.treeList,
+        props = _objectWithoutProperties(_props, ['children', 'element', 'ref', 'getScrollParent', 'treeList']);
 
     props.ref = function (node) {
       _this2.scrollComponent = node;
@@ -358,15 +293,7 @@ var InfiniteScroll = function (_Component) {
     };
 
     var childrenArray = [children];
-    // if (hasMore) {
-    //   if (loader) {
-    //     isReverse ? childrenArray.unshift(loader) : childrenArray.push(loader);
-    //   } else if (this.defaultLoader) {
-    //     isReverse
-    //       ? childrenArray.unshift(this.defaultLoader)
-    //       : childrenArray.push(this.defaultLoader);
-    //   }
-    // }
+
     return _react2["default"].createElement(element, props, childrenArray);
   };
 
@@ -376,34 +303,17 @@ var InfiniteScroll = function (_Component) {
 InfiniteScroll.propTypes = {
   children: _propTypes2["default"].node.isRequired,
   element: _propTypes2["default"].node,
-  hasMore: _propTypes2["default"].bool,
-  initialLoad: _propTypes2["default"].bool,
-  isReverse: _propTypes2["default"].bool,
-  loader: _propTypes2["default"].node,
-  loadMore: _propTypes2["default"].func.isRequired,
-  pageStart: _propTypes2["default"].number,
   ref: _propTypes2["default"].func,
   getScrollParent: _propTypes2["default"].func,
-  threshold: _propTypes2["default"].number,
-  useCapture: _propTypes2["default"].bool,
-  useWindow: _propTypes2["default"].bool,
-  //=====
-  treeList: _propTypes2["default"].array
+  treeList: _propTypes2["default"].array,
+  handleTreeListChange: _propTypes2["default"].func
 };
 InfiniteScroll.defaultProps = {
   element: 'div',
-  hasMore: false,
-  initialLoad: true,
-  pageStart: 0,
   ref: null,
-  threshold: 250,
-  useWindow: true,
-  isReverse: false,
-  useCapture: false,
-  loader: null,
   getScrollParent: null,
-  //=====
-  treeList: []
+  treeList: [],
+  handleTreeListChange: function handleTreeListChange() {}
 };
 exports["default"] = InfiniteScroll;
 module.exports = exports['default'];

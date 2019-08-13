@@ -3,6 +3,9 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; /* eslint no-loop-func: 0*/
+
 exports.browser = browser;
 exports.getOffset = getOffset;
 exports.loopAllChildren = loopAllChildren;
@@ -17,8 +20,9 @@ exports.isTreeNode = isTreeNode;
 exports.toArray = toArray;
 exports.getNodeChildren = getNodeChildren;
 exports.warnOnlyTreeNode = warnOnlyTreeNode;
-exports.mapChildren = mapChildren;
 exports.convertListToTree = convertListToTree;
+exports.debounce = debounce;
+exports.throttle = throttle;
 
 var _react = require('react');
 
@@ -75,8 +79,6 @@ function browser(navigator) {
 // }
 
 /* eslint-disable */
-/* eslint no-loop-func: 0*/
-
 function getOffset(ele) {
   var doc = void 0,
       win = void 0,
@@ -371,18 +373,6 @@ function warnOnlyTreeNode() {
 }
 
 /**
- * Use `rc-util` `toArray` to get the children list which keeps the key.
- * And return single node if children is only one(This can avoid `key` missing check).
- */
-function mapChildren(children, func) {
-  var list = toArray(children).map(func);
-  if (list.length === 1) {
-    return list[0];
-  }
-  return list;
-}
-
-/**
  * 将一维数组转换为树结构
  * @param {*} treeData  扁平结构的 List 数组
  * @param {*} attr 属性配置设置
@@ -395,7 +385,7 @@ function convertListToTree(treeData, attr, flatTreeKeysMap) {
   resData.map(function (element) {
     resKeysMap[element.key] = element;
   });
-
+  // 查找父节点，为了补充不完整的数据结构
   var findParentNode = function findParentNode(node) {
     var parentKey = node[attr.parendId];
     if (!resKeysMap.hasOwnProperty(parentKey)) {
@@ -424,12 +414,12 @@ function convertListToTree(treeData, attr, flatTreeKeysMap) {
       var parentNode = flatTreeKeysMap[resData[i][attr.id]],
           parentKey = parentNode[attr.parendId];
       while (parentKey !== attr.rootId) {
-        parentNode = findParentNode(parentNode, attr, resKeysMap, flatTreeKeysMap, tree);
+        parentNode = findParentNode(parentNode);
         parentKey = parentNode[attr.parendId];
       }
     }
   }
-  console.log('tree', tree);
+  // console.log('tree',tree);
   var run = function run(treeArrs) {
     if (resData.length > 0) {
       for (var _i2 = 0; _i2 < treeArrs.length; _i2++) {
@@ -453,20 +443,62 @@ function convertListToTree(treeData, attr, flatTreeKeysMap) {
   return tree;
 }
 
+function isObject(value) {
+  var type = typeof value === 'undefined' ? 'undefined' : _typeof(value);
+  return value != null && (type == 'object' || type == 'function');
+}
+
 /**
- * 查找父节点
- * @param {*} node 
+ * 函数防抖
+ * @param {*} func 
+ * @param {*} wait 
+ * @param {*} immediate 
  */
-// export function findParentNode(node,  attr, resKeysMap, flatTreeKeysMap, tree){
-//   let parentKey = node[attr.parendId];
-//   if (!resKeysMap.hasOwnProperty(parentKey) ) {
-//     let obj = {
-//       key: flatTreeKeysMap[parentKey][attr.id],
-//       title: flatTreeKeysMap[parentKey][attr.name],
-//       children: []
-//     };
-//     tree.push(obj);
-//     resKeysMap[obj.key] = obj;
-//   }
-//   return flatTreeKeysMap[parentKey];
-// }
+function debounce(func, wait, immediate) {
+  var timeout = void 0;
+  return function debounceFunc() {
+    var context = this;
+    var args = arguments;
+    // https://fb.me/react-event-pooling
+    if (args[0] && args[0].persist) {
+      args[0].persist();
+    }
+    var later = function later() {
+      timeout = null;
+      if (!immediate) {
+        func.apply(context, args);
+      }
+    };
+    var callNow = immediate && !timeout;
+    clearTimeout(timeout);
+    timeout = setTimeout(later, wait);
+    if (callNow) {
+      func.apply(context, args);
+    }
+  };
+}
+
+/**
+ * 函数节流
+ * @param {*} func 延时调用函数
+ * @param {*} wait 延迟多长时间
+ * @param {*} options 至少多长时间触发一次
+ * @return Function 延迟执行的方法
+ */
+function throttle(func, wait, options) {
+  var leading = true;
+  var trailing = true;
+
+  if (typeof func !== 'function') {
+    throw new TypeError('Expected a function');
+  }
+  if (isObject(options)) {
+    leading = 'leading' in options ? !!options.leading : leading;
+    trailing = 'trailing' in options ? !!options.trailing : trailing;
+  }
+  return debounce(func, wait, {
+    leading: leading,
+    trailing: trailing,
+    'maxWait': wait
+  });
+}

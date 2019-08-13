@@ -30,6 +30,10 @@ var _propTypes2 = _interopRequireDefault(_propTypes);
 
 var _tinperBeeCore = require('tinper-bee-core');
 
+var _config = require('./config');
+
+var _config2 = _interopRequireDefault(_config);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
 function _defaults(obj, defaults) { var keys = Object.getOwnPropertyNames(defaults); for (var i = 0; i < keys.length; i++) { var key = keys[i]; var value = Object.getOwnPropertyDescriptor(defaults, key); if (value && value.configurable && obj[key] === undefined) { Object.defineProperty(obj, key, value); } } return obj; }
@@ -45,10 +49,6 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 function noop() {}
 
-var defaultHeight = 24; //树节点行高
-var loadBuffer = 3; //缓冲区数据量
-var defaultRowsInView = 10; //可视区数据量
-
 var Tree = function (_React$Component) {
   _inherits(Tree, _React$Component);
 
@@ -57,7 +57,7 @@ var Tree = function (_React$Component) {
 
     var _this = _possibleConstructorReturn(this, _React$Component.call(this, props));
 
-    _this.handleTreeListChange = function (treeList, nextScrollTop) {
+    _this.handleTreeListChange = function (treeList, startIndex, endIndex) {
       // 属性配置设置
       var attr = {
         id: 'key',
@@ -66,9 +66,12 @@ var Tree = function (_React$Component) {
         rootId: null
       };
       var treeData = (0, _util.convertListToTree)(treeList, attr, _this.flatTreeKeysMap);
+
+      _this.startIndex = typeof startIndex !== "undefined" ? startIndex : _this.startIndex;
+      _this.endIndex = typeof endIndex !== "undefined" ? endIndex : _this.endIndex;
+
       _this.setState({
-        treeData: treeData,
-        nextScrollTop: nextScrollTop
+        treeData: treeData
       });
     };
 
@@ -87,6 +90,7 @@ var Tree = function (_React$Component) {
           dataCopy[i].isExpanded = isExpanded;
           dataCopy[i].parentKey = parentKey || null;
           dataCopy[i].isShown = isShown;
+          //该节点的父节点是展开状态 或 该节点是根节点
           if (isShown || parentKey === null) {
             flatTreeData.push(dataCopy[i]); // 取每项数据放入一个新数组
             flatTreeKeysMap[key] = dataCopy[i];
@@ -104,15 +108,6 @@ var Tree = function (_React$Component) {
     };
 
     _this.renderTreefromData = function (data) {
-      var treeNodes = [];
-      var lazyLoad = _this.props.lazyLoad;
-      var nextScrollTop = _this.state.nextScrollTop;
-      // 前置占位
-
-      if (lazyLoad) {
-        treeNodes.push(_react2["default"].createElement(_TreeNode2["default"], { style: { height: nextScrollTop }, className: 'u-treenode-start', key: 'tree_node_start', isLeaf: true }));
-      }
-      // 渲染真实树节点
       var loop = function loop(data) {
         return data.map(function (item) {
           if (item.children) {
@@ -125,14 +120,16 @@ var Tree = function (_React$Component) {
           return _react2["default"].createElement(_TreeNode2["default"], { key: item.key, title: item.key, isLeaf: true });
         });
       };
-      // console.log('loop(data)',loop(data))
-      treeNodes = treeNodes.concat(loop(data));
-      // 后置占位
-      if (lazyLoad) {
-        treeNodes.push(_react2["default"].createElement(_TreeNode2["default"], { style: { height: 300 }, className: 'u-treenode-end', key: 'tree_node_end', isLeaf: true }));
-      }
+      return loop(data);
+    };
 
-      return treeNodes;
+    _this.getSumHeight = function (start, end) {
+      var sumHeight = 0;
+      var span = Math.abs(end - start);
+      if (span) {
+        sumHeight = span * _config2["default"].defaultHeight;
+      }
+      return sumHeight;
     };
 
     ['onKeyDown', 'onCheck', "onUlFocus", "_focusDom", "onUlMouseEnter", "onUlMouseLeave"].forEach(function (m) {
@@ -149,15 +146,17 @@ var Tree = function (_React$Component) {
       dragOverNodeKey: '',
       dropNodeKey: '',
       focusKey: '', //上下箭头选择树节点时，用于标识focus状态
-      treeData: [], //Tree结构数组
-      flatTreeData: [], //一维数组
-      nextScrollTop: 0
+      treeData: [], //Tree结构数组(全量)
+      flatTreeData: [] //一维数组(全量)
     };
     //默认显示20条，rowsInView根据定高算的。在非固定高下，这个只是一个大概的值。
-    _this.rowsInView = defaultRowsInView;
+    _this.rowsInView = _config2["default"].defaultRowsInView;
     //一次加载多少数据
-    _this.loadCount = loadBuffer ? _this.rowsInView + loadBuffer * 2 : 16;
+    _this.loadCount = _config2["default"].loadBuffer ? _this.rowsInView + _config2["default"].loadBuffer * 2 : 16;
     _this.flatTreeKeysMap = {}; //存储所有 key-value 的映射，方便获取各节点信息
+    _this.startIndex = 0;
+    _this.endIndex = _this.startIndex + _this.loadCount;
+    _this.cacheTreeNodes = []; //缓存 treenode 节点数组
     return _this;
   }
 
@@ -172,13 +171,9 @@ var Tree = function (_React$Component) {
     //启用懒加载，把 Tree 结构拍平，为后续动态截取数据做准备
     if (lazyLoad) {
       var flatTreeData = this.deepTraversal(treeData);
-      // console.log('flatTreeKeysMap', JSON.stringify(flatTreeKeysMap));
       flatTreeData.forEach(function (element) {
         if (sliceTreeList.length >= _this2.loadCount) return;
-        //该节点的父节点是展开状态 或 该节点是根节点
-        if (element.isShown || element.parentKey === null) {
-          sliceTreeList.push(element);
-        }
+        sliceTreeList.push(element);
       });
       this.handleTreeListChange(sliceTreeList);
       this.setState({
@@ -221,6 +216,19 @@ var Tree = function (_React$Component) {
     }
     this.setState(st);
   };
+
+  // componentWillUpdate(nextProps, nextState){
+  //   const { expandedKeys,treeData } = this.state;
+  //   if(nextState.expandedKeys !== expandedKeys) {
+  //     this.cacheExpandedKeys = expandedKeys;
+  //     if(this.props.lazyLoad){
+  //       let flatTreeData = this.deepTraversal(treeData);
+  //       this.setState({
+  //         flatTreeData
+  //       })
+  //     }
+  //   }
+  // }
 
   Tree.prototype.onDragStart = function onDragStart(e, treeNode) {
     this.dragNode = treeNode;
@@ -564,6 +572,7 @@ var Tree = function (_React$Component) {
 
   Tree.prototype.goDown = function goDown(currentPos, currentIndex, e, treeNode) {
     var props = this.props;
+    var treeChildren = props.children ? props.children : this.cacheTreeNodes; //最终渲染在 Tree 标签中的子节点
     var nextIndex = parseInt(currentIndex) + 1;
 
     var nextPos = void 0,
@@ -590,7 +599,7 @@ var Tree = function (_React$Component) {
       tempPosArrLength = tempPosArr.length;
     }
     //选中下一个相邻的节点
-    (0, _util.loopAllChildren)(props.children, function (itemNode, index, pos, newKey) {
+    (0, _util.loopAllChildren)(treeChildren, function (itemNode, index, pos, newKey) {
       if (pos == nextPos) {
         nextTreeNode = itemNode;
       }
@@ -893,20 +902,23 @@ var Tree = function (_React$Component) {
    * 深度遍历 treeData，把Tree数据拍平，变为一维数组
    * @param {*} treeData 
    * @param {*} parentKey 标识父节点
-   * 转换成如下结构
-   *  {
-        "title":"0-0",     //显示的值
-        "key":"0-0",       //唯一标识（必须）
-        "isExpanded":true, //是否展开
-        "hasChildren":true,//false 是叶子节点
-        "parentKey":null,  //父节点的 key 值
-      }
+   * @param {*} isShown 该节点是否显示在页面中，当节点的父节点是展开状态 或 该节点是根节点时，该值为 true
    */
 
 
   /**
    * 根据 treeData 渲染树节点
    * @param data 树形结构的数组
+   * @param preHeight 前置占位高度
+   * @param sufHeight 后置占位高度
+   */
+
+
+  /**
+   * @description 计算懒加载时的前置占位和后置占位
+   * @param start {Number} 开始截取数据的位置
+   * @param end {Number} 结束截取数据的位置
+   * @return sumHeight {Number} 空白占位的高度
    */
 
 
@@ -997,21 +1009,48 @@ var Tree = function (_React$Component) {
     var _this6 = this;
 
     var props = this.props;
+    var _props2 = this.props,
+        showLine = _props2.showLine,
+        prefixCls = _props2.prefixCls,
+        className = _props2.className,
+        focusable = _props2.focusable,
+        checkable = _props2.checkable,
+        loadData = _props2.loadData,
+        checkStrictly = _props2.checkStrictly,
+        tabIndexValue = _props2.tabIndexValue,
+        lazyLoad = _props2.lazyLoad;
     var _state = this.state,
         treeData = _state.treeData,
         flatTreeData = _state.flatTreeData;
+    var startIndex = this.startIndex,
+        endIndex = this.endIndex,
+        preHeight = 0,
+        sufHeight = 0,
+        treeNode = [],
+        treeChildren = props.children; //最终渲染在 Tree 标签中的子节点
 
-    var treeNode = []; //根据传入的 treeData 生成的 treeNode 节点数组
+    if (lazyLoad) {
+      preHeight = this.getSumHeight(0, startIndex);
+      sufHeight = this.getSumHeight(endIndex, flatTreeData.length);
+    }
+
+    if (!props.children && treeData) {
+      //传入json数据
+      treeNode = this.renderTreefromData(treeData);
+      // console.log('render', treeNode);
+      this.cacheTreeNodes = treeNode;
+      treeChildren = treeNode;
+    }
     var showLineCls = "";
-    if (props.showLine) {
-      showLineCls = props.prefixCls + '-show-line';
+    if (showLine) {
+      showLineCls = prefixCls + '-show-line';
     }
     var domProps = {
-      className: (0, _classnames2["default"])(props.className, props.prefixCls, showLineCls),
+      className: (0, _classnames2["default"])(className, prefixCls, showLineCls),
       role: 'tree-node'
     };
 
-    if (props.focusable) {
+    if (focusable) {
       domProps.onFocus = this.onUlFocus;
       domProps.onMouseEnter = this.onUlMouseEnter;
       domProps.onMouseLeave = this.onUlMouseLeave;
@@ -1023,17 +1062,17 @@ var Tree = function (_React$Component) {
     // }
     var getTreeNodesStates = function getTreeNodesStates() {
       _this6.treeNodesStates = {};
-      (0, _util.loopAllChildren)(props.children, function (item, index, pos, keyOrPos, siblingPosition) {
+      (0, _util.loopAllChildren)(treeChildren, function (item, index, pos, keyOrPos, siblingPosition) {
         _this6.treeNodesStates[pos] = {
           siblingPosition: siblingPosition
         };
       });
     };
-    if (props.showLine && !props.checkable) {
+    if (showLine && !checkable) {
       getTreeNodesStates();
     }
-    if (props.checkable && (this.checkedKeysChange || props.loadData || this.dataChange)) {
-      if (props.checkStrictly) {
+    if (checkable && (this.checkedKeysChange || loadData || this.dataChange)) {
+      if (checkStrictly) {
         getTreeNodesStates();
       } else if (props._treeNodesStates) {
         this.treeNodesStates = props._treeNodesStates.treeNodesStates;
@@ -1042,13 +1081,13 @@ var Tree = function (_React$Component) {
       } else {
         var checkedKeys = this.state.checkedKeys;
         var checkKeys = void 0;
-        if (!props.loadData && this.checkKeys && this._checkedKeys && (0, _util.arraysEqual)(this._checkedKeys, checkedKeys) && !this.dataChange) {
+        if (!loadData && this.checkKeys && this._checkedKeys && (0, _util.arraysEqual)(this._checkedKeys, checkedKeys) && !this.dataChange) {
           // if checkedKeys the same as _checkedKeys from onCheck, use _checkedKeys.
           checkKeys = this.checkKeys;
         } else {
           var checkedPositions = [];
           this.treeNodesStates = {};
-          (0, _util.loopAllChildren)(props.children, function (item, index, pos, keyOrPos, siblingPosition) {
+          (0, _util.loopAllChildren)(treeChildren, function (item, index, pos, keyOrPos, siblingPosition) {
             _this6.treeNodesStates[pos] = {
               node: item,
               key: keyOrPos,
@@ -1069,12 +1108,8 @@ var Tree = function (_React$Component) {
         this.checkedKeys = checkKeys.checkedKeys;
       }
     }
-    if (treeData) {
-      treeNode = this.renderTreefromData(treeData);
-      console.log('render', treeNode);
-    }
     this.selectKeyDomExist = false;
-    return props.lazyLoad ? _react2["default"].createElement(
+    return lazyLoad ? _react2["default"].createElement(
       _infiniteScroll2["default"],
       {
         className: 'u-tree-infinite-scroll',
@@ -1085,19 +1120,17 @@ var Tree = function (_React$Component) {
         'ul',
         _extends({}, domProps, { unselectable: 'true', ref: function ref(el) {
             _this6.tree = el;
-          }, tabIndex: props.focusable && props.tabIndexValue }),
-        treeData ? (0, _util.mapChildren)(treeNode, function (node, index) {
-          return _this6.renderTreeNode(node, index);
-        }) : _react2["default"].Children.map(props.children, this.renderTreeNode, this)
+          }, tabIndex: focusable && tabIndexValue }),
+        _react2["default"].createElement('li', { style: { height: preHeight }, className: 'u-treenode-start', key: 'tree_node_start' }),
+        _react2["default"].Children.map(treeChildren, this.renderTreeNode, this),
+        _react2["default"].createElement('li', { style: { height: sufHeight }, className: 'u-treenode-end', key: 'tree_node_end' })
       )
     ) : _react2["default"].createElement(
       'ul',
       _extends({}, domProps, { unselectable: 'true', ref: function ref(el) {
           _this6.tree = el;
-        }, tabIndex: props.focusable && props.tabIndexValue }),
-      treeData ? (0, _util.mapChildren)(treeNode, function (node, index) {
-        return _this6.renderTreeNode(node, index);
-      }) : _react2["default"].Children.map(props.children, this.renderTreeNode, this)
+        }, tabIndex: focusable && tabIndexValue }),
+      _react2["default"].Children.map(treeChildren, this.renderTreeNode, this)
     );
   };
 

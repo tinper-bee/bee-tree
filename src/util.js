@@ -324,18 +324,6 @@ export function warnOnlyTreeNode() {
 }
 
 /**
- * Use `rc-util` `toArray` to get the children list which keeps the key.
- * And return single node if children is only one(This can avoid `key` missing check).
- */
-export function mapChildren(children,func) {
-  const list = toArray(children).map(func);
-  if (list.length === 1) {
-    return list[0];
-  }
-  return list;
-}
-
-/**
  * 将一维数组转换为树结构
  * @param {*} treeData  扁平结构的 List 数组
  * @param {*} attr 属性配置设置

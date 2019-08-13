@@ -14,7 +14,6 @@ import {
   arraysEqual,
   closest,
   convertListToTree,
-  mapChildren
 } from './util';
 import PropTypes from 'prop-types';
 import { KeyCode } from 'tinper-bee-core';
@@ -49,6 +48,7 @@ class Tree extends React.Component {
     this.flatTreeKeysMap = {}; //存储所有 key-value 的映射，方便获取各节点信息
     this.startIndex = 0;
     this.endIndex = this.startIndex + this.loadCount;
+    this.cacheTreeNodes = []; //缓存 treenode 节点数组
   }
 
   componentWillMount() {
@@ -102,6 +102,19 @@ class Tree extends React.Component {
     }
     this.setState(st);
   }
+
+  // componentWillUpdate(nextProps, nextState){
+  //   const { expandedKeys,treeData } = this.state;
+  //   if(nextState.expandedKeys !== expandedKeys) {
+  //     this.cacheExpandedKeys = expandedKeys;
+  //     if(this.props.lazyLoad){
+  //       let flatTreeData = this.deepTraversal(treeData);
+  //       this.setState({
+  //         flatTreeData
+  //       })
+  //     }
+  //   }
+  // }
 
   onDragStart(e, treeNode) {
     this.dragNode = treeNode;
@@ -262,12 +275,6 @@ onExpand(treeNode,keyType) {
           });
         }
       });
-    }
-    if(this.props.lazyLoad){
-      let flatTreeData = this.deepTraversal(treeData);
-      this.setState({
-        flatTreeData
-      })
     }
   }
 
@@ -450,6 +457,7 @@ onExpand(treeNode,keyType) {
 
   goDown(currentPos,currentIndex,e,treeNode){
     const props = this.props;
+    let treeChildren = props.children ? props.children : this.cacheTreeNodes; //最终渲染在 Tree 标签中的子节点
     const nextIndex =  parseInt(currentIndex) + 1;
       
     let nextPos,backNextPos;
@@ -474,7 +482,7 @@ onExpand(treeNode,keyType) {
       tempPosArrLength = tempPosArr.length;
     }
     //选中下一个相邻的节点
-    loopAllChildren(props.children,function(itemNode,index,pos,newKey){
+    loopAllChildren(treeChildren,function(itemNode,index,pos,newKey){
       if(pos == nextPos){
         nextTreeNode = itemNode;
       }
@@ -836,16 +844,7 @@ onExpand(treeNode,keyType) {
    * @param preHeight 前置占位高度
    * @param sufHeight 后置占位高度
    */
-  renderTreefromData = (data, preHeight, sufHeight) => {
-    let treeNodes = [];
-    let {lazyLoad} = this.props;
-    // 前置占位
-    if(lazyLoad){
-      treeNodes.push(
-        <li style={{height : preHeight}} className='u-treenode-start' key={'tree_node_start'}></li>
-      )
-    }
-    // 渲染真实树节点
+  renderTreefromData = (data) => {
     const loop = data => data.map((item) => {
       if (item.children) {
         return (
@@ -856,15 +855,7 @@ onExpand(treeNode,keyType) {
       }
       return <TreeNode key={item.key} title={item.key} isLeaf={true}/>;
     });
-    treeNodes = treeNodes.concat(loop(data));
-    // 后置占位
-    if(lazyLoad){
-      treeNodes.push(
-        <li style={{height : sufHeight}} className='u-treenode-end' key={'tree_node_end'}></li>
-      )
-    }
-
-    return treeNodes;
+    return loop(data);
   }
 
   /**
@@ -965,14 +956,22 @@ onExpand(treeNode,keyType) {
     const props = this.props;
     const { showLine, prefixCls, className, focusable, checkable, loadData, checkStrictly, tabIndexValue, lazyLoad } = this.props;
     const { treeData,flatTreeData } = this.state;
-    let { startIndex, endIndex } = this,
-        preHeight = 0,
-        sufHeight = 0;
+    let { startIndex, endIndex } = this, //数据截取的开始位置和结束位置
+        preHeight = 0, //前置占位高度
+        sufHeight = 0, //后置占位高度
+        treeNode = [], //根据传入的 treeData 生成的 treeNode 节点数组
+        treeChildren = props.children; //最终渲染在 Tree 标签中的子节点
     if(lazyLoad){
       preHeight = this.getSumHeight(0, startIndex);
       sufHeight = this.getSumHeight(endIndex, flatTreeData.length);
     }
-    let treeNode = []; //根据传入的 treeData 生成的 treeNode 节点数组
+    
+    if(!props.children && treeData) { //传入json数据
+      treeNode = this.renderTreefromData(treeData);
+      // console.log('render', treeNode);
+      this.cacheTreeNodes = treeNode;
+      treeChildren = treeNode;
+    }
     let showLineCls = "";
     if (showLine) {
       showLineCls = `${prefixCls}-show-line`;
@@ -994,7 +993,7 @@ onExpand(treeNode,keyType) {
     // }
     const getTreeNodesStates = () => {
       this.treeNodesStates = {};
-      loopAllChildren(props.children, (item, index, pos, keyOrPos, siblingPosition) => {
+      loopAllChildren(treeChildren, (item, index, pos, keyOrPos, siblingPosition) => {
         this.treeNodesStates[pos] = {
           siblingPosition,
         };
@@ -1020,7 +1019,7 @@ onExpand(treeNode,keyType) {
         } else {
           const checkedPositions = [];
           this.treeNodesStates = {};
-          loopAllChildren(props.children, (item, index, pos, keyOrPos, siblingPosition) => {
+          loopAllChildren(treeChildren, (item, index, pos, keyOrPos, siblingPosition) => {
             this.treeNodesStates[pos] = {
               node: item,
               key: keyOrPos,
@@ -1041,10 +1040,6 @@ onExpand(treeNode,keyType) {
         this.checkedKeys = checkKeys.checkedKeys;
       }
     }
-    if(treeData) {
-      treeNode = this.renderTreefromData(treeData, preHeight, sufHeight);
-      // console.log('render', treeNode);
-    }
     this.selectKeyDomExist = false;
     return (
       lazyLoad ? 
@@ -1054,24 +1049,14 @@ onExpand(treeNode,keyType) {
           handleTreeListChange={this.handleTreeListChange}
         >
           <ul {...domProps} unselectable="true" ref={(el)=>{this.tree = el}}  tabIndex={focusable && tabIndexValue}>
-            {/* {React.Children.map(props.children, this.renderTreeNode, this)} */}
-            {
-              treeData ? 
-              mapChildren(treeNode, (node, index) => this.renderTreeNode(node, index))
-              :
-              React.Children.map(props.children, this.renderTreeNode, this)
-            }
+              <li style={{height : preHeight}} className='u-treenode-start' key={'tree_node_start'}></li>
+              { React.Children.map(treeChildren, this.renderTreeNode, this) }
+              <li style={{height : sufHeight}} className='u-treenode-end' key={'tree_node_end'}></li>
           </ul>
         </InfiniteScroll>
         :
         <ul {...domProps} unselectable="true" ref={(el)=>{this.tree = el}}  tabIndex={focusable && tabIndexValue}>
-            {/* {React.Children.map(props.children, this.renderTreeNode, this)} */}
-            {
-              treeData ? 
-              mapChildren(treeNode, (node, index) => this.renderTreeNode(node, index))
-              :
-              React.Children.map(props.children, this.renderTreeNode, this)
-            }
+            { React.Children.map(treeChildren, this.renderTreeNode, this) }
         </ul>
     );
   }

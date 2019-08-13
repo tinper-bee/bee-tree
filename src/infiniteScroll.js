@@ -1,3 +1,6 @@
+/**
+ * 处理滚动加载逻辑
+ */
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import {debounce} from './util';
@@ -7,35 +10,18 @@ export default class InfiniteScroll extends Component {
   static propTypes = {
     children: PropTypes.node.isRequired,
     element: PropTypes.node,
-    hasMore: PropTypes.bool,
-    initialLoad: PropTypes.bool,
-    isReverse: PropTypes.bool,
-    loader: PropTypes.node,
-    loadMore: PropTypes.func.isRequired,
-    pageStart: PropTypes.number,
     ref: PropTypes.func,
     getScrollParent: PropTypes.func,
-    threshold: PropTypes.number,
-    useCapture: PropTypes.bool,
-    useWindow: PropTypes.bool,
-    //=====
     treeList: PropTypes.array,
+    handleTreeListChange: PropTypes.func
   };
 
   static defaultProps = {
     element: 'div',
-    hasMore: false,
-    initialLoad: true,
-    pageStart: 0,
     ref: null,
-    threshold: 250,
-    useWindow: true,
-    isReverse: false,
-    useCapture: false,
-    loader: null,
     getScrollParent: null,
-    //=====
     treeList: [],
+    handleTreeListChange: () => {}
   };
 
   constructor(props) {
@@ -58,15 +44,16 @@ export default class InfiniteScroll extends Component {
     this.attachScrollListener();
   }
 
+  // componentWillReceiveProps(nextProps){
+  //   let {treeList:newTreeList} = nextProps;
+  //   let {treeList:oldTreeList} = this.props;
+  //   if(newTreeList !== oldTreeList) {
+  //     debugger
+  //     this.treeList = newTreeList
+  //   }
+  // }
+
   componentDidUpdate() {
-    if (this.props.isReverse && this.loadMore) {
-      const parentElement = this.getParentElement(this.scrollComponent);
-      parentElement.scrollTop =
-        parentElement.scrollHeight -
-        this.beforeScrollHeight +
-        this.beforeScrollTop;
-      this.loadMore = false;
-    }
     this.attachScrollListener();
   }
 
@@ -105,10 +92,6 @@ export default class InfiniteScroll extends Component {
     return options;
   }
 
-  // Set a defaut loader for all your `InfiniteScroll` components
-  setDefaultLoader(loader) {
-    this.defaultLoader = loader;
-  }
   /**
    * 解除mousewheel事件监听
    */
@@ -176,11 +159,6 @@ export default class InfiniteScroll extends Component {
     //默认显示20条，rowsInView根据定高算的。在非固定高下，这个只是一个大概的值。
     this.rowsInView = scrollY ? Math.floor(scrollY / CONFIG.defaultHeight) : CONFIG.defaultRowsInView;
 
-    scrollEl.addEventListener(
-      'mousewheel',
-      this.mousewheelListener,
-      this.options ? this.options : this.props.useCapture
-    );
     scrollEl.addEventListener(
       'scroll',
       this.scrollListener,
@@ -256,11 +234,6 @@ export default class InfiniteScroll extends Component {
       if (endIndex > this.endIndex ) {
         this.startIndex = startIndex;
         this.endIndex = endIndex;
-        // console.log(
-        //   "**currentIndex**" + this.currentIndex,
-        //   "**startIndex**" + this.startIndex,
-        //   "**endIndex**" + this.endIndex
-        // );
         this.sliceTreeList(this.startIndex, this.endIndex);
       }
     }
@@ -273,11 +246,6 @@ export default class InfiniteScroll extends Component {
       if (startIndex < this.startIndex) {
         this.startIndex = startIndex;
         this.endIndex = this.startIndex + loadCount;
-        // console.log(
-        //   "**index**" + index,
-        //   "**startIndex**" + this.startIndex,
-        //   "**endIndex**" + this.endIndex
-        // );
         this.sliceTreeList(this.startIndex, this.endIndex);
       }
     }
@@ -301,24 +269,14 @@ export default class InfiniteScroll extends Component {
   }
 
   render() {
-    const renderProps = this.filterProps(this.props);
     const {
       children,
       element,
-      hasMore,
-      initialLoad,
-      isReverse,
-      loader,
-      loadMore,
-      pageStart,
       ref,
-      threshold,
-      useCapture,
-      useWindow,
       getScrollParent,
       treeList,
       ...props
-    } = renderProps;
+    } = this.props;
 
     props.ref = node => {
       this.scrollComponent = node;

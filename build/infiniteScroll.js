@@ -69,7 +69,9 @@ var InfiniteScroll = function (_Component) {
 
       _this.scrollTop = parentNode.scrollTop;
 
-      setInterval((0, _util.debounce)(_this.handleScrollY, 300), 500);
+      (0, _util.throttle)(_this.handleScrollY, 500)();
+
+      _this.handleScrollY();
     };
 
     _this.handleScrollY = function () {
@@ -117,7 +119,7 @@ var InfiniteScroll = function (_Component) {
         if (startIndex < 0) {
           startIndex = 0;
         }
-        if (startIndex < _this.startIndex) {
+        if (startIndex <= _this.startIndex) {
           _this.startIndex = startIndex;
           _this.endIndex = _this.startIndex + loadCount;
           _this.sliceTreeList(_this.startIndex, _this.endIndex);
@@ -154,17 +156,14 @@ var InfiniteScroll = function (_Component) {
     this.attachScrollListener();
   };
 
-  // componentWillReceiveProps(nextProps){
-  //   let {treeList:newTreeList} = nextProps;
-  //   let {treeList:oldTreeList} = this.props;
-  //   if(newTreeList !== oldTreeList) {
-  //     debugger
-  //     this.treeList = newTreeList
-  //   }
-  // }
+  InfiniteScroll.prototype.componentWillReceiveProps = function componentWillReceiveProps(nextProps) {
+    var newTreeList = nextProps.treeList;
+    var oldTreeList = this.props.treeList;
 
-  InfiniteScroll.prototype.componentDidUpdate = function componentDidUpdate() {
-    this.attachScrollListener();
+    if (newTreeList !== oldTreeList) {
+      this.treeList = newTreeList;
+      this.handleScrollY();
+    }
   };
 
   InfiniteScroll.prototype.componentWillUnmount = function componentWillUnmount() {
@@ -252,10 +251,6 @@ var InfiniteScroll = function (_Component) {
 
     scrollEl.addEventListener('scroll', this.scrollListener, this.options ? this.options : this.props.useCapture);
     scrollEl.addEventListener('resize', this.scrollListener, this.options ? this.options : this.props.useCapture);
-
-    if (this.props.initialLoad) {
-      this.scrollListener();
-    }
   };
   /**
    * 滚动事件监听

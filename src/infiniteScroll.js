@@ -3,7 +3,7 @@
  */
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import {debounce} from './util';
+import {debounce, throttle} from './util';
 import CONFIG from './config';
 
 export default class InfiniteScroll extends Component {
@@ -44,17 +44,13 @@ export default class InfiniteScroll extends Component {
     this.attachScrollListener();
   }
 
-  // componentWillReceiveProps(nextProps){
-  //   let {treeList:newTreeList} = nextProps;
-  //   let {treeList:oldTreeList} = this.props;
-  //   if(newTreeList !== oldTreeList) {
-  //     debugger
-  //     this.treeList = newTreeList
-  //   }
-  // }
-
-  componentDidUpdate() {
-    this.attachScrollListener();
+  componentWillReceiveProps(nextProps){
+    let {treeList:newTreeList} = nextProps;
+    let {treeList:oldTreeList} = this.props;
+    if(newTreeList !== oldTreeList) {
+      this.treeList = newTreeList;
+      this.handleScrollY();
+    }
   }
 
   componentWillUnmount() {
@@ -169,10 +165,6 @@ export default class InfiniteScroll extends Component {
       this.scrollListener,
       this.options ? this.options : this.props.useCapture
     );
-
-    if (this.props.initialLoad) {
-      this.scrollListener();
-    }
   }
 
   mousewheelListener = (e) => {
@@ -192,7 +184,9 @@ export default class InfiniteScroll extends Component {
 
     this.scrollTop = parentNode.scrollTop;
 
-    setInterval(debounce(this.handleScrollY, 300), 500)
+    throttle(this.handleScrollY, 500)()
+
+    this.handleScrollY();
   }
 
   /**
@@ -243,7 +237,7 @@ export default class InfiniteScroll extends Component {
       if (startIndex < 0) {
         startIndex = 0;
       }
-      if (startIndex < this.startIndex) {
+      if (startIndex <= this.startIndex) {
         this.startIndex = startIndex;
         this.endIndex = this.startIndex + loadCount;
         this.sliceTreeList(this.startIndex, this.endIndex);

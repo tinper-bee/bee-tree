@@ -56,6 +56,7 @@ import 'bee-tree/build/Tree.css';
 |mustExpandable|支持disabled的节点可以自定义展开收起，默认disabled的节点不可以展开收起|bool|false
 |treeData|treeNodes 数据，如果设置则不需要手动构造 TreeNode 节点（key 在整个树范围内唯一）|array\<{key, title, children, [disabled, selectable]}>|-
 |lazyLoad|是否使用懒加载（适用于大数据场景），[如何使用](http://bee.tinper.org/tinper-bee/bee-tree#%E6%BB%9A%E5%8A%A8%E5%8A%A0%E8%BD%BD%E6%A0%91%E8%8A%82%E7%82%B9)|bool|false
+|renderTitle|使用 treeData 渲染树时使用，可通过此函数自定义树节点内容|Function(item)|-
 
 
 ## TreeNode

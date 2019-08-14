@@ -240,6 +240,7 @@ class Tree extends React.Component {
  * @memberof Tree
  */
 onExpand(treeNode,keyType) {
+    const { treeData,lazyLoad } = this.props;
     let expanded = !treeNode.props.expanded;
     const controlled = 'expandedKeys' in this.props;
     const expandedKeys = [...this.state.expandedKeys];
@@ -275,6 +276,16 @@ onExpand(treeNode,keyType) {
           });
         }
       });
+    }
+    //收起和展开时，缓存 expandedKeys
+    this.cacheExpandedKeys = expandedKeys;
+    //启用懒加载，把 Tree 结构拍平，为后续动态截取数据做准备
+    if(lazyLoad) {
+      let flatTreeData = this.deepTraversal(treeData);
+      this.cacheExpandedKeys = null;
+      this.setState({
+        flatTreeData
+      })
     }
   }
 
@@ -791,7 +802,8 @@ onExpand(treeNode,keyType) {
       id: 'key',
       parendId: 'parentKey',
       name: 'title',
-      rootId: null
+      rootId: null,
+      isLeaf: 'isLeaf'
     };
     let treeData = convertListToTree(treeList, attr, this.flatTreeKeysMap);
 
@@ -817,10 +829,12 @@ onExpand(treeNode,keyType) {
     if(Array.isArray(dataCopy)){
       for (let i=0, l=dataCopy.length; i<l; i++) {
         let key = dataCopy[i].hasOwnProperty('key') && dataCopy[i].key,
-            isExpanded = expandedKeys.indexOf(key) !== -1;
+            isLeaf = dataCopy[i].hasOwnProperty('children') ? false : true,
+            isExpanded = this.cacheExpandedKeys ? this.cacheExpandedKeys.indexOf(key) !== -1 : expandedKeys.indexOf(key) !== -1;
         dataCopy[i].isExpanded = isExpanded;
         dataCopy[i].parentKey = parentKey || null;
         dataCopy[i].isShown = isShown;
+        dataCopy[i].isLeaf = isLeaf;
         //该节点的父节点是展开状态 或 该节点是根节点
         if(isShown || parentKey === null){
           flatTreeData.push(dataCopy[i]); // 取每项数据放入一个新数组
@@ -845,15 +859,16 @@ onExpand(treeNode,keyType) {
    * @param sufHeight 后置占位高度
    */
   renderTreefromData = (data) => {
+    let {renderTitle} = this.props;
     const loop = data => data.map((item) => {
       if (item.children) {
         return (
-          <TreeNode key={item.key} title={item.key}>
+          <TreeNode key={item.key} title={renderTitle ? renderTitle(item) : item.key} isLeaf={item.isLeaf}>
             {loop(item.children)}
           </TreeNode>
         );
       }
-      return <TreeNode key={item.key} title={item.key} isLeaf={true}/>;
+      return <TreeNode key={item.key} title={renderTitle ? renderTitle(item) : item.key} isLeaf={true}/>;
     });
     return loop(data);
   }
@@ -874,6 +889,7 @@ onExpand(treeNode,keyType) {
   }
 
   renderTreeNode(child, index, level = 0) {
+    console.log('child',child.props)
     const pos = `${level}-${index}`;
     const key = child.key || pos;
     
@@ -893,6 +909,10 @@ onExpand(treeNode,keyType) {
     let draggable = props.draggable;
     if(child.props.hasOwnProperty('draggable')){
       draggable = child.props.draggable;
+    }
+    let isLeaf = null;
+    if(child.props.hasOwnProperty('isLeaf')){
+      isLeaf = child.props.isLeaf;
     }
   
     const cloneProps = {
@@ -926,7 +946,8 @@ onExpand(treeNode,keyType) {
       tabIndexKey: state.selectedKeys[0],
       tabIndexValue:props.tabIndexValue,
       ext:child.props.ext,
-      mustExpandable:props.mustExpandable
+      mustExpandable:props.mustExpandable,
+      isLeaf
     };
     if (props.checkable) {
       cloneProps.checkable = props.checkable;
@@ -954,7 +975,7 @@ onExpand(treeNode,keyType) {
 
   render() {
     const props = this.props;
-    const { showLine, prefixCls, className, focusable, checkable, loadData, checkStrictly, tabIndexValue, lazyLoad } = this.props;
+    const { showLine, prefixCls, className, focusable, checkable, loadData, checkStrictly, tabIndexValue, lazyLoad, offsetHeight } = this.props;
     const { treeData,flatTreeData } = this.state;
     let { startIndex, endIndex } = this, //数据截取的开始位置和结束位置
         preHeight = 0, //前置占位高度
@@ -965,10 +986,8 @@ onExpand(treeNode,keyType) {
       preHeight = this.getSumHeight(0, startIndex);
       sufHeight = this.getSumHeight(endIndex, flatTreeData.length);
     }
-    
     if(!props.children && treeData) { //传入json数据
       treeNode = this.renderTreefromData(treeData);
-      // console.log('render', treeNode);
       this.cacheTreeNodes = treeNode;
       treeChildren = treeNode;
     }
@@ -1047,6 +1066,7 @@ onExpand(treeNode,keyType) {
           className="u-tree-infinite-scroll"
           treeList={flatTreeData}
           handleTreeListChange={this.handleTreeListChange}
+          offsetHeight={offsetHeight}
         >
           <ul {...domProps} unselectable="true" ref={(el)=>{this.tree = el}}  tabIndex={focusable && tabIndexValue}>
               <li style={{height : preHeight}} className='u-treenode-start' key={'tree_node_start'}></li>

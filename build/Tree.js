@@ -63,7 +63,8 @@ var Tree = function (_React$Component) {
         id: 'key',
         parendId: 'parentKey',
         name: 'title',
-        rootId: null
+        rootId: null,
+        isLeaf: 'isLeaf'
       };
       var treeData = (0, _util.convertListToTree)(treeList, attr, _this.flatTreeKeysMap);
 
@@ -86,10 +87,12 @@ var Tree = function (_React$Component) {
       if (Array.isArray(dataCopy)) {
         for (var i = 0, l = dataCopy.length; i < l; i++) {
           var key = dataCopy[i].hasOwnProperty('key') && dataCopy[i].key,
-              isExpanded = expandedKeys.indexOf(key) !== -1;
+              isLeaf = dataCopy[i].hasOwnProperty('children') ? false : true,
+              isExpanded = _this.cacheExpandedKeys ? _this.cacheExpandedKeys.indexOf(key) !== -1 : expandedKeys.indexOf(key) !== -1;
           dataCopy[i].isExpanded = isExpanded;
           dataCopy[i].parentKey = parentKey || null;
           dataCopy[i].isShown = isShown;
+          dataCopy[i].isLeaf = isLeaf;
           //该节点的父节点是展开状态 或 该节点是根节点
           if (isShown || parentKey === null) {
             flatTreeData.push(dataCopy[i]); // 取每项数据放入一个新数组
@@ -108,16 +111,18 @@ var Tree = function (_React$Component) {
     };
 
     _this.renderTreefromData = function (data) {
+      var renderTitle = _this.props.renderTitle;
+
       var loop = function loop(data) {
         return data.map(function (item) {
           if (item.children) {
             return _react2["default"].createElement(
               _TreeNode2["default"],
-              { key: item.key, title: item.key },
+              { key: item.key, title: renderTitle ? renderTitle(item) : item.key, isLeaf: item.isLeaf },
               loop(item.children)
             );
           }
-          return _react2["default"].createElement(_TreeNode2["default"], { key: item.key, title: item.key, isLeaf: true });
+          return _react2["default"].createElement(_TreeNode2["default"], { key: item.key, title: renderTitle ? renderTitle(item) : item.key, isLeaf: true });
         });
       };
       return loop(data);
@@ -358,6 +363,10 @@ var Tree = function (_React$Component) {
   Tree.prototype.onExpand = function onExpand(treeNode, keyType) {
     var _this3 = this;
 
+    var _props2 = this.props,
+        treeData = _props2.treeData,
+        lazyLoad = _props2.lazyLoad;
+
     var expanded = !treeNode.props.expanded;
     var controlled = 'expandedKeys' in this.props;
     var expandedKeys = [].concat(_toConsumableArray(this.state.expandedKeys));
@@ -392,6 +401,16 @@ var Tree = function (_React$Component) {
             expandedKeys: expandedKeys
           });
         }
+      });
+    }
+    //收起和展开时，缓存 expandedKeys
+    this.cacheExpandedKeys = expandedKeys;
+    //启用懒加载，把 Tree 结构拍平，为后续动态截取数据做准备
+    if (lazyLoad) {
+      var flatTreeData = this.deepTraversal(treeData);
+      this.cacheExpandedKeys = null;
+      this.setState({
+        flatTreeData: flatTreeData
       });
     }
   };
@@ -925,6 +944,7 @@ var Tree = function (_React$Component) {
   Tree.prototype.renderTreeNode = function renderTreeNode(child, index) {
     var level = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
 
+    console.log('child', child.props);
     var pos = level + '-' + index;
     var key = child.key || pos;
 
@@ -946,6 +966,10 @@ var Tree = function (_React$Component) {
     var draggable = props.draggable;
     if (child.props.hasOwnProperty('draggable')) {
       draggable = child.props.draggable;
+    }
+    var isLeaf = null;
+    if (child.props.hasOwnProperty('isLeaf')) {
+      isLeaf = child.props.isLeaf;
     }
 
     var cloneProps = {
@@ -979,7 +1003,8 @@ var Tree = function (_React$Component) {
       tabIndexKey: state.selectedKeys[0],
       tabIndexValue: props.tabIndexValue,
       ext: child.props.ext,
-      mustExpandable: props.mustExpandable
+      mustExpandable: props.mustExpandable,
+      isLeaf: isLeaf
     };
     if (props.checkable) {
       cloneProps.checkable = props.checkable;
@@ -1009,16 +1034,17 @@ var Tree = function (_React$Component) {
     var _this6 = this;
 
     var props = this.props;
-    var _props2 = this.props,
-        showLine = _props2.showLine,
-        prefixCls = _props2.prefixCls,
-        className = _props2.className,
-        focusable = _props2.focusable,
-        checkable = _props2.checkable,
-        loadData = _props2.loadData,
-        checkStrictly = _props2.checkStrictly,
-        tabIndexValue = _props2.tabIndexValue,
-        lazyLoad = _props2.lazyLoad;
+    var _props3 = this.props,
+        showLine = _props3.showLine,
+        prefixCls = _props3.prefixCls,
+        className = _props3.className,
+        focusable = _props3.focusable,
+        checkable = _props3.checkable,
+        loadData = _props3.loadData,
+        checkStrictly = _props3.checkStrictly,
+        tabIndexValue = _props3.tabIndexValue,
+        lazyLoad = _props3.lazyLoad,
+        offsetHeight = _props3.offsetHeight;
     var _state = this.state,
         treeData = _state.treeData,
         flatTreeData = _state.flatTreeData;
@@ -1033,11 +1059,9 @@ var Tree = function (_React$Component) {
       preHeight = this.getSumHeight(0, startIndex);
       sufHeight = this.getSumHeight(endIndex, flatTreeData.length);
     }
-
     if (!props.children && treeData) {
       //传入json数据
       treeNode = this.renderTreefromData(treeData);
-      // console.log('render', treeNode);
       this.cacheTreeNodes = treeNode;
       treeChildren = treeNode;
     }
@@ -1114,7 +1138,8 @@ var Tree = function (_React$Component) {
       {
         className: 'u-tree-infinite-scroll',
         treeList: flatTreeData,
-        handleTreeListChange: this.handleTreeListChange
+        handleTreeListChange: this.handleTreeListChange,
+        offsetHeight: offsetHeight
       },
       _react2["default"].createElement(
         'ul',

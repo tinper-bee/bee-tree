@@ -71,15 +71,21 @@ class Demo13 extends Component{
     console.log('***',e);
     return false;
   }
+
+  //自定义树节点内容
+  renderTitle = item => {
+    return item.key
+  }
+
   render() {
-    // console.log('gData', JSON.stringify(gData))
     return (
-      <div style={{height:'300px',overflow:'auto',border:'1px solid'}}>
+      <div style={{height:'300px', border:'1px solid', overflow:'auto'}}>
         <Tree
           checkable
           focusable
           treeData={gData}
           lazyLoad={true}
+          renderTitle={this.renderTitle}
           onExpand={this.onExpand}
           defaultExpandAll={true} 
           expandedKeys={this.state.expandedKeys}

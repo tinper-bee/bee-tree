@@ -828,8 +828,8 @@ onExpand(treeNode,keyType) {
         dataCopy = JSON.parse(JSON.stringify(treeData));
     if(Array.isArray(dataCopy)){
       for (let i=0, l=dataCopy.length; i<l; i++) {
-        let key = dataCopy[i].hasOwnProperty('key') && dataCopy[i].key,
-            isLeaf = dataCopy[i].hasOwnProperty('children') ? false : true,
+        let { key, title, children, ...props } = dataCopy[i];
+        let isLeaf = children ? false : true,
             isExpanded = this.cacheExpandedKeys ? this.cacheExpandedKeys.indexOf(key) !== -1 : expandedKeys.indexOf(key) !== -1;
         dataCopy[i].isExpanded = isExpanded;
         dataCopy[i].parentKey = parentKey || null;
@@ -837,7 +837,7 @@ onExpand(treeNode,keyType) {
         dataCopy[i].isLeaf = isLeaf;
         //该节点的父节点是展开状态 或 该节点是根节点
         if(isShown || parentKey === null){
-          flatTreeData.push(dataCopy[i]); // 取每项数据放入一个新数组
+          flatTreeData.push(Object.assign(dataCopy[i], {...props})); // 取每项数据放入一个新数组
           flatTreeKeysMap[key] = dataCopy[i];
         }
         if (Array.isArray(dataCopy[i]["children"]) && dataCopy[i]["children"].length > 0){
@@ -859,7 +859,10 @@ onExpand(treeNode,keyType) {
    * @param sufHeight 后置占位高度
    */
   renderTreefromData = (data) => {
-    let {renderTitle} = this.props;
+    let {renderTitle,renderTreeNodes} = this.props;
+    if(renderTreeNodes) {
+      return renderTreeNodes(data);
+    }
     const loop = data => data.map((item) => {
       if (item.children) {
         return (
@@ -889,7 +892,6 @@ onExpand(treeNode,keyType) {
   }
 
   renderTreeNode(child, index, level = 0) {
-    console.log('child',child.props)
     const pos = `${level}-${index}`;
     const key = child.key || pos;
     
@@ -1124,7 +1126,9 @@ Tree.propTypes = {
   openTransitionName: PropTypes.string,
   focusable: PropTypes.bool,
   openAnimation: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
-  lazyLoad: PropTypes.bool
+  lazyLoad: PropTypes.bool,
+  treeData: PropTypes.array,
+  renderTreeNode: PropTypes.func
 };
 
 Tree.defaultProps = {

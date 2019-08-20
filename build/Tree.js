@@ -575,7 +575,9 @@ var Tree = function (_React$Component) {
       this.setState({
         focusKey: eventKey
       });
-      // this.onSelect(nextTreeNode);
+      if (props.autoSelectWhenFocus) {
+        this.onSelect(nextTreeNode);
+      }
     }
   };
 
@@ -628,7 +630,9 @@ var Tree = function (_React$Component) {
     this.setState({
       focusKey: eventKey
     });
-    // this.onSelect(prevTreeNode);
+    if (props.autoSelectWhenFocus) {
+      this.onSelect(prevTreeNode);
+    }
   };
   // all keyboard events callbacks run from here at first
 
@@ -1217,7 +1221,8 @@ Tree.propTypes = {
   openAnimation: _propTypes2["default"].oneOfType([_propTypes2["default"].string, _propTypes2["default"].object]),
   lazyLoad: _propTypes2["default"].bool,
   treeData: _propTypes2["default"].array,
-  renderTreeNodes: _propTypes2["default"].func
+  renderTreeNodes: _propTypes2["default"].func,
+  autoSelectWhenFocus: _propTypes2["default"].bool
 };
 
 Tree.defaultProps = {
@@ -1244,7 +1249,8 @@ Tree.defaultProps = {
   onDrop: noop,
   onDragEnd: noop,
   tabIndexValue: 0,
-  lazyLoad: false
+  lazyLoad: false,
+  autoSelectWhenFocus: false
 };
 
 exports["default"] = Tree;

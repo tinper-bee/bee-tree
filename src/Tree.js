@@ -529,7 +529,9 @@ onExpand(treeNode,keyType) {
       this.setState({
         focusKey: eventKey
       })
-      // this.onSelect(nextTreeNode);
+      if(props.autoSelectWhenFocus){
+        this.onSelect(nextTreeNode);
+      }
     }
   }
 
@@ -583,7 +585,9 @@ onExpand(treeNode,keyType) {
     this.setState({
       focusKey: eventKey
     })
-    // this.onSelect(prevTreeNode);
+    if(props.autoSelectWhenFocus){
+      this.onSelect(prevTreeNode);
+    }
   }
   // all keyboard events callbacks run from here at first
   onKeyDown(e,treeNode) {
@@ -1128,7 +1132,8 @@ Tree.propTypes = {
   openAnimation: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
   lazyLoad: PropTypes.bool,
   treeData: PropTypes.array,
-  renderTreeNodes: PropTypes.func
+  renderTreeNodes: PropTypes.func,
+  autoSelectWhenFocus: PropTypes.bool
 };
 
 Tree.defaultProps = {
@@ -1155,7 +1160,8 @@ Tree.defaultProps = {
   onDrop: noop,
   onDragEnd: noop,
   tabIndexValue:0,
-  lazyLoad: false
+  lazyLoad: false,
+  autoSelectWhenFocus: false
 };
 
 export default Tree;

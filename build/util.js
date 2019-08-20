@@ -393,12 +393,17 @@ function convertListToTree(treeData, attr, flatTreeKeysMap) {
   var findParentNode = function findParentNode(node) {
     var parentKey = node[attr.parendId];
     if (!resKeysMap.hasOwnProperty(parentKey)) {
+      var key = node.key,
+          title = node.title,
+          children = node.children,
+          otherProps = _objectWithoutProperties(node, ['key', 'title', 'children']);
+
       var obj = {
         key: flatTreeKeysMap[parentKey][attr.id],
         title: flatTreeKeysMap[parentKey][attr.name],
         children: []
       };
-      tree.push(obj);
+      tree.push(_extends(obj, _extends({}, otherProps)));
       resKeysMap[obj.key] = obj;
     }
     return flatTreeKeysMap[parentKey];

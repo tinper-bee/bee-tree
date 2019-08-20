@@ -340,12 +340,13 @@ export function convertListToTree(treeData, attr, flatTreeKeysMap) {
     let findParentNode = (node) => {
       let parentKey = node[attr.parendId];
       if (!resKeysMap.hasOwnProperty(parentKey) ) {
+        let { key, title, children, ...otherProps } = node;
         let obj = {
           key: flatTreeKeysMap[parentKey][attr.id],
           title: flatTreeKeysMap[parentKey][attr.name],
           children: []
         };
-        tree.push(obj);
+        tree.push(Object.assign(obj, {...otherProps}));
         resKeysMap[obj.key] = obj;
       }
       return flatTreeKeysMap[parentKey];

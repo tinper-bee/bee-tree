@@ -136,7 +136,7 @@ var Tree = function (_React$Component) {
     if (selectedKeys) {
       st.selectedKeys = selectedKeys;
     }
-    if (nextProps.treeData !== this.props.treeData) {
+    if (nextProps.hasOwnProperty('treeData') && nextProps.treeData !== this.props.treeData) {
       this.dataChange = true;
       st.treeData = treeData;
     }
@@ -1217,7 +1217,7 @@ Tree.propTypes = {
   openAnimation: _propTypes2["default"].oneOfType([_propTypes2["default"].string, _propTypes2["default"].object]),
   lazyLoad: _propTypes2["default"].bool,
   treeData: _propTypes2["default"].array,
-  renderTreeNode: _propTypes2["default"].func
+  renderTreeNodes: _propTypes2["default"].func
 };
 
 Tree.defaultProps = {

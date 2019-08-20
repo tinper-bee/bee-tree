@@ -93,7 +93,7 @@ class Tree extends React.Component {
     if (selectedKeys) {
       st.selectedKeys = selectedKeys;
     }
-    if(nextProps.treeData !== this.props.treeData){
+    if(nextProps.hasOwnProperty('treeData') && nextProps.treeData !== this.props.treeData){
       this.dataChange = true;
       st.treeData = treeData;
     }
@@ -1128,7 +1128,7 @@ Tree.propTypes = {
   openAnimation: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
   lazyLoad: PropTypes.bool,
   treeData: PropTypes.array,
-  renderTreeNode: PropTypes.func
+  renderTreeNodes: PropTypes.func
 };
 
 Tree.defaultProps = {

@@ -34482,7 +34482,7 @@
 	    if (selectedKeys) {
 	      st.selectedKeys = selectedKeys;
 	    }
-	    if (nextProps.treeData !== this.props.treeData) {
+	    if (nextProps.hasOwnProperty('treeData') && nextProps.treeData !== this.props.treeData) {
 	      this.dataChange = true;
 	      st.treeData = treeData;
 	    }
@@ -35563,7 +35563,7 @@
 	  openAnimation: _propTypes2['default'].oneOfType([_propTypes2['default'].string, _propTypes2['default'].object]),
 	  lazyLoad: _propTypes2['default'].bool,
 	  treeData: _propTypes2['default'].array,
-	  renderTreeNode: _propTypes2['default'].func
+	  renderTreeNodes: _propTypes2['default'].func
 	};
 	
 	Tree.defaultProps = {
@@ -36578,12 +36578,17 @@
 	  var findParentNode = function findParentNode(node) {
 	    var parentKey = node[attr.parendId];
 	    if (!resKeysMap.hasOwnProperty(parentKey)) {
+	      var key = node.key,
+	          title = node.title,
+	          children = node.children,
+	          otherProps = _objectWithoutProperties(node, ['key', 'title', 'children']);
+	
 	      var obj = {
 	        key: flatTreeKeysMap[parentKey][attr.id],
 	        title: flatTreeKeysMap[parentKey][attr.name],
 	        children: []
 	      };
-	      tree.push(obj);
+	      tree.push(_extends(obj, _extends({}, otherProps)));
 	      resKeysMap[obj.key] = obj;
 	    }
 	    return flatTreeKeysMap[parentKey];

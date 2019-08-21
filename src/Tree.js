@@ -981,7 +981,7 @@ onExpand(treeNode,keyType) {
 
   render() {
     const props = this.props;
-    const { showLine, prefixCls, className, focusable, checkable, loadData, checkStrictly, tabIndexValue, lazyLoad, offsetHeight } = this.props;
+    const { showLine, prefixCls, className, focusable, checkable, loadData, checkStrictly, tabIndexValue, lazyLoad, getScrollContainer } = this.props;
     const { treeData,flatTreeData } = this.state;
     let { startIndex, endIndex } = this, //数据截取的开始位置和结束位置
         preHeight = 0, //前置占位高度
@@ -1072,7 +1072,7 @@ onExpand(treeNode,keyType) {
           className="u-tree-infinite-scroll"
           treeList={flatTreeData}
           handleTreeListChange={this.handleTreeListChange}
-          offsetHeight={offsetHeight}
+          getScrollParent={getScrollContainer}
         >
           <ul {...domProps} unselectable="true" ref={(el)=>{this.tree = el}}  tabIndex={focusable && tabIndexValue}>
               <li style={{height : preHeight}} className='u-treenode-start' key={'tree_node_start'}></li>
@@ -1133,7 +1133,8 @@ Tree.propTypes = {
   lazyLoad: PropTypes.bool,
   treeData: PropTypes.array,
   renderTreeNodes: PropTypes.func,
-  autoSelectWhenFocus: PropTypes.bool
+  autoSelectWhenFocus: PropTypes.bool,
+  getScrollContainer: PropTypes.func
 };
 
 Tree.defaultProps = {
@@ -1161,7 +1162,8 @@ Tree.defaultProps = {
   onDragEnd: noop,
   tabIndexValue:0,
   lazyLoad: false,
-  autoSelectWhenFocus: false
+  autoSelectWhenFocus: false,
+  getScrollContainer: noop
 };
 
 export default Tree;

@@ -1,7 +1,7 @@
 /**
 *
-* @title 滚动加载树节点
-* @description 适用于大数据场景。注意：使用懒加载，需要通过 treeData 属性传入完整的数据结构，并设置 lazyLoad = {true}。可视区域的高度可以自定义，在 Tree 组件外层包裹一层div即可。
+* @title 自定义滚动容器
+* @description 使用 getScrollParent 设置需要监听滚动事件的容器。
 */
 
 import React, { Component } from 'react';
@@ -37,7 +37,7 @@ const generateData = (_level, _preKey, _tns) => {
 };
 generateData(z);
 
-class Demo13 extends Component{
+class Demo14 extends Component{
   constructor(props) {
   	super(props);
     this.state = {
@@ -92,26 +92,31 @@ class Demo13 extends Component{
 
   render() {
     return (
-      <div style={{height:'300px', overflow:'auto'}}>
-        <Tree
-          checkable
-          focusable
-          treeData={gData}
-          lazyLoad={true}
-          renderTreeNodes={this.renderTreeNodes}
-          onExpand={this.onExpand}
-          defaultExpandAll={true} 
-          expandedKeys={this.state.expandedKeys}
-          autoExpandParent={this.state.autoExpandParent}
-          onCheck={this.onCheck} 
-          onSelect={this.onSelect} 
-          keyFun={this.onKeyDown}
-        >
-        </Tree>
-      </div>
+        <div className="container" style={{height:'300px', overflow:'auto'}}>
+            <div>
+                <Tree
+                checkable
+                focusable
+                treeData={gData}
+                lazyLoad={true}
+                renderTreeNodes={this.renderTreeNodes}
+                onExpand={this.onExpand}
+                defaultExpandAll={true} 
+                expandedKeys={this.state.expandedKeys}
+                autoExpandParent={this.state.autoExpandParent}
+                onCheck={this.onCheck} 
+                onSelect={this.onSelect} 
+                keyFun={this.onKeyDown}
+                getScrollContainer={() => {
+                    return document.querySelector('.container')
+                }}
+                >
+                </Tree>
+            </div>
+        </div>
     );
   }
 };
 
 
-export default Demo13;
+export default Demo14;

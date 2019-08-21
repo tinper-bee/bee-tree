@@ -971,7 +971,7 @@ var Tree = function (_React$Component) {
         checkStrictly = _props3.checkStrictly,
         tabIndexValue = _props3.tabIndexValue,
         lazyLoad = _props3.lazyLoad,
-        offsetHeight = _props3.offsetHeight;
+        getScrollContainer = _props3.getScrollContainer;
     var _state = this.state,
         treeData = _state.treeData,
         flatTreeData = _state.flatTreeData;
@@ -1066,7 +1066,7 @@ var Tree = function (_React$Component) {
         className: 'u-tree-infinite-scroll',
         treeList: flatTreeData,
         handleTreeListChange: this.handleTreeListChange,
-        offsetHeight: offsetHeight
+        getScrollParent: getScrollContainer
       },
       _react2["default"].createElement(
         'ul',
@@ -1222,7 +1222,8 @@ Tree.propTypes = {
   lazyLoad: _propTypes2["default"].bool,
   treeData: _propTypes2["default"].array,
   renderTreeNodes: _propTypes2["default"].func,
-  autoSelectWhenFocus: _propTypes2["default"].bool
+  autoSelectWhenFocus: _propTypes2["default"].bool,
+  getScrollContainer: _propTypes2["default"].func
 };
 
 Tree.defaultProps = {
@@ -1250,7 +1251,8 @@ Tree.defaultProps = {
   onDragEnd: noop,
   tabIndexValue: 0,
   lazyLoad: false,
-  autoSelectWhenFocus: false
+  autoSelectWhenFocus: false,
+  getScrollContainer: noop
 };
 
 exports["default"] = Tree;

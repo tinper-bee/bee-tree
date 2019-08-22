@@ -138,7 +138,7 @@ var Tree = function (_React$Component) {
     }
     if (nextProps.hasOwnProperty('treeData') && nextProps.treeData !== this.props.treeData) {
       this.dataChange = true;
-      st.treeData = treeData;
+      st.treeData = nextProps.treeData;
     }
     if (nextProps.children !== this.props.children) {
       this.dataChange = true;

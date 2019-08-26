@@ -68,10 +68,7 @@ var InfiniteScroll = function (_Component) {
       var parentNode = _this.getParentElement(el);
 
       _this.scrollTop = parentNode.scrollTop;
-
       (0, _util.throttle)(_this.handleScrollY, 500)();
-
-      _this.handleScrollY();
     };
 
     _this.handleScrollY = function () {

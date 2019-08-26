@@ -3,7 +3,7 @@
  */
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import {debounce, throttle} from './util';
+import {throttle} from './util';
 import CONFIG from './config';
 
 export default class InfiniteScroll extends Component {
@@ -183,10 +183,7 @@ export default class InfiniteScroll extends Component {
     const parentNode = this.getParentElement(el);
 
     this.scrollTop = parentNode.scrollTop;
-
-    throttle(this.handleScrollY, 500)()
-
-    this.handleScrollY();
+    throttle(this.handleScrollY, 500)();
   }
 
   /**

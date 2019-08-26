@@ -103,19 +103,6 @@ class Tree extends React.Component {
     this.setState(st);
   }
 
-  // componentWillUpdate(nextProps, nextState){
-  //   const { expandedKeys,treeData } = this.state;
-  //   if(nextState.expandedKeys !== expandedKeys) {
-  //     this.cacheExpandedKeys = expandedKeys;
-  //     if(this.props.lazyLoad){
-  //       let flatTreeData = this.deepTraversal(treeData);
-  //       this.setState({
-  //         flatTreeData
-  //       })
-  //     }
-  //   }
-  // }
-
   onDragStart(e, treeNode) {
     this.dragNode = treeNode;
     this.dragNodesKeys = this.getDragNodes(treeNode);
@@ -829,29 +816,31 @@ onExpand(treeNode,keyType) {
     let {expandedKeys} = this.state,
         flatTreeData = [],
         flatTreeKeysMap = this.flatTreeKeysMap, //存储所有 key-value 的映射，方便获取各节点信息
-        dataCopy = JSON.parse(JSON.stringify(treeData));
+        dataCopy = treeData;
     if(Array.isArray(dataCopy)){
       for (let i=0, l=dataCopy.length; i<l; i++) {
         let { key, title, children, ...props } = dataCopy[i];
+        let dataCopyI = new Object();
         let isLeaf = children ? false : true,
             isExpanded = this.cacheExpandedKeys ? this.cacheExpandedKeys.indexOf(key) !== -1 : expandedKeys.indexOf(key) !== -1;
-        dataCopy[i].isExpanded = isExpanded;
-        dataCopy[i].parentKey = parentKey || null;
-        dataCopy[i].isShown = isShown;
-        dataCopy[i].isLeaf = isLeaf;
+        dataCopyI = Object.assign(dataCopyI,{
+          key,
+          title,
+          isExpanded,
+          parentKey : parentKey || null,
+          isShown,
+          isLeaf
+        },{...props});
         //该节点的父节点是展开状态 或 该节点是根节点
         if(isShown || parentKey === null){
-          flatTreeData.push(Object.assign(dataCopy[i], {...props})); // 取每项数据放入一个新数组
-          flatTreeKeysMap[key] = dataCopy[i];
+          flatTreeData.push(dataCopyI); // 取每项数据放入一个新数组
+          flatTreeKeysMap[key] = dataCopyI;
         }
-        if (Array.isArray(dataCopy[i]["children"]) && dataCopy[i]["children"].length > 0){
+        if (Array.isArray(children) && children.length > 0){
           // 若存在children则递归调用，把数据拼接到新数组中，并且删除该children
-          flatTreeData = flatTreeData.concat(this.deepTraversal(dataCopy[i]["children"], key, isExpanded));
-          delete dataCopy[i]["children"]
+          flatTreeData = flatTreeData.concat(this.deepTraversal(children, key, isExpanded));
         }
       }
-    }else {
-      flatTreeData.push(dataCopy); // 取每项数据放入一个新数组
     }
     return flatTreeData;
   }

@@ -125,14 +125,12 @@ var InfiniteScroll = function (_Component) {
     };
 
     _this.sliceTreeList = function (startIndex, endIndex) {
-      var flatTreeData = JSON.parse(JSON.stringify(_this.treeList)),
-          newTreeList = []; //存储截取后的新数据
+      var newTreeList = []; //存储截取后的新数据
       // console.log(
       //   "**startIndex**" + startIndex,
       //   "**endIndex**" + endIndex
       // );
-      newTreeList = flatTreeData.slice(startIndex, endIndex);
-      // console.log('截取后', JSON.stringify(newTreeList))
+      newTreeList = _this.treeList.slice(startIndex, endIndex);
       _this.props.handleTreeListChange && _this.props.handleTreeListChange(newTreeList, startIndex, endIndex);
     };
 

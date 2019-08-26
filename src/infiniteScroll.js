@@ -248,14 +248,12 @@ export default class InfiniteScroll extends Component {
    * @param endIndex
    */
   sliceTreeList = (startIndex, endIndex) => {
-    let flatTreeData = JSON.parse(JSON.stringify(this.treeList)),
-        newTreeList = []; //存储截取后的新数据
+    let newTreeList = []; //存储截取后的新数据
     // console.log(
     //   "**startIndex**" + startIndex,
     //   "**endIndex**" + endIndex
     // );
-    newTreeList = flatTreeData.slice(startIndex,endIndex);
-    // console.log('截取后', JSON.stringify(newTreeList))
+    newTreeList = this.treeList.slice(startIndex,endIndex);
     this.props.handleTreeListChange && this.props.handleTreeListChange(newTreeList, startIndex, endIndex);
   }
 

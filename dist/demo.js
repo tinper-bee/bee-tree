@@ -34492,19 +34492,6 @@
 	    this.setState(st);
 	  };
 	
-	  // componentWillUpdate(nextProps, nextState){
-	  //   const { expandedKeys,treeData } = this.state;
-	  //   if(nextState.expandedKeys !== expandedKeys) {
-	  //     this.cacheExpandedKeys = expandedKeys;
-	  //     if(this.props.lazyLoad){
-	  //       let flatTreeData = this.deepTraversal(treeData);
-	  //       this.setState({
-	  //         flatTreeData
-	  //       })
-	  //     }
-	  //   }
-	  // }
-	
 	  Tree.prototype.onDragStart = function onDragStart(e, treeNode) {
 	    this.dragNode = treeNode;
 	    this.dragNodesKeys = this.getDragNodes(treeNode);
@@ -35463,7 +35450,7 @@
 	    var expandedKeys = _this7.state.expandedKeys,
 	        flatTreeData = [],
 	        flatTreeKeysMap = _this7.flatTreeKeysMap,
-	        dataCopy = JSON.parse(JSON.stringify(treeData));
+	        dataCopy = treeData;
 	
 	    if (Array.isArray(dataCopy)) {
 	      for (var i = 0, l = dataCopy.length; i < l; i++) {
@@ -35473,25 +35460,27 @@
 	            children = _dataCopy$i.children,
 	            props = _objectWithoutProperties(_dataCopy$i, ['key', 'title', 'children']);
 	
+	        var dataCopyI = new Object();
 	        var isLeaf = children ? false : true,
 	            isExpanded = _this7.cacheExpandedKeys ? _this7.cacheExpandedKeys.indexOf(key) !== -1 : expandedKeys.indexOf(key) !== -1;
-	        dataCopy[i].isExpanded = isExpanded;
-	        dataCopy[i].parentKey = parentKey || null;
-	        dataCopy[i].isShown = isShown;
-	        dataCopy[i].isLeaf = isLeaf;
+	        dataCopyI = _extends(dataCopyI, {
+	          key: key,
+	          title: title,
+	          isExpanded: isExpanded,
+	          parentKey: parentKey || null,
+	          isShown: isShown,
+	          isLeaf: isLeaf
+	        }, _extends({}, props));
 	        //该节点的父节点是展开状态 或 该节点是根节点
 	        if (isShown || parentKey === null) {
-	          flatTreeData.push(_extends(dataCopy[i], _extends({}, props))); // 取每项数据放入一个新数组
-	          flatTreeKeysMap[key] = dataCopy[i];
+	          flatTreeData.push(dataCopyI); // 取每项数据放入一个新数组
+	          flatTreeKeysMap[key] = dataCopyI;
 	        }
-	        if (Array.isArray(dataCopy[i]["children"]) && dataCopy[i]["children"].length > 0) {
+	        if (Array.isArray(children) && children.length > 0) {
 	          // 若存在children则递归调用，把数据拼接到新数组中，并且删除该children
-	          flatTreeData = flatTreeData.concat(_this7.deepTraversal(dataCopy[i]["children"], key, isExpanded));
-	          delete dataCopy[i]["children"];
+	          flatTreeData = flatTreeData.concat(_this7.deepTraversal(children, key, isExpanded));
 	        }
 	      }
-	    } else {
-	      flatTreeData.push(dataCopy); // 取每项数据放入一个新数组
 	    }
 	    return flatTreeData;
 	  };
@@ -36574,59 +36563,75 @@
 	 * @param {*} treeData  扁平结构的 List 数组
 	 * @param {*} attr 属性配置设置
 	 * @param {*} flatTreeKeysMap 存储所有 key-value 的映射，方便获取各节点信息
+	 *  let attr = {
+	      id: 'key',
+	      parendId: 'parentKey',
+	      name: 'title',
+	      rootId: null,
+	      isLeaf: 'isLeaf'
+	    };
 	 */
 	function convertListToTree(treeData, attr, flatTreeKeysMap) {
 	  var tree = [];
 	  var resData = treeData,
-	      resKeysMap = {};
+	      resKeysMap = {},
+	      treeKeysMap = {};
 	  resData.map(function (element) {
-	    resKeysMap[element.key] = element;
+	    var key = attr.id;
+	    resKeysMap[element[key]] = element;
 	  });
 	  // 查找父节点，为了补充不完整的数据结构
 	  var findParentNode = function findParentNode(node) {
 	    var parentKey = node[attr.parendId];
-	    if (!resKeysMap.hasOwnProperty(parentKey)) {
-	      var _flatTreeKeysMap$pare = flatTreeKeysMap[parentKey],
-	          key = _flatTreeKeysMap$pare.key,
-	          title = _flatTreeKeysMap$pare.title,
-	          children = _flatTreeKeysMap$pare.children,
-	          otherProps = _objectWithoutProperties(_flatTreeKeysMap$pare, ['key', 'title', 'children']);
+	    if (parentKey !== attr.rootId) {
+	      var item = flatTreeKeysMap[parentKey];
+	      if (resKeysMap.hasOwnProperty(item[attr.id])) return;
+	      resData.push(item);
+	      resKeysMap[item[attr.id]] = item;
+	      findParentNode(item);
+	    } else {
+	      if (!treeKeysMap.hasOwnProperty(node[attr.id])) {
+	        var key = node.key,
+	            title = node.title,
+	            children = node.children,
+	            isLeaf = node.isLeaf,
+	            otherProps = _objectWithoutProperties(node, ['key', 'title', 'children', 'isLeaf']),
+	            obj = {
+	          key: key,
+	          title: title,
+	          isLeaf: isLeaf,
+	          children: []
+	        };
 	
-	      var obj = {
-	        key: key,
-	        title: title,
-	        children: []
-	      };
-	      tree.push(_extends(obj, _extends({}, otherProps)));
-	      resKeysMap[obj.key] = obj;
+	        tree.push(_extends(obj, _extends({}, otherProps)));
+	        treeKeysMap[key] = node;
+	        return node;
+	      }
 	    }
-	    return flatTreeKeysMap[parentKey];
 	  };
 	
 	  for (var i = 0; i < resData.length; i++) {
-	    if (resData[i].parentKey === attr.rootId) {
-	      var _resData$i = resData[i],
-	          key = _resData$i.key,
-	          title = _resData$i.title,
-	          children = _resData$i.children,
-	          otherProps = _objectWithoutProperties(_resData$i, ['key', 'title', 'children']);
+	    var item = resData[i];
+	    if (item[attr.parendId] === attr.rootId) {
+	      //如果是根节点，就存放进 tree 对象中
+	      var key = item.key,
+	          title = item.title,
+	          children = item.children,
+	          otherProps = _objectWithoutProperties(item, ['key', 'title', 'children']);
 	
 	      var obj = {
-	        key: resData[i][attr.id],
-	        title: resData[i][attr.name],
-	        isLeaf: resData[i][attr.isLeaf],
+	        key: item[attr.id],
+	        title: item[attr.name],
+	        isLeaf: item[attr.isLeaf],
 	        children: []
 	      };
 	      tree.push(_extends(obj, _extends({}, otherProps)));
+	      treeKeysMap[key] = item;
 	      resData.splice(i, 1);
 	      i--;
 	    } else {
-	      var parentNode = flatTreeKeysMap[resData[i][attr.id]],
-	          parentKey = parentNode[attr.parendId];
-	      while (parentKey !== attr.rootId) {
-	        parentNode = findParentNode(parentNode);
-	        parentKey = parentNode[attr.parendId];
-	      }
+	      //找到根节点信息
+	      findParentNode(item);
 	    }
 	  }
 	  // console.log('tree',tree);
@@ -36634,17 +36639,17 @@
 	    if (resData.length > 0) {
 	      for (var _i2 = 0; _i2 < treeArrs.length; _i2++) {
 	        for (var j = 0; j < resData.length; j++) {
-	          if (treeArrs[_i2].key === resData[j][attr.parendId]) {
-	            var _resData$j = resData[j],
-	                _key = _resData$j.key,
-	                _title = _resData$j.title,
-	                _children = _resData$j.children,
-	                _otherProps = _objectWithoutProperties(_resData$j, ['key', 'title', 'children']);
+	          var _item = resData[j];
+	          if (treeArrs[_i2].key === _item[attr.parendId]) {
+	            var _key = _item.key,
+	                _title = _item.title,
+	                _children = _item.children,
+	                _otherProps = _objectWithoutProperties(_item, ['key', 'title', 'children']);
 	
 	            var _obj = {
-	              key: resData[j][attr.id],
-	              title: resData[j][attr.name],
-	              isLeaf: resData[j][attr.isLeaf],
+	              key: _item[attr.id],
+	              title: _item[attr.name],
+	              isLeaf: _item[attr.isLeaf],
 	              children: []
 	            };
 	            treeArrs[_i2].children.push(_extends(_obj, _extends({}, _otherProps)));
@@ -36851,14 +36856,12 @@
 	    };
 	
 	    _this.sliceTreeList = function (startIndex, endIndex) {
-	      var flatTreeData = JSON.parse(JSON.stringify(_this.treeList)),
-	          newTreeList = []; //存储截取后的新数据
+	      var newTreeList = []; //存储截取后的新数据
 	      // console.log(
 	      //   "**startIndex**" + startIndex,
 	      //   "**endIndex**" + endIndex
 	      // );
-	      newTreeList = flatTreeData.slice(startIndex, endIndex);
-	      // console.log('截取后', JSON.stringify(newTreeList))
+	      newTreeList = _this.treeList.slice(startIndex, endIndex);
 	      _this.props.handleTreeListChange && _this.props.handleTreeListChange(newTreeList, startIndex, endIndex);
 	    };
 	

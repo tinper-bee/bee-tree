@@ -4,13 +4,9 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-<<<<<<< HEAD
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; /* eslint no-loop-func: 0*/
-=======
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
->>>>>>> master
 
 exports.browser = browser;
 exports.getOffset = getOffset;
@@ -385,22 +381,6 @@ function warnOnlyTreeNode() {
  * @param {*} treeData  扁平结构的 List 数组
  * @param {*} attr 属性配置设置
  * @param {*} flatTreeKeysMap 存储所有 key-value 的映射，方便获取各节点信息
-<<<<<<< HEAD
- */
-function convertListToTree(treeData, attr, flatTreeKeysMap) {
-  var tree = [];
-  var resData = treeData,
-      resKeysMap = {};
-  resData.map(function (element) {
-    resKeysMap[element.key] = element;
-=======
- *  let attr = {
-      id: 'key',
-      parendId: 'parentKey',
-      name: 'title',
-      rootId: null,
-      isLeaf: 'isLeaf'
-    };
  */
 function convertListToTree(treeData, attr, flatTreeKeysMap) {
   var tree = []; //存储所有一级节点
@@ -412,49 +392,16 @@ function convertListToTree(treeData, attr, flatTreeKeysMap) {
   resData.map(function (element) {
     var key = attr.id;
     resKeysMap[element[key]] = element;
->>>>>>> master
   });
   // 查找父节点，为了补充不完整的数据结构
   var findParentNode = function findParentNode(node) {
     var parentKey = node[attr.parendId];
-<<<<<<< HEAD
-    if (!resKeysMap.hasOwnProperty(parentKey)) {
-      var obj = {
-        key: flatTreeKeysMap[parentKey][attr.id],
-        title: flatTreeKeysMap[parentKey][attr.name],
-        children: []
-      };
-      tree.push(obj);
-      resKeysMap[obj.key] = obj;
-    }
-    return flatTreeKeysMap[parentKey];
-  };
-
-  for (var i = 0; i < resData.length; i++) {
-    if (resData[i].parentKey === attr.rootId) {
-      var obj = {
-        key: resData[i][attr.id],
-        title: resData[i][attr.name],
-        isLeaf: resData[i][attr.isLeaf],
-        children: []
-      };
-      tree.push(obj);
-      resData.splice(i, 1);
-      i--;
-    } else {
-      var parentNode = flatTreeKeysMap[resData[i][attr.id]],
-          parentKey = parentNode[attr.parendId];
-      while (parentKey !== attr.rootId) {
-        parentNode = findParentNode(parentNode);
-        parentKey = parentNode[attr.parendId];
-      }
-=======
     if (parentKey !== attr.rootId) {
       //如果不是根节点，则继续递归
       var item = flatTreeKeysMap[parentKey];
       // 用 resKeysMap 判断，避免重复计算某节点的父节点
       if (resKeysMap.hasOwnProperty(item[attr.id])) return;
-      resData.push(item);
+      resData.unshift(item);
       resKeysMap[item[attr.id]] = item;
       findParentNode(item);
     } else {
@@ -480,7 +427,7 @@ function convertListToTree(treeData, attr, flatTreeKeysMap) {
   // 遍历 resData ，找到所有的一级节点
   for (var i = 0; i < resData.length; i++) {
     var item = resData[i];
-    if (item[attr.parendId] === attr.rootId) {
+    if (item[attr.parendId] === attr.rootId && !treeKeysMap.hasOwnProperty(item[attr.id])) {
       //如果是根节点，就存放进 tree 对象中
       var key = item.key,
           title = item.title,
@@ -500,24 +447,13 @@ function convertListToTree(treeData, attr, flatTreeKeysMap) {
     } else {
       //递归查找根节点信息
       findParentNode(item);
->>>>>>> master
     }
   }
-  // console.log('tree',tree);
+  // console.log('resData',resKeysMap);
   var run = function run(treeArrs) {
     if (resData.length > 0) {
       for (var _i2 = 0; _i2 < treeArrs.length; _i2++) {
         for (var j = 0; j < resData.length; j++) {
-<<<<<<< HEAD
-          if (treeArrs[_i2].key === resData[j][attr.parendId]) {
-            var _obj = {
-              key: resData[j][attr.id],
-              title: resData[j][attr.name],
-              isLeaf: resData[j][attr.isLeaf],
-              children: []
-            };
-            treeArrs[_i2].children.push(_obj);
-=======
           var _item = resData[j];
           if (treeArrs[_i2].key === _item[attr.parendId]) {
             var _key = _item.key,
@@ -532,7 +468,6 @@ function convertListToTree(treeData, attr, flatTreeKeysMap) {
               children: []
             };
             treeArrs[_i2].children.push(_extends(_obj, _extends({}, _otherProps)));
->>>>>>> master
             resData.splice(j, 1);
             j--;
           }

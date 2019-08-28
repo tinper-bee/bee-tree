@@ -59,89 +59,7 @@ var Tree = function (_React$Component) {
 
     var _this = _possibleConstructorReturn(this, _React$Component.call(this, props));
 
-<<<<<<< HEAD
-    _this.handleTreeListChange = function (treeList, startIndex, endIndex) {
-      // 属性配置设置
-      var attr = {
-        id: 'key',
-        parendId: 'parentKey',
-        name: 'title',
-        rootId: null,
-        isLeaf: 'isLeaf'
-      };
-      var treeData = (0, _util.convertListToTree)(treeList, attr, _this.flatTreeKeysMap);
-
-      _this.startIndex = typeof startIndex !== "undefined" ? startIndex : _this.startIndex;
-      _this.endIndex = typeof endIndex !== "undefined" ? endIndex : _this.endIndex;
-
-      _this.setState({
-        treeData: treeData
-      });
-    };
-
-    _this.deepTraversal = function (treeData) {
-      var parentKey = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
-      var isShown = arguments[2];
-      var expandedKeys = _this.state.expandedKeys,
-          flatTreeData = [],
-          flatTreeKeysMap = _this.flatTreeKeysMap,
-          dataCopy = JSON.parse(JSON.stringify(treeData));
-
-      if (Array.isArray(dataCopy)) {
-        for (var i = 0, l = dataCopy.length; i < l; i++) {
-          var key = dataCopy[i].hasOwnProperty('key') && dataCopy[i].key,
-              isLeaf = dataCopy[i].hasOwnProperty('children') ? false : true,
-              isExpanded = _this.cacheExpandedKeys ? _this.cacheExpandedKeys.indexOf(key) !== -1 : expandedKeys.indexOf(key) !== -1;
-          dataCopy[i].isExpanded = isExpanded;
-          dataCopy[i].parentKey = parentKey || null;
-          dataCopy[i].isShown = isShown;
-          dataCopy[i].isLeaf = isLeaf;
-          //该节点的父节点是展开状态 或 该节点是根节点
-          if (isShown || parentKey === null) {
-            flatTreeData.push(dataCopy[i]); // 取每项数据放入一个新数组
-            flatTreeKeysMap[key] = dataCopy[i];
-          }
-          if (Array.isArray(dataCopy[i]["children"]) && dataCopy[i]["children"].length > 0) {
-            // 若存在children则递归调用，把数据拼接到新数组中，并且删除该children
-            flatTreeData = flatTreeData.concat(_this.deepTraversal(dataCopy[i]["children"], key, isExpanded));
-            delete dataCopy[i]["children"];
-          }
-        }
-      } else {
-        flatTreeData.push(dataCopy); // 取每项数据放入一个新数组
-      }
-      return flatTreeData;
-    };
-
-    _this.renderTreefromData = function (data) {
-      var renderTitle = _this.props.renderTitle;
-
-      var loop = function loop(data) {
-        return data.map(function (item) {
-          if (item.children) {
-            return _react2["default"].createElement(
-              _TreeNode2["default"],
-              { key: item.key, title: renderTitle ? renderTitle(item) : item.key, isLeaf: item.isLeaf },
-              loop(item.children)
-            );
-          }
-          return _react2["default"].createElement(_TreeNode2["default"], { key: item.key, title: renderTitle ? renderTitle(item) : item.key, isLeaf: true });
-        });
-      };
-      return loop(data);
-    };
-
-    _this.getSumHeight = function (start, end) {
-      var sumHeight = 0;
-      var span = Math.abs(end - start);
-      if (span) {
-        sumHeight = span * _config2["default"].defaultHeight;
-      }
-      return sumHeight;
-    };
-=======
     _initialiseProps.call(_this);
->>>>>>> master
 
     ['onKeyDown', 'onCheck', "onUlFocus", "_focusDom", "onUlMouseEnter", "onUlMouseLeave"].forEach(function (m) {
       _this[m] = _this[m].bind(_this);
@@ -218,34 +136,15 @@ var Tree = function (_React$Component) {
     if (selectedKeys) {
       st.selectedKeys = selectedKeys;
     }
-<<<<<<< HEAD
-    if (nextProps.treeData !== this.props.treeData) {
-      this.dataChange = true;
-      st.treeData = treeData;
-=======
     if (nextProps.hasOwnProperty('treeData') && nextProps.treeData !== this.props.treeData) {
       this.dataChange = true;
       st.treeData = nextProps.treeData;
->>>>>>> master
     }
     if (nextProps.children !== this.props.children) {
       this.dataChange = true;
     }
     this.setState(st);
   };
-
-  // componentWillUpdate(nextProps, nextState){
-  //   const { expandedKeys,treeData } = this.state;
-  //   if(nextState.expandedKeys !== expandedKeys) {
-  //     this.cacheExpandedKeys = expandedKeys;
-  //     if(this.props.lazyLoad){
-  //       let flatTreeData = this.deepTraversal(treeData);
-  //       this.setState({
-  //         flatTreeData
-  //       })
-  //     }
-  //   }
-  // }
 
   Tree.prototype.onDragStart = function onDragStart(e, treeNode) {
     this.dragNode = treeNode;
@@ -960,7 +859,6 @@ var Tree = function (_React$Component) {
   Tree.prototype.renderTreeNode = function renderTreeNode(child, index) {
     var level = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
 
-    console.log('child', child.props);
     var pos = level + '-' + index;
     var key = child.key || pos;
 
@@ -1060,11 +958,7 @@ var Tree = function (_React$Component) {
         checkStrictly = _props3.checkStrictly,
         tabIndexValue = _props3.tabIndexValue,
         lazyLoad = _props3.lazyLoad,
-<<<<<<< HEAD
-        offsetHeight = _props3.offsetHeight;
-=======
         getScrollContainer = _props3.getScrollContainer;
->>>>>>> master
     var _state = this.state,
         treeData = _state.treeData,
         flatTreeData = _state.flatTreeData;
@@ -1159,11 +1053,7 @@ var Tree = function (_React$Component) {
         className: 'u-tree-infinite-scroll',
         treeList: flatTreeData,
         handleTreeListChange: this.handleTreeListChange,
-<<<<<<< HEAD
-        offsetHeight: offsetHeight
-=======
         getScrollParent: getScrollContainer
->>>>>>> master
       },
       _react2["default"].createElement(
         'ul',
@@ -1202,7 +1092,6 @@ var _initialiseProps = function _initialiseProps() {
 
     _this7.startIndex = typeof startIndex !== "undefined" ? startIndex : _this7.startIndex;
     _this7.endIndex = typeof endIndex !== "undefined" ? endIndex : _this7.endIndex;
-
     _this7.setState({
       treeData: treeData
     });
@@ -1321,15 +1210,11 @@ Tree.propTypes = {
   openTransitionName: _propTypes2["default"].string,
   focusable: _propTypes2["default"].bool,
   openAnimation: _propTypes2["default"].oneOfType([_propTypes2["default"].string, _propTypes2["default"].object]),
-<<<<<<< HEAD
-  lazyLoad: _propTypes2["default"].bool
-=======
   lazyLoad: _propTypes2["default"].bool,
   treeData: _propTypes2["default"].array,
   renderTreeNodes: _propTypes2["default"].func,
   autoSelectWhenFocus: _propTypes2["default"].bool,
   getScrollContainer: _propTypes2["default"].func
->>>>>>> master
 };
 
 Tree.defaultProps = {
@@ -1356,13 +1241,9 @@ Tree.defaultProps = {
   onDrop: noop,
   onDragEnd: noop,
   tabIndexValue: 0,
-<<<<<<< HEAD
-  lazyLoad: false
-=======
   lazyLoad: false,
   autoSelectWhenFocus: false,
   getScrollContainer: noop
->>>>>>> master
 };
 
 exports["default"] = Tree;

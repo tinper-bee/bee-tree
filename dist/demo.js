@@ -197,7 +197,7 @@
 	        return _react2['default'].createElement(
 	            _beeLayout.Row,
 	            null,
-	            [DemoArray[12]].map(function (child, index) {
+	            DemoArray.map(function (child, index) {
 	
 	                return _react2['default'].createElement(Demo, { example: child.example, title: child.title, code: child.code, scss_code: child.scss_code, desc: child.desc, key: index });
 	            })
@@ -34446,7 +34446,6 @@
 	    //启用懒加载，把 Tree 结构拍平，为后续动态截取数据做准备
 	    if (lazyLoad) {
 	      var flatTreeData = this.deepTraversal(treeData);
-	      // console.log(JSON.stringify(flatTreeData))
 	      flatTreeData.forEach(function (element) {
 	        if (sliceTreeList.length >= _this2.loadCount) return;
 	        sliceTreeList.push(element);
@@ -35315,10 +35314,6 @@
 	        sufHeight = 0,
 	        treeNode = [],
 	        treeChildren = props.children; //最终渲染在 Tree 标签中的子节点
-	    // console.log(
-	    //   "**startIndex**" + startIndex,
-	    //   "**endIndex**" + endIndex
-	    // );
 	
 	    if (lazyLoad) {
 	      preHeight = this.getSumHeight(0, startIndex);
@@ -35440,13 +35435,9 @@
 	      isLeaf: 'isLeaf'
 	    };
 	    var treeData = (0, _util.convertListToTree)(treeList, attr, _this7.flatTreeKeysMap);
-	    // console.log(
-	    //   "**startIndex**" + startIndex,
-	    //   "**endIndex**" + endIndex
-	    // );
+	
 	    _this7.startIndex = typeof startIndex !== "undefined" ? startIndex : _this7.startIndex;
 	    _this7.endIndex = typeof endIndex !== "undefined" ? endIndex : _this7.endIndex;
-	
 	    _this7.setState({
 	      treeData: treeData
 	    });
@@ -36574,13 +36565,6 @@
 	 * @param {*} treeData  扁平结构的 List 数组
 	 * @param {*} attr 属性配置设置
 	 * @param {*} flatTreeKeysMap 存储所有 key-value 的映射，方便获取各节点信息
-	 *  let attr = {
-	      id: 'key',
-	      parendId: 'parentKey',
-	      name: 'title',
-	      rootId: null,
-	      isLeaf: 'isLeaf'
-	    };
 	 */
 	function convertListToTree(treeData, attr, flatTreeKeysMap) {
 	  var tree = []; //存储所有一级节点
@@ -36601,7 +36585,7 @@
 	      var item = flatTreeKeysMap[parentKey];
 	      // 用 resKeysMap 判断，避免重复计算某节点的父节点
 	      if (resKeysMap.hasOwnProperty(item[attr.id])) return;
-	      resData.push(item);
+	      resData.unshift(item);
 	      resKeysMap[item[attr.id]] = item;
 	      findParentNode(item);
 	    } else {
@@ -36627,7 +36611,7 @@
 	  // 遍历 resData ，找到所有的一级节点
 	  for (var i = 0; i < resData.length; i++) {
 	    var item = resData[i];
-	    if (item[attr.parendId] === attr.rootId) {
+	    if (item[attr.parendId] === attr.rootId && !treeKeysMap.hasOwnProperty(item[attr.id])) {
 	      //如果是根节点，就存放进 tree 对象中
 	      var key = item.key,
 	          title = item.title,
@@ -36644,11 +36628,12 @@
 	      treeKeysMap[key] = item;
 	      resData.splice(i, 1);
 	      i--;
-	    } else {//递归查找根节点信息
-	      // findParentNode(item);
+	    } else {
+	      //递归查找根节点信息
+	      findParentNode(item);
 	    }
 	  }
-	  // console.log('tree',tree);
+	  // console.log('resData',resKeysMap);
 	  var run = function run(treeArrs) {
 	    if (resData.length > 0) {
 	      for (var _i2 = 0; _i2 < treeArrs.length; _i2++) {

@@ -1092,7 +1092,6 @@ var _initialiseProps = function _initialiseProps() {
 
     _this7.startIndex = typeof startIndex !== "undefined" ? startIndex : _this7.startIndex;
     _this7.endIndex = typeof endIndex !== "undefined" ? endIndex : _this7.endIndex;
-
     _this7.setState({
       treeData: treeData
     });

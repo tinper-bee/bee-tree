@@ -57,7 +57,6 @@ class Tree extends React.Component {
     //启用懒加载，把 Tree 结构拍平，为后续动态截取数据做准备
     if(lazyLoad) {
       let flatTreeData = this.deepTraversal(treeData);
-      // console.log(JSON.stringify(flatTreeData))
       flatTreeData.forEach((element) => {
         if(sliceTreeList.length >= this.loadCount) return;
         sliceTreeList.push(element);
@@ -798,13 +797,9 @@ onExpand(treeNode,keyType) {
       isLeaf: 'isLeaf'
     };
     let treeData = convertListToTree(treeList, attr, this.flatTreeKeysMap);
-    // console.log(
-    //   "**startIndex**" + startIndex,
-    //   "**endIndex**" + endIndex
-    // );
+
     this.startIndex = typeof(startIndex) !== "undefined" ? startIndex : this.startIndex;
     this.endIndex = typeof(endIndex) !== "undefined" ? endIndex : this.endIndex;
-
     this.setState({
       treeData : treeData
     })
@@ -984,10 +979,6 @@ onExpand(treeNode,keyType) {
         sufHeight = 0, //后置占位高度
         treeNode = [], //根据传入的 treeData 生成的 treeNode 节点数组
         treeChildren = props.children; //最终渲染在 Tree 标签中的子节点
-    // console.log(
-    //   "**startIndex**" + startIndex,
-    //   "**endIndex**" + endIndex
-    // );
     if(lazyLoad){
       preHeight = this.getSumHeight(0, startIndex);
       sufHeight = this.getSumHeight(endIndex, flatTreeData.length);

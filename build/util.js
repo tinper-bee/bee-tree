@@ -381,13 +381,6 @@ function warnOnlyTreeNode() {
  * @param {*} treeData  扁平结构的 List 数组
  * @param {*} attr 属性配置设置
  * @param {*} flatTreeKeysMap 存储所有 key-value 的映射，方便获取各节点信息
- *  let attr = {
-      id: 'key',
-      parendId: 'parentKey',
-      name: 'title',
-      rootId: null,
-      isLeaf: 'isLeaf'
-    };
  */
 function convertListToTree(treeData, attr, flatTreeKeysMap) {
   var tree = []; //存储所有一级节点
@@ -408,7 +401,7 @@ function convertListToTree(treeData, attr, flatTreeKeysMap) {
       var item = flatTreeKeysMap[parentKey];
       // 用 resKeysMap 判断，避免重复计算某节点的父节点
       if (resKeysMap.hasOwnProperty(item[attr.id])) return;
-      resData.push(item);
+      resData.unshift(item);
       resKeysMap[item[attr.id]] = item;
       findParentNode(item);
     } else {
@@ -434,7 +427,7 @@ function convertListToTree(treeData, attr, flatTreeKeysMap) {
   // 遍历 resData ，找到所有的一级节点
   for (var i = 0; i < resData.length; i++) {
     var item = resData[i];
-    if (item[attr.parendId] === attr.rootId) {
+    if (item[attr.parendId] === attr.rootId && !treeKeysMap.hasOwnProperty(item[attr.id])) {
       //如果是根节点，就存放进 tree 对象中
       var key = item.key,
           title = item.title,
@@ -456,7 +449,7 @@ function convertListToTree(treeData, attr, flatTreeKeysMap) {
       findParentNode(item);
     }
   }
-  // console.log('tree',tree);
+  // console.log('resData',resKeysMap);
   var run = function run(treeArrs) {
     if (resData.length > 0) {
       for (var _i2 = 0; _i2 < treeArrs.length; _i2++) {

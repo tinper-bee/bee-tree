@@ -390,10 +390,12 @@ function warnOnlyTreeNode() {
     };
  */
 function convertListToTree(treeData, attr, flatTreeKeysMap) {
-  var tree = [];
+  var tree = []; //存储所有一级节点
   var resData = treeData,
-      resKeysMap = {},
-      treeKeysMap = {};
+      //resData 存储截取的节点 + 父节点（除一级节点外）
+  resKeysMap = {},
+      //resData 的Map映射
+  treeKeysMap = {}; //tree 的Map映射
   resData.map(function (element) {
     var key = attr.id;
     resKeysMap[element[key]] = element;
@@ -416,21 +418,20 @@ function convertListToTree(treeData, attr, flatTreeKeysMap) {
             title = node.title,
             children = node.children,
             isLeaf = node.isLeaf,
-            otherProps = _objectWithoutProperties(node, ['key', 'title', 'children', 'isLeaf']),
-            obj = {
+            otherProps = _objectWithoutProperties(node, ['key', 'title', 'children', 'isLeaf']);
+
+        var obj = {
           key: key,
           title: title,
           isLeaf: isLeaf,
           children: []
         };
-
         tree.push(_extends(obj, _extends({}, otherProps)));
         treeKeysMap[key] = node;
-        return node;
       }
     }
   };
-
+  // 遍历 resData ，找到所有的一级节点
   for (var i = 0; i < resData.length; i++) {
     var item = resData[i];
     if (item[attr.parendId] === attr.rootId) {

@@ -197,7 +197,7 @@
 	        return _react2['default'].createElement(
 	            _beeLayout.Row,
 	            null,
-	            DemoArray.map(function (child, index) {
+	            [DemoArray[12]].map(function (child, index) {
 	
 	                return _react2['default'].createElement(Demo, { example: child.example, title: child.title, code: child.code, scss_code: child.scss_code, desc: child.desc, key: index });
 	            })
@@ -34446,6 +34446,7 @@
 	    //启用懒加载，把 Tree 结构拍平，为后续动态截取数据做准备
 	    if (lazyLoad) {
 	      var flatTreeData = this.deepTraversal(treeData);
+	      // console.log(JSON.stringify(flatTreeData))
 	      flatTreeData.forEach(function (element) {
 	        if (sliceTreeList.length >= _this2.loadCount) return;
 	        sliceTreeList.push(element);
@@ -35314,6 +35315,10 @@
 	        sufHeight = 0,
 	        treeNode = [],
 	        treeChildren = props.children; //最终渲染在 Tree 标签中的子节点
+	    // console.log(
+	    //   "**startIndex**" + startIndex,
+	    //   "**endIndex**" + endIndex
+	    // );
 	
 	    if (lazyLoad) {
 	      preHeight = this.getSumHeight(0, startIndex);
@@ -35435,7 +35440,10 @@
 	      isLeaf: 'isLeaf'
 	    };
 	    var treeData = (0, _util.convertListToTree)(treeList, attr, _this7.flatTreeKeysMap);
-	
+	    // console.log(
+	    //   "**startIndex**" + startIndex,
+	    //   "**endIndex**" + endIndex
+	    // );
 	    _this7.startIndex = typeof startIndex !== "undefined" ? startIndex : _this7.startIndex;
 	    _this7.endIndex = typeof endIndex !== "undefined" ? endIndex : _this7.endIndex;
 	
@@ -35510,6 +35518,9 @@
 	
 	  this.getSumHeight = function (start, end) {
 	    var sumHeight = 0;
+	    if (start > end) {
+	      return sumHeight;
+	    }
 	    var span = Math.abs(end - start);
 	    if (span) {
 	      sumHeight = span * _config2['default'].defaultHeight;
@@ -36572,10 +36583,12 @@
 	    };
 	 */
 	function convertListToTree(treeData, attr, flatTreeKeysMap) {
-	  var tree = [];
+	  var tree = []; //存储所有一级节点
 	  var resData = treeData,
-	      resKeysMap = {},
-	      treeKeysMap = {};
+	      //resData 存储截取的节点 + 父节点（除一级节点外）
+	  resKeysMap = {},
+	      //resData 的Map映射
+	  treeKeysMap = {}; //tree 的Map映射
 	  resData.map(function (element) {
 	    var key = attr.id;
 	    resKeysMap[element[key]] = element;
@@ -36584,32 +36597,34 @@
 	  var findParentNode = function findParentNode(node) {
 	    var parentKey = node[attr.parendId];
 	    if (parentKey !== attr.rootId) {
+	      //如果不是根节点，则继续递归
 	      var item = flatTreeKeysMap[parentKey];
+	      // 用 resKeysMap 判断，避免重复计算某节点的父节点
 	      if (resKeysMap.hasOwnProperty(item[attr.id])) return;
 	      resData.push(item);
 	      resKeysMap[item[attr.id]] = item;
 	      findParentNode(item);
 	    } else {
+	      // 用 treeKeysMap 判断，避免重复累加
 	      if (!treeKeysMap.hasOwnProperty(node[attr.id])) {
 	        var key = node.key,
 	            title = node.title,
 	            children = node.children,
 	            isLeaf = node.isLeaf,
-	            otherProps = _objectWithoutProperties(node, ['key', 'title', 'children', 'isLeaf']),
-	            obj = {
+	            otherProps = _objectWithoutProperties(node, ['key', 'title', 'children', 'isLeaf']);
+	
+	        var obj = {
 	          key: key,
 	          title: title,
 	          isLeaf: isLeaf,
 	          children: []
 	        };
-	
 	        tree.push(_extends(obj, _extends({}, otherProps)));
 	        treeKeysMap[key] = node;
-	        return node;
 	      }
 	    }
 	  };
-	
+	  // 遍历 resData ，找到所有的一级节点
 	  for (var i = 0; i < resData.length; i++) {
 	    var item = resData[i];
 	    if (item[attr.parendId] === attr.rootId) {
@@ -36629,9 +36644,8 @@
 	      treeKeysMap[key] = item;
 	      resData.splice(i, 1);
 	      i--;
-	    } else {
-	      //找到根节点信息
-	      findParentNode(item);
+	    } else {//递归查找根节点信息
+	      // findParentNode(item);
 	    }
 	  }
 	  // console.log('tree',tree);
@@ -36862,6 +36876,7 @@
 	      //   "**endIndex**" + endIndex
 	      // );
 	      newTreeList = _this.treeList.slice(startIndex, endIndex);
+	      // console.log(JSON.stringify(newTreeList))
 	      _this.props.handleTreeListChange && _this.props.handleTreeListChange(newTreeList, startIndex, endIndex);
 	    };
 	

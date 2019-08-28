@@ -131,6 +131,7 @@ var InfiniteScroll = function (_Component) {
       //   "**endIndex**" + endIndex
       // );
       newTreeList = _this.treeList.slice(startIndex, endIndex);
+      // console.log(JSON.stringify(newTreeList))
       _this.props.handleTreeListChange && _this.props.handleTreeListChange(newTreeList, startIndex, endIndex);
     };
 

@@ -1164,6 +1164,9 @@ var _initialiseProps = function _initialiseProps() {
 
   this.getSumHeight = function (start, end) {
     var sumHeight = 0;
+    if (start > end) {
+      return sumHeight;
+    }
     var span = Math.abs(end - start);
     if (span) {
       sumHeight = span * _config2["default"].defaultHeight;

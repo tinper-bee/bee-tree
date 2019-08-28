@@ -337,10 +337,10 @@ export function warnOnlyTreeNode() {
     };
  */
 export function convertListToTree(treeData, attr, flatTreeKeysMap) {
-    let tree = [];
-    let resData = treeData,
-        resKeysMap = {},
-        treeKeysMap = {};
+    let tree = []; //存储所有一级节点
+    let resData = treeData, //resData 存储截取的节点 + 父节点（除一级节点外）
+        resKeysMap = {}, //resData 的Map映射
+        treeKeysMap = {}; //tree 的Map映射
     resData.map((element) => {
       let key = attr.id;
       resKeysMap[element[key]] = element;
@@ -358,8 +358,8 @@ export function convertListToTree(treeData, attr, flatTreeKeysMap) {
       }else{
         // 用 treeKeysMap 判断，避免重复累加
         if (!treeKeysMap.hasOwnProperty(node[attr.id]) ) {
-          let { key, title, children, isLeaf, ...otherProps } = node,
-              obj = {
+          let { key, title, children, isLeaf, ...otherProps } = node;
+          let obj = {
                 key,
                 title,
                 isLeaf,
@@ -367,11 +367,10 @@ export function convertListToTree(treeData, attr, flatTreeKeysMap) {
               }
           tree.push(Object.assign(obj, {...otherProps}));
           treeKeysMap[key] = node;
-          return node;
         }
       }
     }
-
+    // 遍历 resData ，找到所有的一级节点
     for (let i = 0; i < resData.length; i++) {
         let item = resData[i];
         if (item[attr.parendId] === attr.rootId) { //如果是根节点，就存放进 tree 对象中
@@ -387,7 +386,7 @@ export function convertListToTree(treeData, attr, flatTreeKeysMap) {
             resData.splice(i, 1);
             i--;
         }else { //递归查找根节点信息
-          findParentNode(item);
+          // findParentNode(item);
         }
     }
     // console.log('tree',tree);

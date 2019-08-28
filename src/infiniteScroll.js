@@ -254,6 +254,7 @@ export default class InfiniteScroll extends Component {
     //   "**endIndex**" + endIndex
     // );
     newTreeList = this.treeList.slice(startIndex,endIndex);
+    // console.log(JSON.stringify(newTreeList))
     this.props.handleTreeListChange && this.props.handleTreeListChange(newTreeList, startIndex, endIndex);
   }
 

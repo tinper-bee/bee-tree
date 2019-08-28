@@ -4,7 +4,13 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
+<<<<<<< HEAD
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; /* eslint no-loop-func: 0*/
+=======
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+>>>>>>> master
 
 exports.browser = browser;
 exports.getOffset = getOffset;
@@ -29,6 +35,8 @@ var _react = require('react');
 var _react2 = _interopRequireDefault(_react);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+
+function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; } /* eslint no-loop-func: 0*/
 
 function browser(navigator) {
   var tem = void 0;
@@ -377,6 +385,7 @@ function warnOnlyTreeNode() {
  * @param {*} treeData  扁平结构的 List 数组
  * @param {*} attr 属性配置设置
  * @param {*} flatTreeKeysMap 存储所有 key-value 的映射，方便获取各节点信息
+<<<<<<< HEAD
  */
 function convertListToTree(treeData, attr, flatTreeKeysMap) {
   var tree = [];
@@ -384,10 +393,31 @@ function convertListToTree(treeData, attr, flatTreeKeysMap) {
       resKeysMap = {};
   resData.map(function (element) {
     resKeysMap[element.key] = element;
+=======
+ *  let attr = {
+      id: 'key',
+      parendId: 'parentKey',
+      name: 'title',
+      rootId: null,
+      isLeaf: 'isLeaf'
+    };
+ */
+function convertListToTree(treeData, attr, flatTreeKeysMap) {
+  var tree = []; //存储所有一级节点
+  var resData = treeData,
+      //resData 存储截取的节点 + 父节点（除一级节点外）
+  resKeysMap = {},
+      //resData 的Map映射
+  treeKeysMap = {}; //tree 的Map映射
+  resData.map(function (element) {
+    var key = attr.id;
+    resKeysMap[element[key]] = element;
+>>>>>>> master
   });
   // 查找父节点，为了补充不完整的数据结构
   var findParentNode = function findParentNode(node) {
     var parentKey = node[attr.parendId];
+<<<<<<< HEAD
     if (!resKeysMap.hasOwnProperty(parentKey)) {
       var obj = {
         key: flatTreeKeysMap[parentKey][attr.id],
@@ -418,6 +448,59 @@ function convertListToTree(treeData, attr, flatTreeKeysMap) {
         parentNode = findParentNode(parentNode);
         parentKey = parentNode[attr.parendId];
       }
+=======
+    if (parentKey !== attr.rootId) {
+      //如果不是根节点，则继续递归
+      var item = flatTreeKeysMap[parentKey];
+      // 用 resKeysMap 判断，避免重复计算某节点的父节点
+      if (resKeysMap.hasOwnProperty(item[attr.id])) return;
+      resData.push(item);
+      resKeysMap[item[attr.id]] = item;
+      findParentNode(item);
+    } else {
+      // 用 treeKeysMap 判断，避免重复累加
+      if (!treeKeysMap.hasOwnProperty(node[attr.id])) {
+        var key = node.key,
+            title = node.title,
+            children = node.children,
+            isLeaf = node.isLeaf,
+            otherProps = _objectWithoutProperties(node, ['key', 'title', 'children', 'isLeaf']);
+
+        var obj = {
+          key: key,
+          title: title,
+          isLeaf: isLeaf,
+          children: []
+        };
+        tree.push(_extends(obj, _extends({}, otherProps)));
+        treeKeysMap[key] = node;
+      }
+    }
+  };
+  // 遍历 resData ，找到所有的一级节点
+  for (var i = 0; i < resData.length; i++) {
+    var item = resData[i];
+    if (item[attr.parendId] === attr.rootId) {
+      //如果是根节点，就存放进 tree 对象中
+      var key = item.key,
+          title = item.title,
+          children = item.children,
+          otherProps = _objectWithoutProperties(item, ['key', 'title', 'children']);
+
+      var obj = {
+        key: item[attr.id],
+        title: item[attr.name],
+        isLeaf: item[attr.isLeaf],
+        children: []
+      };
+      tree.push(_extends(obj, _extends({}, otherProps)));
+      treeKeysMap[key] = item;
+      resData.splice(i, 1);
+      i--;
+    } else {
+      //递归查找根节点信息
+      findParentNode(item);
+>>>>>>> master
     }
   }
   // console.log('tree',tree);
@@ -425,6 +508,7 @@ function convertListToTree(treeData, attr, flatTreeKeysMap) {
     if (resData.length > 0) {
       for (var _i2 = 0; _i2 < treeArrs.length; _i2++) {
         for (var j = 0; j < resData.length; j++) {
+<<<<<<< HEAD
           if (treeArrs[_i2].key === resData[j][attr.parendId]) {
             var _obj = {
               key: resData[j][attr.id],
@@ -433,6 +517,22 @@ function convertListToTree(treeData, attr, flatTreeKeysMap) {
               children: []
             };
             treeArrs[_i2].children.push(_obj);
+=======
+          var _item = resData[j];
+          if (treeArrs[_i2].key === _item[attr.parendId]) {
+            var _key = _item.key,
+                _title = _item.title,
+                _children = _item.children,
+                _otherProps = _objectWithoutProperties(_item, ['key', 'title', 'children']);
+
+            var _obj = {
+              key: _item[attr.id],
+              title: _item[attr.name],
+              isLeaf: _item[attr.isLeaf],
+              children: []
+            };
+            treeArrs[_i2].children.push(_extends(_obj, _extends({}, _otherProps)));
+>>>>>>> master
             resData.splice(j, 1);
             j--;
           }

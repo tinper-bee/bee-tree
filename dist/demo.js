@@ -34801,6 +34801,9 @@
 	      event: 'dblclick',
 	      node: treeNode
 	    };
+	    if (props.expandWhenDoubleClick) {
+	      this.onExpand(treeNode);
+	    }
 	    props.onDoubleClick(eventKey, newSt);
 	  };
 	
@@ -35560,7 +35563,8 @@
 	  treeData: _propTypes2['default'].array,
 	  renderTreeNodes: _propTypes2['default'].func,
 	  autoSelectWhenFocus: _propTypes2['default'].bool,
-	  getScrollContainer: _propTypes2['default'].func
+	  getScrollContainer: _propTypes2['default'].func,
+	  expandWhenDoubleClick: _propTypes2['default'].bool
 	};
 	
 	Tree.defaultProps = {
@@ -35589,7 +35593,8 @@
 	  tabIndexValue: 0,
 	  lazyLoad: false,
 	  autoSelectWhenFocus: false,
-	  getScrollContainer: noop
+	  getScrollContainer: noop,
+	  expandWhenDoubleClick: false
 	};
 	
 	exports['default'] = Tree;

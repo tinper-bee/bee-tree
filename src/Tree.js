@@ -405,6 +405,9 @@ onExpand(treeNode,keyType) {
       event: 'dblclick',
       node: treeNode
     };
+    if(props.expandWhenDoubleClick) {
+      this.onExpand(treeNode);
+    }
     props.onDoubleClick(eventKey,newSt);
   }
 
@@ -1125,7 +1128,8 @@ Tree.propTypes = {
   treeData: PropTypes.array,
   renderTreeNodes: PropTypes.func,
   autoSelectWhenFocus: PropTypes.bool,
-  getScrollContainer: PropTypes.func
+  getScrollContainer: PropTypes.func,
+  expandWhenDoubleClick: PropTypes.bool
 };
 
 Tree.defaultProps = {
@@ -1154,7 +1158,8 @@ Tree.defaultProps = {
   tabIndexValue:0,
   lazyLoad: false,
   autoSelectWhenFocus: false,
-  getScrollContainer: noop
+  getScrollContainer: noop,
+  expandWhenDoubleClick: false
 };
 
 export default Tree;

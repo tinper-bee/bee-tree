@@ -127,6 +127,15 @@ var Tree = function (_React$Component) {
     this.dataChange = false;
     if (expandedKeys) {
       st.expandedKeys = expandedKeys;
+      //缓存 expandedKeys
+      this.cacheExpandedKeys = new Set(expandedKeys);
+      if (nextProps.lazyLoad) {
+        var flatTreeData = this.deepTraversal(nextProps.treeData);
+        this.cacheExpandedKeys = null;
+        st.flatTreeData = flatTreeData;
+        var newTreeList = flatTreeData.slice(startIndex, endIndex);
+        this.handleTreeListChange(newTreeList, startIndex, endIndex);
+      }
     }
     if (checkedKeys) {
       if (nextProps.checkedKeys === this.props.checkedKeys) {
@@ -143,10 +152,10 @@ var Tree = function (_React$Component) {
       this.dataChange = true;
       //treeData更新时，需要重新处理一次数据
       if (nextProps.lazyLoad) {
-        var flatTreeData = this.deepTraversal(nextProps.treeData);
-        st.flatTreeData = flatTreeData;
-        var newTreeList = flatTreeData.slice(startIndex, endIndex);
-        this.handleTreeListChange(newTreeList, startIndex, endIndex);
+        var _flatTreeData = this.deepTraversal(nextProps.treeData);
+        st.flatTreeData = _flatTreeData;
+        var _newTreeList = _flatTreeData.slice(startIndex, endIndex);
+        this.handleTreeListChange(_newTreeList, startIndex, endIndex);
       }
     }
     if (nextProps.children !== this.props.children) {

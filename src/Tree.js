@@ -82,6 +82,15 @@ class Tree extends React.Component {
     this.dataChange = false;
     if (expandedKeys) {
       st.expandedKeys = expandedKeys;
+      //缓存 expandedKeys
+      this.cacheExpandedKeys = new Set(expandedKeys);
+      if(nextProps.lazyLoad) {
+        let flatTreeData = this.deepTraversal(nextProps.treeData);
+        this.cacheExpandedKeys = null;
+        st.flatTreeData = flatTreeData;
+        let newTreeList = flatTreeData.slice(startIndex,endIndex);
+        this.handleTreeListChange(newTreeList, startIndex, endIndex);
+      }
     }
     if (checkedKeys) {
       if (nextProps.checkedKeys === this.props.checkedKeys) {

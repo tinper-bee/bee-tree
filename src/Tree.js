@@ -1008,7 +1008,11 @@ onExpand(treeNode,keyType) {
 
   render() {
     const props = this.props;
-    const { showLine, prefixCls, className, focusable, checkable, loadData, checkStrictly, tabIndexValue, lazyLoad, getScrollContainer } = this.props;
+    const { 
+      showLine, prefixCls, className, focusable, checkable, loadData, checkStrictly, tabIndexValue, lazyLoad, getScrollContainer, 
+      defaultExpandedKeys, defaultSelectedKeys, defaultCheckedKeys, openAnimation, draggable,
+      ...others 
+    } = this.props;
     const { treeData,flatTreeData } = this.state;
     let { startIndex, endIndex } = this, //数据截取的开始位置和结束位置
         preHeight = 0, //前置占位高度
@@ -1102,14 +1106,14 @@ onExpand(treeNode,keyType) {
           getScrollParent={getScrollContainer}
           store={this.store}
         >
-          <ul {...domProps} unselectable="true" ref={(el)=>{this.tree = el}}  tabIndex={focusable && tabIndexValue}>
+          <ul {...domProps} unselectable="true" ref={(el)=>{this.tree = el}}  tabIndex={focusable && tabIndexValue} {...others}>
               <li style={{height : preHeight}} className='u-treenode-start' key={'tree_node_start'}></li>
               { React.Children.map(treeChildren, this.renderTreeNode, this) }
               <li style={{height : sufHeight}} className='u-treenode-end' key={'tree_node_end'}></li>
           </ul>
         </InfiniteScroll>
         :
-        <ul {...domProps} unselectable="true" ref={(el)=>{this.tree = el}}  tabIndex={focusable && tabIndexValue}>
+        <ul {...domProps} unselectable="true" ref={(el)=>{this.tree = el}}  tabIndex={focusable && tabIndexValue} {...others}>
             { React.Children.map(treeChildren, this.renderTreeNode, this) }
         </ul>
     );

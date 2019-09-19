@@ -34384,11 +34384,11 @@
 	
 	var _createStore2 = _interopRequireDefault(_createStore);
 	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 	
 	function _defaults(obj, defaults) { var keys = Object.getOwnPropertyNames(defaults); for (var i = 0; i < keys.length; i++) { var key = keys[i]; var value = Object.getOwnPropertyDescriptor(defaults, key); if (value && value.configurable && obj[key] === undefined) { Object.defineProperty(obj, key, value); } } return obj; }
+	
+	function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
 	
 	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 	
@@ -35336,6 +35336,7 @@
 	    var _this6 = this;
 	
 	    var props = this.props;
+	
 	    var _props3 = this.props,
 	        showLine = _props3.showLine,
 	        prefixCls = _props3.prefixCls,
@@ -35346,7 +35347,14 @@
 	        checkStrictly = _props3.checkStrictly,
 	        tabIndexValue = _props3.tabIndexValue,
 	        lazyLoad = _props3.lazyLoad,
-	        getScrollContainer = _props3.getScrollContainer;
+	        getScrollContainer = _props3.getScrollContainer,
+	        defaultExpandedKeys = _props3.defaultExpandedKeys,
+	        defaultSelectedKeys = _props3.defaultSelectedKeys,
+	        defaultCheckedKeys = _props3.defaultCheckedKeys,
+	        openAnimation = _props3.openAnimation,
+	        draggable = _props3.draggable,
+	        others = _objectWithoutProperties(_props3, ['showLine', 'prefixCls', 'className', 'focusable', 'checkable', 'loadData', 'checkStrictly', 'tabIndexValue', 'lazyLoad', 'getScrollContainer', 'defaultExpandedKeys', 'defaultSelectedKeys', 'defaultCheckedKeys', 'openAnimation', 'draggable']);
+	
 	    var _state = this.state,
 	        treeData = _state.treeData,
 	        flatTreeData = _state.flatTreeData;
@@ -35448,7 +35456,7 @@
 	        'ul',
 	        _extends({}, domProps, { unselectable: 'true', ref: function ref(el) {
 	            _this6.tree = el;
-	          }, tabIndex: focusable && tabIndexValue }),
+	          }, tabIndex: focusable && tabIndexValue }, others),
 	        _react2['default'].createElement('li', { style: { height: preHeight }, className: 'u-treenode-start', key: 'tree_node_start' }),
 	        _react2['default'].Children.map(treeChildren, this.renderTreeNode, this),
 	        _react2['default'].createElement('li', { style: { height: sufHeight }, className: 'u-treenode-end', key: 'tree_node_end' })
@@ -35457,7 +35465,7 @@
 	      'ul',
 	      _extends({}, domProps, { unselectable: 'true', ref: function ref(el) {
 	          _this6.tree = el;
-	        }, tabIndex: focusable && tabIndexValue }),
+	        }, tabIndex: focusable && tabIndexValue }, others),
 	      _react2['default'].Children.map(treeChildren, this.renderTreeNode, this)
 	    );
 	  };

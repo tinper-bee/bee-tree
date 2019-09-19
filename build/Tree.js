@@ -34,6 +34,10 @@ var _config = require('./config');
 
 var _config2 = _interopRequireDefault(_config);
 
+var _createStore = require('./createStore');
+
+var _createStore2 = _interopRequireDefault(_createStore);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
 function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
@@ -86,8 +90,25 @@ var Tree = function (_React$Component) {
     _this.startIndex = 0;
     _this.endIndex = _this.startIndex + _this.loadCount;
     _this.cacheTreeNodes = []; //缓存 treenode 节点数组
+    _this.store = (0, _createStore2["default"])({ rowHeight: 24 }); //rowHeight 树节点的高度，此变量在滚动加载场景很关键
     return _this;
   }
+
+  /**
+   * 在 lazyload 情况下，需要获取树节点的真实高度
+   */
+
+
+  Tree.prototype.componentDidMount = function componentDidMount() {
+    var lazyLoad = this.props.lazyLoad;
+
+    if (!lazyLoad) return;
+    var treenodes = this.tree.querySelectorAll('.u-tree-treenode-close')[0];
+    var rowHeight = treenodes.getBoundingClientRect().height;
+    this.store.setState({
+      rowHeight: rowHeight
+    });
+  };
 
   Tree.prototype.componentWillMount = function componentWillMount() {
     var _this2 = this;
@@ -1074,7 +1095,8 @@ var Tree = function (_React$Component) {
         className: 'u-tree-infinite-scroll',
         treeList: flatTreeData,
         handleTreeListChange: this.handleTreeListChange,
-        getScrollParent: getScrollContainer
+        getScrollParent: getScrollContainer,
+        store: this.store
       },
       _react2["default"].createElement(
         'ul',
@@ -1192,7 +1214,7 @@ var _initialiseProps = function _initialiseProps() {
     }
     var span = Math.abs(end - start);
     if (span) {
-      sumHeight = span * _config2["default"].defaultHeight;
+      sumHeight = span * _this7.store.getState().rowHeight;
     }
     return sumHeight;
   };

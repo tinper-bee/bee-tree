@@ -18,6 +18,7 @@ import {
 import PropTypes from 'prop-types';
 import { KeyCode } from 'tinper-bee-core';
 import CONFIG from './config';
+import createStore from './createStore';
 
 function noop() {}
 
@@ -49,6 +50,20 @@ class Tree extends React.Component {
     this.startIndex = 0;
     this.endIndex = this.startIndex + this.loadCount;
     this.cacheTreeNodes = []; //缓存 treenode 节点数组
+    this.store = createStore({ rowHeight: 24 }); //rowHeight 树节点的高度，此变量在滚动加载场景很关键
+  }
+
+  /**
+   * 在 lazyload 情况下，需要获取树节点的真实高度
+   */
+  componentDidMount() {
+    const { lazyLoad } = this.props;
+    if(!lazyLoad) return;
+    const treenodes = this.tree.querySelectorAll('.u-tree-treenode-close')[0];
+    let rowHeight = treenodes.getBoundingClientRect().height;
+    this.store.setState({
+      rowHeight: rowHeight
+    });
   }
 
   componentWillMount() {
@@ -902,7 +917,7 @@ onExpand(treeNode,keyType) {
     }
     let span = Math.abs(end - start);
     if(span) {
-      sumHeight = span * CONFIG.defaultHeight;
+      sumHeight = span * this.store.getState().rowHeight;
     }
     return sumHeight;
   }
@@ -1085,6 +1100,7 @@ onExpand(treeNode,keyType) {
           treeList={flatTreeData}
           handleTreeListChange={this.handleTreeListChange}
           getScrollParent={getScrollContainer}
+          store={this.store}
         >
           <ul {...domProps} unselectable="true" ref={(el)=>{this.tree = el}}  tabIndex={focusable && tabIndexValue}>
               <li style={{height : preHeight}} className='u-treenode-start' key={'tree_node_start'}></li>

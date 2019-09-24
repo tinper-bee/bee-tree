@@ -19,6 +19,7 @@ import PropTypes from 'prop-types';
 import { KeyCode } from 'tinper-bee-core';
 import CONFIG from './config';
 import createStore from './createStore';
+import omit from 'omit.js';
 
 function noop() {}
 
@@ -89,7 +90,8 @@ class Tree extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     const {startIndex,endIndex} = this;
-    const expandedKeys = this.getDefaultExpandedKeys(nextProps);
+    let expandAll = nextProps.defaultExpandAll;
+    const expandedKeys = this.getDefaultExpandedKeys(nextProps, !expandAll);
     const checkedKeys = this.getDefaultCheckedKeys(nextProps, true);
     const selectedKeys = this.getDefaultSelectedKeys(nextProps, true);
     const st = {};
@@ -126,6 +128,8 @@ class Tree extends React.Component {
         st.flatTreeData = flatTreeData;
         let newTreeList = flatTreeData.slice(startIndex,endIndex);
         this.handleTreeListChange(newTreeList, startIndex, endIndex);
+      } else {
+        st.treeData = nextProps.treeData;
       }
     }
     if(nextProps.children !== this.props.children){
@@ -489,6 +493,7 @@ onExpand(treeNode,keyType) {
 
   goDown(currentPos,currentIndex,e,treeNode){
     const props = this.props;
+    const state = this.state;
     let treeChildren = props.children ? props.children : this.cacheTreeNodes; //最终渲染在 Tree 标签中的子节点
     const nextIndex =  parseInt(currentIndex) + 1;
       
@@ -496,7 +501,7 @@ onExpand(treeNode,keyType) {
     let nextTreeNode,backNextTreeNode;
     const backNextPosArr=[],backNextTreeNodeArr = [],tempBackNextPosArr=[];
     //是否为展开的节点，如果展开获取第一个子节点的信息，如果没有取相邻节点，若也没有相邻节点则获取父节点的下一个节点
-    if(props.expandedKeys.indexOf(treeNode.props.eventKey)>-1){
+    if(state.expandedKeys.indexOf(treeNode.props.eventKey)>-1){
       nextPos = currentPos + '-0';
     }else{
       nextPos = currentPos.substr(0,currentPos.lastIndexOf('-')+1)+nextIndex;
@@ -558,6 +563,7 @@ onExpand(treeNode,keyType) {
 
   goUp(currentPos,currentIndex,e,treeNode){
     const props = this.props;
+    const state = this.state;
     if(currentIndex == 0 && currentPos.length === 3){
       return
     }
@@ -581,7 +587,7 @@ onExpand(treeNode,keyType) {
     if(prevTreeNode){
       if(preIndex >=0){
         //如果上面的节点展开则默认选择最后一个子节点
-        if(props.expandedKeys.indexOf(prevTreeNode.key)>-1){
+        if(state.expandedKeys.indexOf(prevTreeNode.key)>-1){
           const preElementArr =  e.target.parentElement.previousElementSibling.querySelectorAll('a');
           preElement = preElementArr[preElementArr.length-1];
           prePos = preElement.getAttribute('pos');
@@ -1013,6 +1019,28 @@ onExpand(treeNode,keyType) {
       defaultExpandedKeys, defaultSelectedKeys, defaultCheckedKeys, openAnimation, draggable,
       ...others 
     } = this.props;
+    const customProps = {...omit(others, [
+      'showIcon',
+      'cancelUnSelect',
+      'onCheck',
+      'selectable',
+      'autoExpandParent',
+      'defaultExpandAll',
+      'onExpand',
+      'autoSelectWhenFocus',
+      'expandWhenDoubleClick',
+      'expandedKeys',
+      'keyFun',
+      'openIcon',
+      'closeIcon',
+      'treeData',
+      'checkedKeys',
+      'selectedKeys',
+      'renderTreeNodes',
+      'mustExpandable',
+      'onMouseEnter',
+      'onMouseLeave'
+    ])}
     const { treeData,flatTreeData } = this.state;
     let { startIndex, endIndex } = this, //数据截取的开始位置和结束位置
         preHeight = 0, //前置占位高度
@@ -1106,14 +1134,14 @@ onExpand(treeNode,keyType) {
           getScrollParent={getScrollContainer}
           store={this.store}
         >
-          <ul {...domProps} unselectable="true" ref={(el)=>{this.tree = el}}  tabIndex={focusable && tabIndexValue} {...others}>
+          <ul {...domProps} unselectable="true" ref={(el)=>{this.tree = el}}  tabIndex={focusable && tabIndexValue} {...customProps}>
               <li style={{height : preHeight}} className='u-treenode-start' key={'tree_node_start'}></li>
               { React.Children.map(treeChildren, this.renderTreeNode, this) }
               <li style={{height : sufHeight}} className='u-treenode-end' key={'tree_node_end'}></li>
           </ul>
         </InfiniteScroll>
         :
-        <ul {...domProps} unselectable="true" ref={(el)=>{this.tree = el}}  tabIndex={focusable && tabIndexValue} {...others}>
+        <ul {...domProps} unselectable="true" ref={(el)=>{this.tree = el}}  tabIndex={focusable && tabIndexValue} {...customProps}>
             { React.Children.map(treeChildren, this.renderTreeNode, this) }
         </ul>
     );

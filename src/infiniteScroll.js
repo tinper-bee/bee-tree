@@ -269,6 +269,8 @@ export default class InfiniteScroll extends Component {
       ref,
       getScrollParent,
       treeList,
+      handleTreeListChange,
+      store,
       ...props
     } = this.props;
 

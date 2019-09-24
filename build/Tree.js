@@ -38,6 +38,10 @@ var _createStore = require('./createStore');
 
 var _createStore2 = _interopRequireDefault(_createStore);
 
+var _omit = require('omit.js');
+
+var _omit2 = _interopRequireDefault(_omit);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
 function _defaults(obj, defaults) { var keys = Object.getOwnPropertyNames(defaults); for (var i = 0; i < keys.length; i++) { var key = keys[i]; var value = Object.getOwnPropertyDescriptor(defaults, key); if (value && value.configurable && obj[key] === undefined) { Object.defineProperty(obj, key, value); } } return obj; }
@@ -140,7 +144,8 @@ var Tree = function (_React$Component) {
     var startIndex = this.startIndex,
         endIndex = this.endIndex;
 
-    var expandedKeys = this.getDefaultExpandedKeys(nextProps);
+    var expandAll = nextProps.defaultExpandAll;
+    var expandedKeys = this.getDefaultExpandedKeys(nextProps, !expandAll);
     var checkedKeys = this.getDefaultCheckedKeys(nextProps, true);
     var selectedKeys = this.getDefaultSelectedKeys(nextProps, true);
     var st = {};
@@ -177,6 +182,8 @@ var Tree = function (_React$Component) {
         st.flatTreeData = _flatTreeData;
         var _newTreeList = _flatTreeData.slice(startIndex, endIndex);
         this.handleTreeListChange(_newTreeList, startIndex, endIndex);
+      } else {
+        st.treeData = nextProps.treeData;
       }
     }
     if (nextProps.children !== this.props.children) {
@@ -544,6 +551,7 @@ var Tree = function (_React$Component) {
 
   Tree.prototype.goDown = function goDown(currentPos, currentIndex, e, treeNode) {
     var props = this.props;
+    var state = this.state;
     var treeChildren = props.children ? props.children : this.cacheTreeNodes; //最终渲染在 Tree 标签中的子节点
     var nextIndex = parseInt(currentIndex) + 1;
 
@@ -555,7 +563,7 @@ var Tree = function (_React$Component) {
         backNextTreeNodeArr = [],
         tempBackNextPosArr = [];
     //是否为展开的节点，如果展开获取第一个子节点的信息，如果没有取相邻节点，若也没有相邻节点则获取父节点的下一个节点
-    if (props.expandedKeys.indexOf(treeNode.props.eventKey) > -1) {
+    if (state.expandedKeys.indexOf(treeNode.props.eventKey) > -1) {
       nextPos = currentPos + '-0';
     } else {
       nextPos = currentPos.substr(0, currentPos.lastIndexOf('-') + 1) + nextIndex;
@@ -612,6 +620,7 @@ var Tree = function (_React$Component) {
 
   Tree.prototype.goUp = function goUp(currentPos, currentIndex, e, treeNode) {
     var props = this.props;
+    var state = this.state;
     if (currentIndex == 0 && currentPos.length === 3) {
       return;
     }
@@ -636,7 +645,7 @@ var Tree = function (_React$Component) {
     if (prevTreeNode) {
       if (preIndex >= 0) {
         //如果上面的节点展开则默认选择最后一个子节点
-        if (props.expandedKeys.indexOf(prevTreeNode.key) > -1) {
+        if (state.expandedKeys.indexOf(prevTreeNode.key) > -1) {
           var preElementArr = e.target.parentElement.previousElementSibling.querySelectorAll('a');
           preElement = preElementArr[preElementArr.length - 1];
           prePos = preElement.getAttribute('pos');
@@ -1009,6 +1018,7 @@ var Tree = function (_React$Component) {
         draggable = _props3.draggable,
         others = _objectWithoutProperties(_props3, ['showLine', 'prefixCls', 'className', 'focusable', 'checkable', 'loadData', 'checkStrictly', 'tabIndexValue', 'lazyLoad', 'getScrollContainer', 'defaultExpandedKeys', 'defaultSelectedKeys', 'defaultCheckedKeys', 'openAnimation', 'draggable']);
 
+    var customProps = _extends({}, (0, _omit2["default"])(others, ['showIcon', 'cancelUnSelect', 'onCheck', 'selectable', 'autoExpandParent', 'defaultExpandAll', 'onExpand', 'autoSelectWhenFocus', 'expandWhenDoubleClick', 'expandedKeys', 'keyFun', 'openIcon', 'closeIcon', 'treeData', 'checkedKeys', 'selectedKeys', 'renderTreeNodes', 'mustExpandable', 'onMouseEnter', 'onMouseLeave']));
     var _state = this.state,
         treeData = _state.treeData,
         flatTreeData = _state.flatTreeData;
@@ -1110,7 +1120,7 @@ var Tree = function (_React$Component) {
         'ul',
         _extends({}, domProps, { unselectable: 'true', ref: function ref(el) {
             _this6.tree = el;
-          }, tabIndex: focusable && tabIndexValue }, others),
+          }, tabIndex: focusable && tabIndexValue }, customProps),
         _react2["default"].createElement('li', { style: { height: preHeight }, className: 'u-treenode-start', key: 'tree_node_start' }),
         _react2["default"].Children.map(treeChildren, this.renderTreeNode, this),
         _react2["default"].createElement('li', { style: { height: sufHeight }, className: 'u-treenode-end', key: 'tree_node_end' })
@@ -1119,7 +1129,7 @@ var Tree = function (_React$Component) {
       'ul',
       _extends({}, domProps, { unselectable: 'true', ref: function ref(el) {
           _this6.tree = el;
-        }, tabIndex: focusable && tabIndexValue }, others),
+        }, tabIndex: focusable && tabIndexValue }, customProps),
       _react2["default"].Children.map(treeChildren, this.renderTreeNode, this)
     );
   };

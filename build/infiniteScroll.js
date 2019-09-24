@@ -279,7 +279,9 @@ var InfiniteScroll = function (_Component) {
         ref = _props.ref,
         getScrollParent = _props.getScrollParent,
         treeList = _props.treeList,
-        props = _objectWithoutProperties(_props, ['children', 'element', 'ref', 'getScrollParent', 'treeList']);
+        handleTreeListChange = _props.handleTreeListChange,
+        store = _props.store,
+        props = _objectWithoutProperties(_props, ['children', 'element', 'ref', 'getScrollParent', 'treeList', 'handleTreeListChange', 'store']);
 
     props.ref = function (node) {
       _this2.scrollComponent = node;

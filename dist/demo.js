@@ -34385,7 +34385,8 @@
 	        endIndex = this.endIndex;
 	
 	    var expandAll = nextProps.defaultExpandAll;
-	    var expandedKeys = this.getDefaultExpandedKeys(nextProps, !expandAll);
+	    var syncData = nextProps.loadData;
+	    var expandedKeys = this.getDefaultExpandedKeys(nextProps, syncData || expandAll);
 	    var checkedKeys = this.getDefaultCheckedKeys(nextProps, true);
 	    var selectedKeys = this.getDefaultSelectedKeys(nextProps, true);
 	    var st = {};

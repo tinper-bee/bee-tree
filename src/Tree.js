@@ -673,7 +673,12 @@ onExpand(treeNode,keyType) {
       // 如果是多选tree则进行选中或者反选该节点
       props.checkable && this.onCheck(treeNode);
     }else if(e.keyCode == KeyCode.ENTER){
-      this.onDoubleClick(treeNode);
+      if(props.onDoubleClick) {
+        this.onDoubleClick(treeNode);
+      } else {
+        this.onSelect(treeNode);
+        props.checkable && this.onCheck(treeNode);
+      }
     }
      this.props.keyFun && this.props.keyFun(e,treeNode);
     // e.preventDefault();
@@ -698,16 +703,22 @@ onExpand(treeNode,keyType) {
  
     // 如果当前tree节点不包括上一个焦点节点会触发此方法
     if(this.tree == targetDom && !this.isIn && !this.tree.contains(e.relatedTarget)){
-      const {onFocus} = this.props;
+      const {onFocus, children} = this.props;
       const {selectedKeys=[]} = this.state;
       let tabIndexKey = selectedKeys[0]
       let isExist = false;
+      const treeNode = children.length && children[0];
+      let eventKey = treeNode.props.eventKey || treeNode.key;
       if((this.selectKeyDomExist && tabIndexKey) || !tabIndexKey){
         isExist = true;
         const queryInfo = `a[pos="${this.selectKeyDomPos}"]`;
         const parentEle = closest(e.target,".u-tree")
         const focusEle = parentEle?parentEle.querySelector(queryInfo):null;
         focusEle && focusEle.focus();
+        // TAB键选中树后，默认聚焦在第一个（已选中）节点，并显示 focus 状态。
+        this.setState({
+          focusKey: tabIndexKey || eventKey
+        })
       }
       let onFocusRes = onFocus && onFocus(isExist);
         if(onFocusRes instanceof Promise){
@@ -718,10 +729,6 @@ onExpand(treeNode,keyType) {
           this._focusDom(this.selectKeyDomPos,targetDom);
         } 
       }
-
-    
-    
-    
   }
 
 

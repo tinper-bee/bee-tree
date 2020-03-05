@@ -172,8 +172,7 @@ var Tree = function (_React$Component) {
       return !prevProps && name in nextProps || prevProps && prevProps[name] !== nextProps[name];
     }
     // ================ expandedKeys =================
-    // if (needSync('expandedKeys') || (prevProps && needSync('autoExpandParent'))) {
-    if (needSync('expandedKeys')) {
+    if (needSync('expandedKeys') || prevProps && needSync('autoExpandParent') || prevProps && prevProps['expandedKeys'] !== expandedKeys) {
       st.expandedKeys = expandedKeys;
     } else if (!prevProps && props.defaultExpandAll || !prevProps && props.defaultExpandedKeys) {
       st.expandedKeys = this.getDefaultExpandedKeys(nextProps);

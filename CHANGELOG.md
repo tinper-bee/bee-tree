@@ -1,3 +1,13 @@
+<a name="2.1.14"></a>
+## [2.1.14](https://github.com/tinper-bee/bee-tree/compare/v2.1.13...v2.1.14) (2020-03-05)
+
+
+### Bug Fixes
+
+* autoExpandParent 未生效问题 ([046a7ae](https://github.com/tinper-bee/bee-tree/commit/046a7ae))
+
+
+
 <a name="2.1.13"></a>
 ## [2.1.13](https://github.com/tinper-bee/bee-tree/compare/v2.1.12...v2.1.13) (2020-02-22)
 

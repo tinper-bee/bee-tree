@@ -6,9 +6,7 @@
  */
 
 
-import React, {
-  Component
-} from 'react';
+import React, { Component } from 'react';
 import FormControl from 'bee-form-control';
 import Tree from '../../src';
 

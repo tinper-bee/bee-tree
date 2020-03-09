@@ -4,11 +4,7 @@
  * @description 如何获取选中对象自定义对象和数据
  *
  */
-
-
-import React, {
-	Component
-} from 'react';
+import React, { Component } from 'react';
 import Tree from '../../src';
 
 const TreeNode = Tree.TreeNode;

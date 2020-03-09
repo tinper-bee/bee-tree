@@ -5,10 +5,7 @@
  *
  */
 
-
-import React, {
-	Component
-} from 'react';
+import React, { Component } from 'react';
 import Tree from '../../src';
 import Icon from 'bee-icon';
 const TreeNode = Tree.TreeNode;

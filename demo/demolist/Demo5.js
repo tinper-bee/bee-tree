@@ -4,11 +4,7 @@
  * @description 当点击展开，异步获取子节点数据
  *
  */
-
-
-import React, {
-  Component
-} from 'react';
+import React, { Component } from 'react';
 import Tree from '../../src';
 
 const x = 3;

@@ -6,9 +6,7 @@
  */
 
 
-import React, {
-	Component
-} from 'react';
+import React, { Component } from 'react';
 import Tree from '../../src';
 
 const TreeNode = Tree.TreeNode;

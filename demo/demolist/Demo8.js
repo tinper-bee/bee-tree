@@ -5,11 +5,8 @@
  */
 
 
-import React, {
-	Component
-} from 'react';
+import React, { Component } from 'react';
 import Tree from '../../src';
-import Button from 'bee-button';
 import Icon from 'bee-icon';
 
 const TreeNode = Tree.TreeNode;

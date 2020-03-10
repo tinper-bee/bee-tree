@@ -1,3 +1,13 @@
+<a name="2.1.15"></a>
+## [2.1.15](https://github.com/tinper-bee/bee-tree/compare/v2.1.14...v2.1.15) (2020-03-10)
+
+
+### Bug Fixes
+
+* treenodes报错问题 ([cfdf3ae](https://github.com/tinper-bee/bee-tree/commit/cfdf3ae))
+
+
+
 <a name="2.1.14"></a>
 ## [2.1.14](https://github.com/tinper-bee/bee-tree/compare/v2.1.13...v2.1.14) (2020-03-05)
 

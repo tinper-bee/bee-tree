@@ -118,6 +118,7 @@ var Tree = function (_React$Component) {
     // 启用懒加载，计算树节点真实高度
     if (!lazyLoad) return;
     var treenodes = this.tree.querySelectorAll('.u-tree-treenode-close')[0];
+    if (!treenodes) return;
     var rowHeight = treenodes.getBoundingClientRect().height;
     this.store.setState({
       rowHeight: rowHeight

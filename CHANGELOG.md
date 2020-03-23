@@ -1,3 +1,13 @@
+<a name="2.1.16"></a>
+## [2.1.16](https://github.com/tinper-bee/bee-tree/compare/v2.1.15...v2.1.16) (2020-03-23)
+
+
+### Bug Fixes
+
+* 兼容children为 null ([15c13a9](https://github.com/tinper-bee/bee-tree/commit/15c13a9))
+
+
+
 <a name="2.1.15"></a>
 ## [2.1.15](https://github.com/tinper-bee/bee-tree/compare/v2.1.14...v2.1.15) (2020-03-10)
 

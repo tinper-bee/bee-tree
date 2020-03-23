@@ -79,7 +79,7 @@ class Tree extends React.Component {
   // 判断初始化挂载时，有没有渲染树节点
   hasTreeNode = () => {
     const { children, treeData } = this.props;
-    let noTreeNode = typeof children === 'undefined' || (typeof children === 'object' && children.length === 0) || (typeof treeData === 'object' && treeData.length === 0);
+    let noTreeNode = children === null || typeof children === 'undefined' || (typeof children === 'object' && children.length === 0) || (typeof treeData === 'object' && treeData.length === 0);
     return !noTreeNode;
   }
 

@@ -35474,7 +35474,7 @@
 	        children = _props5.children,
 	        treeData = _props5.treeData;
 	
-	    var noTreeNode = typeof children === 'undefined' || (typeof children === 'undefined' ? 'undefined' : _typeof(children)) === 'object' && children.length === 0 || (typeof treeData === 'undefined' ? 'undefined' : _typeof(treeData)) === 'object' && treeData.length === 0;
+	    var noTreeNode = children === null || typeof children === 'undefined' || (typeof children === 'undefined' ? 'undefined' : _typeof(children)) === 'object' && children.length === 0 || (typeof treeData === 'undefined' ? 'undefined' : _typeof(treeData)) === 'object' && treeData.length === 0;
 	    return !noTreeNode;
 	  };
 	

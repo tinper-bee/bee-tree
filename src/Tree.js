@@ -66,6 +66,10 @@ class Tree extends React.Component {
             prevProps: this.props
         })
     }
+    // ncc制造，树参照包含下级需求，checkStrictly 动态改变后，拿到组件内部属性 this.checkedKeys
+    if(this.props._getTreeObj){
+      this.props._getTreeObj(this);
+    }
     // 启用懒加载，计算树节点真实高度
     if(!lazyLoad) return;
     const treenodes = this.tree.querySelectorAll('.u-tree-treenode-close')[0];

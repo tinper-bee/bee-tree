@@ -35000,6 +35000,7 @@
 	
 	    var props = this.props;
 	    var currentPos = treeNode.props.pos;
+	    var selectable = treeNode.props.selectable;
 	    var currentIndex = currentPos.substr(currentPos.lastIndexOf('-') + 1);
 	    //向下键down
 	    if (e.keyCode == _tinperBeeCore.KeyCode.DOWN) {
@@ -35020,7 +35021,7 @@
 	      if (props.onDoubleClick) {
 	        this.onDoubleClick(treeNode);
 	      } else {
-	        this.onSelect(treeNode);
+	        selectable && this.onSelect(treeNode);
 	        props.checkable && this.onCheck(treeNode);
 	      }
 	    }

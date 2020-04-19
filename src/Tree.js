@@ -660,6 +660,7 @@ onExpand(treeNode,keyType) {
    
     const props = this.props;
     const currentPos = treeNode.props.pos;
+    const selectable = treeNode.props.selectable;
     const currentIndex = currentPos.substr(currentPos.lastIndexOf('-')+1);
     //向下键down
     if(e.keyCode == KeyCode.DOWN){
@@ -680,7 +681,7 @@ onExpand(treeNode,keyType) {
       if(props.onDoubleClick) {
         this.onDoubleClick(treeNode);
       } else {
-        this.onSelect(treeNode);
+        selectable && this.onSelect(treeNode);
         props.checkable && this.onCheck(treeNode);
       }
     }

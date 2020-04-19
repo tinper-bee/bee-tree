@@ -70,6 +70,7 @@ import 'bee-tree/build/Tree.css';
 |:---|:-----|:----|:------|
 |disabled|节点是否不可用|bool|false
 |disableCheckbox|节点的checkbox是否不可用|bool|false
+|selectable|设置节点是否可被选中|bool|true
 |title|名称标题|String/element  |--
 |key|节点key,和(default)ExpandedKeys / (default)CheckedKeys / (default)SelectedKeys一起用，必须是唯一的|String|-
 |isLeaf|是否是叶子节点|bool|false

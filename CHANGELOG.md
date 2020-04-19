@@ -1,3 +1,13 @@
+<a name="2.1.18"></a>
+## [2.1.18](https://github.com/tinper-bee/bee-tree/compare/v2.1.17...v2.1.18) (2020-04-19)
+
+
+### Bug Fixes
+
+* selectable为 false 时，回车不选中节点 ([c8f3a8d](https://github.com/tinper-bee/bee-tree/commit/c8f3a8d))
+
+
+
 <a name="2.1.17"></a>
 ## [2.1.17](https://github.com/tinper-bee/bee-tree/compare/v2.1.16...v2.1.17) (2020-04-16)
 

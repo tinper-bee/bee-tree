@@ -1,3 +1,13 @@
+## [2.1.19](https://github.com/tinper-bee/bee-tree/compare/v2.1.18...v2.1.19) (2020-05-08)
+
+
+### Bug Fixes
+
+* onCheck第一个参数的key不对 ([66996a1](https://github.com/tinper-bee/bee-tree/commit/66996a1653d4cb53cbc25bdebd429f20851615ee))
+* 自动化 ([2d96ad0](https://github.com/tinper-bee/bee-tree/commit/2d96ad07bc194ddd3bad1afc36e9b67e3808b17b))
+
+
+
 <a name="2.1.18"></a>
 ## [2.1.18](https://github.com/tinper-bee/bee-tree/compare/v2.1.17...v2.1.18) (2020-04-19)
 

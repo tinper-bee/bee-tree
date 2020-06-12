@@ -34383,15 +34383,8 @@
 	    return _this;
 	  }
 	
-	  /**
-	   * 在 lazyload 情况下，需要获取树节点的真实高度
-	   */
-	
-	
 	  Tree.prototype.componentDidMount = function componentDidMount() {
-	    var lazyLoad = this.props.lazyLoad;
 	    // 此处为了区分数据是不是异步渲染的，prevProps 作为标识
-	
 	    if (this.hasTreeNode()) {
 	      this.setState({
 	        prevProps: this.props
@@ -34401,14 +34394,7 @@
 	    if (this.props._getTreeObj) {
 	      this.props._getTreeObj(this);
 	    }
-	    // 启用懒加载，计算树节点真实高度
-	    if (!lazyLoad) return;
-	    var treenodes = this.tree.querySelectorAll('.u-tree-treenode-close')[0];
-	    if (!treenodes) return;
-	    var rowHeight = treenodes.getBoundingClientRect().height;
-	    this.store.setState({
-	      rowHeight: rowHeight
-	    });
+	    this.calculateRowHeight();
 	  };
 	
 	  // 判断初始化挂载时，有没有渲染树节点
@@ -34510,6 +34496,12 @@
 	      this.dataChange = true;
 	    }
 	    this.setState(st);
+	  };
+	
+	  Tree.prototype.componentDidUpdate = function componentDidUpdate() {
+	    if (!this.hasCalculateRowHeight) {
+	      this.calculateRowHeight();
+	    }
 	  };
 	
 	  Tree.prototype.onDragStart = function onDragStart(e, treeNode) {
@@ -34713,6 +34705,7 @@
 	      var rsCheckedKeys = [];
 	      if (checked && index === -1) {
 	        checkedKeys.push(key);
+	        // rsCheckedKeys.push(key);//onCheck第一个参数的key不对
 	      }
 	      if (!checked && index > -1) {
 	        checkedKeys.splice(index, 1);
@@ -35244,7 +35237,9 @@
 	  Tree.prototype.renderTreeNode = function renderTreeNode(child, index) {
 	    var level = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
 	
-	    var pos = level + '-' + index;
+	    // fix: 懒加载场景，index 计算错误
+	    var actualIndex = index + parseInt(this.startIndex);
+	    var pos = level + '-' + actualIndex;
 	    var key = child.key || pos;
 	
 	    var state = this.state;
@@ -35398,7 +35393,7 @@
 	        _this6.treeNodesStates[pos] = {
 	          siblingPosition: siblingPosition
 	        };
-	      });
+	      }, undefined, startIndex);
 	    };
 	    if (showLine && !checkable) {
 	      getTreeNodesStates();
@@ -35431,7 +35426,7 @@
 	              _this6.treeNodesStates[pos].checked = true;
 	              checkedPositions.push(pos);
 	            }
-	          });
+	          }, undefined, startIndex);
 	          // if the parent node's key exists, it all children node will be checked
 	          (0, _util.handleCheckState)(this.treeNodesStates, (0, _util.filterParentPosition)(checkedPositions), true);
 	          checkKeys = (0, _util.getCheck)(this.treeNodesStates);
@@ -35483,6 +35478,20 @@
 	    return !noTreeNode;
 	  };
 	
+	  this.calculateRowHeight = function () {
+	    var lazyLoad = _this7.props.lazyLoad;
+	    // 启用懒加载，计算树节点真实高度
+	
+	    if (!lazyLoad) return;
+	    var treenodes = _this7.tree.querySelectorAll('.u-tree-treenode-close')[0];
+	    if (!treenodes) return;
+	    _this7.hasCalculateRowHeight = true;
+	    var rowHeight = treenodes.getBoundingClientRect().height;
+	    _this7.store.setState({
+	      rowHeight: rowHeight
+	    });
+	  };
+	
 	  this.handleTreeListChange = function (treeList, startIndex, endIndex) {
 	    // 属性配置设置
 	    var attr = {
@@ -35499,6 +35508,7 @@
 	    _this7.setState({
 	      treeData: treeData
 	    });
+	    _this7.dataChange = true;
 	  };
 	
 	  this.deepTraversal = function (treeData) {
@@ -36271,7 +36281,6 @@
 	exports.getNodeChildren = getNodeChildren;
 	exports.warnOnlyTreeNode = warnOnlyTreeNode;
 	exports.convertListToTree = convertListToTree;
-	exports.debounce = debounce;
 	exports.throttle = throttle;
 	
 	var _react = __webpack_require__(1);
@@ -36378,10 +36387,12 @@
 	}
 	
 	function loopAllChildren(childs, callback, parent) {
+	  var baseNum = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 0;
+	
 	  var loop = function loop(children, level, _parent) {
 	    var len = getChildrenlength(children);
 	    _react2['default'].Children.forEach(children, function (item, index) {
-	      var pos = level + '-' + index;
+	      var pos = level + '-' + (index + parseInt(baseNum));
 	      if (item.props.children && item.type && item.type.isTreeNode) {
 	        loop(item.props.children, pos, { node: item, pos: pos });
 	      }
@@ -36734,58 +36745,25 @@
 	}
 	
 	/**
-	 * 函数防抖
-	 * @param {*} func 
-	 * @param {*} wait 
-	 * @param {*} immediate 
-	 */
-	function debounce(func, wait, immediate) {
-	  var timeout = void 0;
-	  return function debounceFunc() {
-	    var context = this;
-	    var args = arguments;
-	    // https://fb.me/react-event-pooling
-	    if (args[0] && args[0].persist) {
-	      args[0].persist();
-	    }
-	    var later = function later() {
-	      timeout = null;
-	      if (!immediate) {
-	        func.apply(context, args);
-	      }
-	    };
-	    var callNow = immediate && !timeout;
-	    clearTimeout(timeout);
-	    timeout = setTimeout(later, wait);
-	    if (callNow) {
-	      func.apply(context, args);
-	    }
-	  };
-	}
-	
-	/**
 	 * 函数节流
 	 * @param {*} func 延时调用函数
 	 * @param {*} wait 延迟多长时间
-	 * @param {*} options 至少多长时间触发一次
 	 * @return Function 延迟执行的方法
 	 */
-	function throttle(func, wait, options) {
-	  var leading = true;
-	  var trailing = true;
-	
-	  if (typeof func !== 'function') {
-	    throw new TypeError('Expected a function');
-	  }
-	  if (isObject(options)) {
-	    leading = 'leading' in options ? !!options.leading : leading;
-	    trailing = 'trailing' in options ? !!options.trailing : trailing;
-	  }
-	  return debounce(func, wait, {
-	    leading: leading,
-	    trailing: trailing,
-	    'maxWait': wait
-	  });
+	function throttle(fn, wait) {
+	  var last = void 0;
+	  return function () {
+	    var now = Date.now();
+	    if (!last) {
+	      fn.apply(this, arguments);
+	      last = now;
+	      return;
+	    }
+	    if (now - last >= wait) {
+	      fn.apply(this, arguments);
+	      last = now;
+	    }
+	  };
 	}
 
 /***/ }),
@@ -36858,11 +36836,9 @@
 	
 	    _this.scrollListener = function () {
 	      var el = _this.scrollComponent;
-	
 	      var parentNode = _this.getParentElement(el);
-	
 	      _this.scrollTop = parentNode.scrollTop;
-	      (0, _util.throttle)(_this.handleScrollY, 500)();
+	      _this.handleScrollY();
 	    };
 	
 	    _this.handleScrollY = function () {
@@ -36924,12 +36900,7 @@
 	
 	    _this.sliceTreeList = function (startIndex, endIndex) {
 	      var newTreeList = []; //存储截取后的新数据
-	      // console.log(
-	      //   "**startIndex**" + startIndex,
-	      //   "**endIndex**" + endIndex
-	      // );
 	      newTreeList = _this.treeList.slice(startIndex, endIndex);
-	      // console.log(JSON.stringify(newTreeList))
 	      _this.props.handleTreeListChange && _this.props.handleTreeListChange(newTreeList, startIndex, endIndex);
 	    };
 	
@@ -36959,6 +36930,12 @@
 	      this.handleScrollY();
 	    }
 	  };
+	
+	  // componentDidUpdate() {
+	  //   const el = this.scrollComponent;
+	  //   const parentNode = this.getParentElement(el);
+	  //   parentNode.scrollTop = this.scrollTop;
+	  // };
 	
 	  InfiniteScroll.prototype.componentWillUnmount = function componentWillUnmount() {
 	    this.detachScrollListener();
@@ -37041,11 +37018,11 @@
 	    var scrollY = scrollEl && scrollEl.clientHeight;
 	
 	    var rowHeight = store.getState().rowHeight;
-	    //默认显示20条，rowsInView根据定高算的。在非固定高下，这个只是一个大概的值。
+	    //默认显示20条，rowsInView根据定高算的。
 	    this.rowsInView = scrollY ? Math.floor(scrollY / rowHeight) : _config2['default'].defaultRowsInView;
 	
-	    scrollEl.addEventListener('scroll', this.scrollListener, this.options ? this.options : this.props.useCapture);
-	    scrollEl.addEventListener('resize', this.scrollListener, this.options ? this.options : this.props.useCapture);
+	    scrollEl.addEventListener('scroll', (0, _util.throttle)(this.scrollListener, 150), this.options ? this.options : this.props.useCapture);
+	    scrollEl.addEventListener('resize', (0, _util.throttle)(this.scrollListener, 150), this.options ? this.options : this.props.useCapture);
 	  };
 	  /**
 	   * 滚动事件监听
@@ -37125,9 +37102,9 @@
 	
 	// 树懒加载功能，需要用到的变量
 	exports["default"] = {
-	    loadBuffer: 5, //懒加载时缓冲区数据量
+	    loadBuffer: 20, //懒加载时缓冲区数据量
 	    defaultRowsInView: 20, //可视区数据量
-	    rowDiff: 3 //行差值，需要重新截取数据的阈值
+	    rowDiff: 10 //行差值，需要重新截取数据的阈值
 	};
 	module.exports = exports["default"];
 

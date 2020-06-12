@@ -53,6 +53,12 @@ export default class InfiniteScroll extends Component {
     }
   }
 
+  // componentDidUpdate() {
+  //   const el = this.scrollComponent;
+  //   const parentNode = this.getParentElement(el);
+  //   parentNode.scrollTop = this.scrollTop;
+  // };
+
   componentWillUnmount() {
     this.detachScrollListener();
     this.detachMousewheelListener();
@@ -152,17 +158,17 @@ export default class InfiniteScroll extends Component {
     let scrollY = scrollEl && scrollEl.clientHeight;
   
     let rowHeight = store.getState().rowHeight; 
-    //默认显示20条，rowsInView根据定高算的。在非固定高下，这个只是一个大概的值。
+    //默认显示20条，rowsInView根据定高算的。
     this.rowsInView = scrollY ? Math.floor(scrollY / rowHeight) : CONFIG.defaultRowsInView;
 
     scrollEl.addEventListener(
       'scroll',
-      this.scrollListener,
+      throttle(this.scrollListener, 150),
       this.options ? this.options : this.props.useCapture
     );
     scrollEl.addEventListener(
       'resize',
-      this.scrollListener,
+      throttle(this.scrollListener, 150),
       this.options ? this.options : this.props.useCapture
     );
   }
@@ -179,11 +185,9 @@ export default class InfiniteScroll extends Component {
    */
   scrollListener = () => {
     const el = this.scrollComponent;
-
     const parentNode = this.getParentElement(el);
-
     this.scrollTop = parentNode.scrollTop;
-    throttle(this.handleScrollY, 500)();
+    this.handleScrollY()
   }
 
   /**
@@ -253,12 +257,7 @@ export default class InfiniteScroll extends Component {
    */
   sliceTreeList = (startIndex, endIndex) => {
     let newTreeList = []; //存储截取后的新数据
-    // console.log(
-    //   "**startIndex**" + startIndex,
-    //   "**endIndex**" + endIndex
-    // );
     newTreeList = this.treeList.slice(startIndex,endIndex);
-    // console.log(JSON.stringify(newTreeList))
     this.props.handleTreeListChange && this.props.handleTreeListChange(newTreeList, startIndex, endIndex);
   }
 

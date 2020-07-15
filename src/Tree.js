@@ -98,6 +98,7 @@ class Tree extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
+    let flatTreeDataDone = false;//已经更新过flatTree
     const {startIndex,endIndex,props,state} = this;
     const {prevProps} = state;
     const expandedKeys = this.getDefaultExpandedKeys(nextProps, true);
@@ -126,6 +127,7 @@ class Tree extends React.Component {
             st.flatTreeData = flatTreeData;
             let newTreeList = flatTreeData.slice(startIndex,endIndex);
             this.handleTreeListChange(newTreeList, startIndex, endIndex);
+            flatTreeDataDone=true;
         }
     }
 
@@ -149,10 +151,13 @@ class Tree extends React.Component {
       this.dataChange = true;
       //treeData更新时，需要重新处理一次数据
       if(nextProps.lazyLoad) {
-        let flatTreeData = this.deepTraversal(nextProps.treeData);
-        st.flatTreeData = flatTreeData;
-        let newTreeList = flatTreeData.slice(startIndex,endIndex);
-        this.handleTreeListChange(newTreeList, startIndex, endIndex);
+        if(!flatTreeDataDone){
+          let flatTreeData = this.deepTraversal(nextProps.treeData);
+          st.flatTreeData = flatTreeData;
+          let newTreeList = flatTreeData.slice(startIndex,endIndex);
+          this.handleTreeListChange(newTreeList, startIndex, endIndex);
+        }
+        
       } else {
         st.treeData = nextProps.treeData;
       }
@@ -721,8 +726,8 @@ onExpand(treeNode,keyType) {
       const {selectedKeys=[]} = this.state;
       let tabIndexKey = selectedKeys[0]
       let isExist = false;
-      const treeNode = children.length && children[0];
-      let eventKey = treeNode.props.eventKey || treeNode.key;
+      const treeNode = children&&children.length && children[0];
+      let eventKey = treeNode&&treeNode.props.eventKey || treeNode.key;
       if((this.selectKeyDomExist && tabIndexKey) || !tabIndexKey){
         isExist = true;
         const queryInfo = `a[pos="${this.selectKeyDomPos}"]`;

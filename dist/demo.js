@@ -34539,6 +34539,7 @@
 	  };
 	
 	  Tree.prototype.componentWillReceiveProps = function componentWillReceiveProps(nextProps) {
+	    var flatTreeDataDone = false; //已经更新过flatTree
 	    var startIndex = this.startIndex,
 	        endIndex = this.endIndex,
 	        props = this.props,
@@ -34571,6 +34572,7 @@
 	        st.flatTreeData = flatTreeData;
 	        var newTreeList = flatTreeData.slice(startIndex, endIndex);
 	        this.handleTreeListChange(newTreeList, startIndex, endIndex);
+	        flatTreeDataDone = true;
 	      }
 	    }
 	
@@ -34594,10 +34596,12 @@
 	      this.dataChange = true;
 	      //treeData更新时，需要重新处理一次数据
 	      if (nextProps.lazyLoad) {
-	        var _flatTreeData = this.deepTraversal(nextProps.treeData);
-	        st.flatTreeData = _flatTreeData;
-	        var _newTreeList = _flatTreeData.slice(startIndex, endIndex);
-	        this.handleTreeListChange(_newTreeList, startIndex, endIndex);
+	        if (!flatTreeDataDone) {
+	          var _flatTreeData = this.deepTraversal(nextProps.treeData);
+	          st.flatTreeData = _flatTreeData;
+	          var _newTreeList = _flatTreeData.slice(startIndex, endIndex);
+	          this.handleTreeListChange(_newTreeList, startIndex, endIndex);
+	        }
 	      } else {
 	        st.treeData = nextProps.treeData;
 	      }
@@ -35164,8 +35168,8 @@
 	
 	      var tabIndexKey = selectedKeys[0];
 	      var isExist = false;
-	      var treeNode = children.length && children[0];
-	      var eventKey = treeNode.props.eventKey || treeNode.key;
+	      var treeNode = children && children.length && children[0];
+	      var eventKey = treeNode && treeNode.props.eventKey || treeNode.key;
 	      if (this.selectKeyDomExist && tabIndexKey || !tabIndexKey) {
 	        isExist = true;
 	        var queryInfo = 'a[pos="' + this.selectKeyDomPos + '"]';

@@ -464,7 +464,8 @@ onExpand(treeNode,keyType) {
     
     const selectedNodes = [];
     if (selectedKeys.length) {
-      loopAllChildren(this.props.children, (item) => {
+      const treeNodes = this.props.children || treeNode.props.root.cacheTreeNodes
+      loopAllChildren(treeNodes, (item) => {
         if (selectedKeys.indexOf(item.key) !== -1) {
           selectedNodes.push(item);
         }
@@ -959,14 +960,15 @@ onExpand(treeNode,keyType) {
       return renderTreeNodes(data);
     }
     const loop = data => data.map((item) => {
+      const { key, title, children, isLeaf , ...others } = item;
       if (item.children) {
         return (
-          <TreeNode key={item.key} title={renderTitle ? renderTitle(item) : item.key} isLeaf={item.isLeaf}>
+          <TreeNode {...others} key={key} title={renderTitle ? renderTitle(item) : key} isLeaf={isLeaf}>
             {loop(item.children)}
           </TreeNode>
         );
       }
-      return <TreeNode key={item.key} title={renderTitle ? renderTitle(item) : item.key} isLeaf={true}/>;
+      return <TreeNode {...others} key={key} title={renderTitle ? renderTitle(item) : key} isLeaf={true}/>;
     });
     return loop(data);
   }

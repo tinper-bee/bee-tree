@@ -1,3 +1,12 @@
+## [2.1.23](https://github.com/tinper-bee/bee-tree/compare/v2.1.22...v2.1.23) (2020-09-17)
+
+
+### Bug Fixes
+
+* 解决focus报错 ([f0c09ec](https://github.com/tinper-bee/bee-tree/commit/f0c09ec1d7faeb5cc5e507159d8868416ecfbde4))
+
+
+
 ## [2.1.22](https://github.com/tinper-bee/bee-tree/compare/v2.1.21...v2.1.22) (2020-07-25)
 
 

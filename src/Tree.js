@@ -68,7 +68,7 @@ class Tree extends React.Component {
     }
     this.calculateRowHeight();
   }
-  
+
   // 判断初始化挂载时，有没有渲染树节点
   hasTreeNode = () => {
     const { children, treeData } = this.props;
@@ -117,7 +117,7 @@ class Tree extends React.Component {
         st.expandedKeys = expandedKeys;
     } else if ((!prevProps && props.defaultExpandAll) || (!prevProps && props.defaultExpandedKeys)) {
         st.expandedKeys = this.getDefaultExpandedKeys(nextProps);
-    } 
+    }
     if(st.expandedKeys){
         //缓存 expandedKeys
         this.cacheExpandedKeys = new Set(expandedKeys);
@@ -157,7 +157,7 @@ class Tree extends React.Component {
           let newTreeList = flatTreeData.slice(startIndex,endIndex);
           this.handleTreeListChange(newTreeList, startIndex, endIndex);
         }
-        
+
       } else {
         st.treeData = nextProps.treeData;
       }
@@ -324,7 +324,7 @@ onExpand(treeNode,keyType) {
     }else if(keyType == 'right'){
       expanded = true;
     }
-  
+
     if (expanded && index === -1) {
       expandedKeys.push(treeNode.props.eventKey);
     } else if (!expanded && index > -1) {
@@ -461,7 +461,7 @@ onExpand(treeNode,keyType) {
         selectedKeys.push(eventKey);
       }
     }
-    
+
     const selectedNodes = [];
     if (selectedKeys.length) {
       const treeNodes = this.props.children || treeNode.props.root.cacheTreeNodes
@@ -541,7 +541,7 @@ onExpand(treeNode,keyType) {
 
   getTreeNode(){
     const props = this.props;
- 
+
   }
 
   goDown(currentPos,currentIndex,e,treeNode){
@@ -549,7 +549,7 @@ onExpand(treeNode,keyType) {
     const state = this.state;
     let treeChildren = props.children ? props.children : this.cacheTreeNodes; //最终渲染在 Tree 标签中的子节点
     const nextIndex =  parseInt(currentIndex) + 1;
-      
+
     let nextPos,backNextPos;
     let nextTreeNode,backNextTreeNode;
     const backNextPosArr=[],backNextTreeNodeArr = [],tempBackNextPosArr=[];
@@ -558,8 +558,8 @@ onExpand(treeNode,keyType) {
       nextPos = currentPos + '-0';
     }else{
       nextPos = currentPos.substr(0,currentPos.lastIndexOf('-')+1)+nextIndex;
-     
-      
+
+
     }
     //若向下的节点没有了，找到父级相邻节点
     let tempPosArr = currentPos.split('-');
@@ -583,7 +583,7 @@ onExpand(treeNode,keyType) {
           backNextPosArr.push(pos);
         }
       })
-      
+
     })
     //如果没有下一个节点，则获取父节点的下一个节点
     if(!nextTreeNode){
@@ -595,9 +595,9 @@ onExpand(treeNode,keyType) {
        }
      }
 
-   
+
     }
-   
+
     //查询的下一个节点不为空的话，则选中
     if(nextTreeNode){
       const queryInfo = `a[pos="${nextPos}"]`;
@@ -628,7 +628,7 @@ onExpand(treeNode,keyType) {
     }else{
       prePos = currentPos.substr(0,currentPos.lastIndexOf('-'));
     }
-    
+
     let prevTreeNode,preElement;
     //选中上一个相邻的节点
     loopAllChildren(props.children,function(item,index,pos,newKey){
@@ -657,8 +657,8 @@ onExpand(treeNode,keyType) {
         // 不存在上一个节点时，选中它的父节点
         preElement =  e.target.parentElement.parentElement.parentElement.querySelector('a')
       }
-      
-      
+
+
     }
     preElement && preElement.focus();
     const eventKey = prevTreeNode.props.eventKey || prevTreeNode.key;
@@ -672,7 +672,7 @@ onExpand(treeNode,keyType) {
   // all keyboard events callbacks run from here at first
   onKeyDown(e,treeNode) {
     // e.stopPropagation();
-   
+
     const props = this.props;
     const currentPos = treeNode.props.pos;
     const selectable = treeNode.props.selectable;
@@ -702,7 +702,7 @@ onExpand(treeNode,keyType) {
     }
      this.props.keyFun && this.props.keyFun(e,treeNode);
     // e.preventDefault();
-    
+
   }
 
   _focusDom(selectKeyDomPos,targetDom){
@@ -716,11 +716,11 @@ onExpand(treeNode,keyType) {
 
   /**
    * 此方法为了解决树快捷键，当有的元素隐藏，按tab键也要显示的问题
-   * @param {*} e 
+   * @param {*} e
    */
-  onUlFocus(e){ 
+  onUlFocus(e){
     const targetDom = e.target;
- 
+
     // 如果当前tree节点不包括上一个焦点节点会触发此方法
     if(this.tree == targetDom && !this.isIn && !this.tree.contains(e.relatedTarget)){
       const {onFocus, children} = this.props;
@@ -747,7 +747,7 @@ onExpand(treeNode,keyType) {
           });
         }else{
           this._focusDom(this.selectKeyDomPos,targetDom);
-        } 
+        }
       }
   }
 
@@ -761,7 +761,7 @@ onExpand(treeNode,keyType) {
     // console.log('onUlMouseLeave----isIn-----',this.isIn);
 
   }
-  
+
   getFilterExpandedKeys(props, expandKeyProp, expandAll) {
     const keys = props[expandKeyProp];
     if (!expandAll && !props.autoExpandParent) {
@@ -906,10 +906,10 @@ onExpand(treeNode,keyType) {
     })
     this.dataChange = true;
   }
-  
+
   /**
    * 深度遍历 treeData，把Tree数据拍平，变为一维数组
-   * @param {*} treeData 
+   * @param {*} treeData
    * @param {*} parentKey 标识父节点
    * @param {*} isShown 该节点是否显示在页面中，当节点的父节点是展开状态 或 该节点是根节点时，该值为 true
    */
@@ -996,7 +996,7 @@ onExpand(treeNode,keyType) {
     const actualIndex = index + parseInt(this.startIndex);
     const pos = `${level}-${actualIndex}`;
     const key = child.key || pos;
-    
+
     const state = this.state;
     const props = this.props;
     const {selectedKeys=[]} = this.state;
@@ -1018,7 +1018,7 @@ onExpand(treeNode,keyType) {
     if(child.props.hasOwnProperty('isLeaf')){
       isLeaf = child.props.isLeaf;
     }
-  
+
     const cloneProps = {
       root: this,
       eventKey: key,
@@ -1079,10 +1079,10 @@ onExpand(treeNode,keyType) {
 
   render() {
     const props = this.props;
-    const { 
-      showLine, prefixCls, className, focusable, checkable, loadData, checkStrictly, tabIndexValue, lazyLoad, getScrollContainer, 
+    const {
+      showLine, prefixCls, className, focusable, checkable, loadData, checkStrictly, tabIndexValue, lazyLoad, getScrollContainer,
       defaultExpandedKeys, defaultSelectedKeys, defaultCheckedKeys, openAnimation, draggable,
-      ...others 
+      ...others
     } = this.props;
     const customProps = {...omit(others, [
       'showIcon',
@@ -1105,6 +1105,7 @@ onExpand(treeNode,keyType) {
       'mustExpandable',
       'onMouseEnter',
       'onMouseLeave',
+      'onFocus',
       'onDoubleClick'
     ])}
     const { treeData,flatTreeData } = this.state;
@@ -1192,7 +1193,7 @@ onExpand(treeNode,keyType) {
     }
     this.selectKeyDomExist = false;
     return (
-      lazyLoad ? 
+      lazyLoad ?
         <InfiniteScroll
           className="u-tree-infinite-scroll"
           treeList={flatTreeData}

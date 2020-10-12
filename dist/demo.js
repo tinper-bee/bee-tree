@@ -66,7 +66,7 @@
 	
 	var _beeClipboard2 = _interopRequireDefault(_beeClipboard);
 	
-	var _src = __webpack_require__(268);
+	var _src = __webpack_require__(296);
 	
 	var _src2 = _interopRequireDefault(_src);
 	
@@ -80,7 +80,7 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : _defaults(subClass, superClass); }
 	
-	var Demo1 = __webpack_require__(279);var Demo2 = __webpack_require__(280);var Demo3 = __webpack_require__(281);var Demo4 = __webpack_require__(282);var Demo5 = __webpack_require__(283);var Demo6 = __webpack_require__(284);var Demo7 = __webpack_require__(285);var Demo8 = __webpack_require__(286);var Demo9 = __webpack_require__(287);var Demo10 = __webpack_require__(288);var Demo11 = __webpack_require__(289);var Demo12 = __webpack_require__(290);var Demo13 = __webpack_require__(291);var Demo14 = __webpack_require__(292);var DemoArray = [{ "example": _react2['default'].createElement(Demo1, null), "title": " Tree基本使用示例", "code": "/**\n *\n * @title Tree基本使用示例\n * @description 示例涵盖 checkbox如何选择，disable状态和部分选择状态。checkStrictly为true时，子节点与父节点的选择情况都不会影响到对方\n *\n */\n\n\nimport React, {\n\tComponent\n} from 'react';\n\nconst TreeNode = Tree.TreeNode;\n\nconst defaultProps = {\n\tkeys: ['0-0-0', '0-0-1']\n}\nclass Demo1 extends Component {\n\tconstructor(props) {\n\t\tsuper(props);\n\t\tconst keys = this.props.keys;\n\t\tthis.state = {\n\t\t\tdefaultExpandedKeys: keys,\n\t\t\tdefaultSelectedKeys: keys,\n\t\t\tdefaultCheckedKeys:keys,\n\t\t\tcheckedKeys: {checked:keys},\n\t\t};\n\t}\n\tonSelect(info) {\n\t\tconsole.log('selected', info);\n\t}\n\tonCheck = (checkedKeys,newst) => {\n\t\t//用户可以自定义当前选中和半选中的节点。\n\t\tconsole.log('onCheck', checkedKeys);\n\t\tconst cks = {\n\t\t\tchecked: checkedKeys.checked || checkedKeys,\n\t\t\thalfChecked:checkedKeys.halfChecked\n\t\t};\n\t\tthis.setState({checkedKeys:cks});\n\t}\n\n\tonDoubleClick=(key,treeNode)=>{\n\t\tconsole.log('---onDblClick---',key,'--treeNode--',treeNode);\n\t}\n\trender() {\n\t\n\t\treturn (\n\t\t\t<Tree \n                className=\"myCls\" \n                showLine \n                checkable\n                defaultExpandedKeys={this.state.defaultExpandedKeys}\n                defaultSelectedKeys={this.state.defaultSelectedKeys}\n                defaultCheckedKeys = {this.state.defaultCheckedKeys}\n                checkStrictly\n                showIcon\n                cancelUnSelect={true}\n                onSelect={this.onSelect} \n                onCheck={this.onCheck}\n                onDoubleClick={this.onDoubleClick}\n\t        >\n\t        <TreeNode title=\"parent 1\" key=\"0-0\"  icon={<Icon type=\"uf-treefolder\"  />}>\n\t          <TreeNode title=\"parent 1-0\" key=\"0-0-0\" disabled  icon={<Icon type=\"uf-treefolder\" />}>\n\t            <TreeNode title=\"leaf\" key=\"0-0-0-0\" disableCheckbox icon={<Icon type=\"uf-list-s-o\" />}/>\n\t            <TreeNode title=\"leaf\" key=\"0-0-0-1\" icon={<Icon type=\"uf-list-s-o\" />}/>\n\t          </TreeNode>\n\t          <TreeNode title=\"parent 1-1\" key=\"0-0-1\" icon={<Icon type=\"uf-treefolder\" />}>\n\t            <TreeNode title={<span>sss</span>} key=\"0-0-1-0\" icon={<Icon type=\"uf-list-s-o\" />}/>\n\t          </TreeNode>\n\t        </TreeNode>\n\t      </Tree>\n\t\t);\n\t}\n}\n\nDemo1.defaultProps = defaultProps;\n\n\nexport default Demo1;", "desc": " 示例涵盖 checkbox如何选择，disable状态和部分选择状态。checkStrictly为true时，子节点与父节点的选择情况都不会影响到对方" }, { "example": _react2['default'].createElement(Demo2, null), "title": " Tree数据可控示例", "code": "/**\n*\n* @title Tree数据可控示例\n* @description\n* \b\n*/\n\nimport React, { Component } from 'react';\nimport { Tree } from 'tinper-bee';\n\n\nconst x = 6;\nconst y = 5;\nconst z = 2;\nconst gData = [];\n\nconst generateData = (_level, _preKey, _tns) => {\n    const preKey = _preKey || '0';\n    const tns = _tns || gData;\n\n    const children = [];\n    for (let i = 0; i < x; i++) {\n        const key = `${preKey}-${i}`;\n        tns.push({ title: key, key });\n        if (i < y) {\n            children.push(key);\n        }\n    }\n    if (_level < 0) {\n        return tns;\n    }\n    const level = _level - 1;\n    children.forEach((key, index) => {\n        tns[index].children = [];\n        return generateData(level, key, tns[index].children);\n    });\n};\ngenerateData(z);\n\nconst TreeNode = Tree.TreeNode;\n\n\nclass Demo2 extends Component{\n  constructor(props) {\n  \tsuper(props);\n    this.state = {\n      expandedKeys: [],\n      autoExpandParent: true,\n      checkedKeys: ['0-0-0'],\n      selectedKeys: [],\n    };\n    this.onExpand = this.onExpand.bind(this);\n    this.onCheck = this.onCheck.bind(this);\n    this.onSelect = this.onSelect.bind(this);\n  }\n  onExpand(expandedKeys) {\n    console.log('onExpand', arguments);\n    // if not set autoExpandParent to false, if children expanded, parent can not collapse.\n    // or, you can remove all expanded children keys.\n    this.setState({\n      expandedKeys,\n      autoExpandParent: false,\n    });\n  }\n  onCheck(checkedKeys) {\n    this.setState({\n      checkedKeys,\n      selectedKeys: ['0-3', '0-4'],\n    });\n  }\n  onSelect(selectedKeys, info) {\n    console.log('onSelect', info);\n    this.setState({ selectedKeys });\n  }\n  // keydown的钩子事件\n  onKeyDown = (e,treeNode)=>{\n    console.log('***',e);\n    return false;\n  }\n  render() {\n    const loop = data => data.map((item) => {\n      if (item.children) {\n        return (\n          <TreeNode key={item.key} title={item.key} disableCheckbox={item.key === '0-0-0'} ext={{'as':'sdfa'}}>\n            {loop(item.children)}\n          </TreeNode>\n        );\n      }\n      return <TreeNode key={item.key} title={item.key} isLeaf={true}/>;\n    });\n    return (\n      <Tree\n        checkable\n        focusable\n        className=\"demo2 myCls\"\n        onExpand={this.onExpand} expandedKeys={this.state.expandedKeys}\n        autoExpandParent={this.state.autoExpandParent}\n        onCheck={this.onCheck} \n        onSelect={this.onSelect} \n        keyFun={this.onKeyDown}\n      >\n        {loop(gData)}\n      </Tree>\n    );\n  }\n};\n\n\nexport default Demo2;", "desc": "", "scss_code": "// .demo2.u-tree {\n//   li a.u-tree-node-content-wrapper:hover::before {\n//     background: rgb(235, 236, 240);\n//   }\n//   li a.u-tree-node-content-wrapper.u-tree-node-selected {\n//     color: rgb(245, 60, 50);\n//     .u-tree-title{\n//         color: rgb(245, 60, 50);\n//     }\n//     background: transparent;\n//     &::before {\n//       background: rgb(235, 236, 240);\n//     }\n//   }\n\n//   li a.u-tree-node-content-wrapper::before {\n//     position: absolute;\n//     right: 0;\n//     left: 0;\n//     height: 20px;\n//     -webkit-transition: all 0.3s;\n//     transition: all 0.3s;\n//     content: \"\";\n//   }\n\n//   li  span {\n//     position: relative;\n//     z-index: 1;\n//   }\n// }\n" }, { "example": _react2['default'].createElement(Demo3, null), "title": " Tree 拖拽使用示例", "code": "/**\n*\n* @title Tree 拖拽使用示例\n* @description 拖动结点插入到另一个结点后面或者其他的父节点里面。\n*\n*/\n\n\n\nimport React, { Component } from 'react';\nimport { Tree } from 'tinper-bee';\n\n\nconst x = 3;\nconst y = 2;\nconst z = 1;\nconst gData = [];\n\nconst generateData = (_level, _preKey, _tns) => {\n    const preKey = _preKey || '0';\n    const tns = _tns || gData;\n\n    const children = [];\n    for (let i = 0; i < x; i++) {\n        const key = `${preKey}-${i}`;\n        tns.push({ title: key, key });\n        if (i < y) {\n            children.push(key);\n        }\n    }\n    if (_level < 0) {\n        return tns;\n    }\n    const level = _level - 1;\n    children.forEach((key, index) => {\n        tns[index].children = [];\n        return generateData(level, key, tns[index].children);\n    });\n};\ngenerateData(z);\n\nconst TreeNode = Tree.TreeNode;\n\nclass Demo3 extends Component{\n  constructor(props) {\n    super(props);\n    this.state = {\n      gData,\n      expandedKeys: ['0-0', '0-0-0', '0-0-0-0'],\n    };\n    this.onDragEnter = this.onDragEnter.bind(this);\n    this.onDrop = this.onDrop.bind(this);\n  }\n  onDragEnter(info) {\n    console.log(info);\n    // expandedKeys 需要受控时设置\n    // this.setState({\n    //   expandedKeys: info.expandedKeys,\n    // });\n  }\n  onDrop(info) {\n    console.log(info);\n    const dropKey = info.node.props.eventKey;\n    const dragKey = info.dragNode.props.eventKey;\n    // const dragNodesKeys = info.dragNodesKeys;\n    const loop = (data, key, callback) => {\n      data.forEach((item, index, arr) => {\n        if (item.key === key) {\n          return callback(item, index, arr);\n        }\n        if (item.children) {\n          return loop(item.children, key, callback);\n        }\n      });\n    };\n    const data = [...this.state.gData];\n    let dragObj;\n    loop(data, dragKey, (item, index, arr) => {\n      arr.splice(index, 1);\n      dragObj = item;\n    });\n    if (info.dropToGap) {\n      let ar;\n      let i;\n      loop(data, dropKey, (item, index, arr) => {\n        ar = arr;\n        i = index;\n      });\n      ar.splice(i, 0, dragObj);\n    } else {\n      loop(data, dropKey, (item) => {\n        item.children = item.children || [];\n        // where to insert 示例添加到尾部，可以是随意位置\n        item.children.push(dragObj);\n      });\n    }\n    this.setState({\n      gData: data,\n    });\n  }\n  render() {\n    const loop = data => data.map((item) => {\n      if (item.children && item.children.length) {\n        return <TreeNode key={item.key} title={item.key}>{loop(item.children)}</TreeNode>;\n      }\n      return <TreeNode key={item.key} title={item.key} />;\n    });\n    return (\n      <Tree\n        className=\"myCls\"\n        defaultExpandedKeys={this.state.expandedKeys}\n        draggable\n        onDragEnter={this.onDragEnter}\n        onDrop={this.onDrop}\n      >\n        {loop(this.state.gData)}\n      </Tree>\n    );\n  }\n};\n\nexport default Demo3;", "desc": " 拖动结点插入到另一个结点后面或者其他的父节点里面。" }, { "example": _react2['default'].createElement(Demo4, null), "title": " Tree可搜索示例", "code": "/**\n *\n * @title Tree可搜索示例\n * @description\n *\n */\n\n\nimport React, {\n  Component\n} from 'react';\n\n\nconst x = 3;\nconst y = 2;\nconst z = 1;\nconst gData = [];\n\nconst generateData = (_level, _preKey, _tns) => {\n  const preKey = _preKey || '0';\n  const tns = _tns || gData;\n\n  const children = [];\n  for (let i = 0; i < x; i++) {\n    const key = `${preKey}-${i}`;\n    tns.push({\n      title: key,\n      key\n    });\n    if (i < y) {\n      children.push(key);\n    }\n  }\n  if (_level < 0) {\n    return tns;\n  }\n  const level = _level - 1;\n  children.forEach((key, index) => {\n    tns[index].children = [];\n    return generateData(level, key, tns[index].children);\n  });\n};\ngenerateData(z);\n\nconst TreeNode = Tree.TreeNode;\n\nconst dataList = [];\nconst generateList = (data) => {\n  for (let i = 0; i < data.length; i++) {\n    const node = data[i];\n    const key = node.key;\n    dataList.push({\n      key,\n      title: key\n    });\n    if (node.children) {\n      generateList(node.children, node.key);\n    }\n  }\n};\ngenerateList(gData);\n\nconst getParentKey = (key, tree) => {\n  let parentKey;\n  for (let i = 0; i < tree.length; i++) {\n    const node = tree[i];\n    if (node.children) {\n      if (node.children.some(item => item.key === key)) {\n        parentKey = node.key;\n      } else if (getParentKey(key, node.children)) {\n        parentKey = getParentKey(key, node.children);\n      }\n    }\n  }\n  return parentKey;\n};\n\n\nclass Demo4 extends Component {\n  constructor(props) {\n    super(props);\n    this.state = {\n      expandedKeys: [],\n      searchValue: '',\n      autoExpandParent: true,\n    }\n  }\n  onExpand = (expandedKeys) => {\n    this.setState({\n      expandedKeys,\n      autoExpandParent: false,\n    });\n  }\n  onChange = (value) => {\n\n    const expandedKeys = [];\n    dataList.forEach((item) => {\n      if (item.key.indexOf(value) > -1) {\n        expandedKeys.push(getParentKey(item.key, gData));\n      }\n    });\n    const uniqueExpandedKeys = [];\n    expandedKeys.forEach((item) => {\n      if (item && uniqueExpandedKeys.indexOf(item) === -1) {\n        uniqueExpandedKeys.push(item);\n      }\n    });\n    this.setState({\n      expandedKeys: uniqueExpandedKeys,\n      searchValue: value,\n      autoExpandParent: true,\n    });\n  }\n  render() {\n    const {\n      searchValue,\n      expandedKeys,\n      autoExpandParent\n    } = this.state;\n    const loop = data => data.map((item) => {\n      const index = item.key.search(searchValue);\n      const beforeStr = item.key.substr(0, index);\n      const afterStr = item.key.substr(index + searchValue.length);\n      const title = index > -1 ? (\n        <span>\n          {beforeStr}\n          <span className=\"u-tree-searchable-filter\">{searchValue}</span>\n          {afterStr}\n        </span>\n      ) : <span>{item.key}</span>;\n      if (item.children) {\n        return (\n          <TreeNode key={item.key} title={title}>\n            {loop(item.children)}\n          </TreeNode>\n        );\n      }\n      return <TreeNode key={item.key} title={title} />;\n    });\n    return (\n      <div>\n        <FormControl\n          style={{ width: 200 }}\n          placeholder=\"Search\"\n          onChange={this.onChange}\n        />\n        <Tree\n          className=\"myCls\"\n          onExpand={this.onExpand}\n          expandedKeys={expandedKeys}\n          autoExpandParent={autoExpandParent}\n        >\n          {loop(gData)}\n        </Tree>\n      </div>\n    );\n  }\n}\n\nexport default Demo4;", "desc": "", "scss_code": ".u-tree-searchable-filter {\n  color: #f50;\n  transition: all .3s ease;\n}" }, { "example": _react2['default'].createElement(Demo5, null), "title": " Tree异步数据加载", "code": "/**\n *\n * @title Tree异步数据加载\n * @description 当点击展开，异步获取子节点数据\n *\n */\n\n\nimport React, {\n  Component\n} from 'react';\n\n\nconst x = 3;\nconst y = 2;\nconst z = 1;\nconst gData = [];\n\nconst generateData = (_level, _preKey, _tns) => {\n  const preKey = _preKey || '0';\n  const tns = _tns || gData;\n\n  const children = [];\n  for (let i = 0; i < x; i++) {\n    const key = `${preKey}-${i}`;\n    tns.push({\n      title: key,\n      key\n    });\n    if (i < y) {\n      children.push(key);\n    }\n  }\n  if (_level < 0) {\n    return tns;\n  }\n  const level = _level - 1;\n  children.forEach((key, index) => {\n    tns[index].children = [];\n    return generateData(level, key, tns[index].children);\n  });\n};\ngenerateData(z);\n\nconst TreeNode = Tree.TreeNode;\n\nfunction generateTreeNodes(treeNode) {\n  const arr = [];\n  const key = treeNode.props.eventKey;\n  for (let i = 0; i < 3; i++) {\n    arr.push({\n      name: `leaf ${key}-${i}`,\n      key: `${key}-${i}`\n    });\n  }\n  return arr;\n}\n\nfunction setLeaf(treeData, curKey, level) {\n  const loopLeaf = (data, lev) => {\n    const l = lev - 1;\n    data.forEach((item) => {\n      if ((item.key.length > curKey.length) ? item.key.indexOf(curKey) !== 0 :\n        curKey.indexOf(item.key) !== 0) {\n        return;\n      }\n      if (item.children) {\n        loopLeaf(item.children, l);\n      } else if (l < 1) {\n        item.isLeaf = true;\n      }\n    });\n  };\n  loopLeaf(treeData, level + 1);\n}\n\nfunction getNewTreeData(treeData, curKey, child, level) {\n  const loop = (data) => {\n    if (level < 1 || curKey.length - 3 > level * 2) return;\n    data.forEach((item) => {\n      if (curKey.indexOf(item.key) === 0) {\n        if (item.children) {\n          loop(item.children);\n        } else {\n          item.children = child;\n        }\n      }\n    });\n  };\n  loop(treeData);\n  setLeaf(treeData, curKey, level);\n}\n\nclass Demo5 extends Component {\n  constructor(props) {\n    super(props);\n    this.state = {\n      treeData: [],\n    };\n    this.onSelect = this.onSelect.bind(this);\n    this.onLoadData = this.onLoadData.bind(this);\n  }\n  componentDidMount() {\n    setTimeout(() => {\n      this.setState({\n        treeData: [{\n          name: 'pNode 01',\n          key: '0-0'\n        }, {\n          name: 'pNode 02',\n          key: '0-1'\n        }, {\n          name: 'pNode 03',\n          key: '0-2',\n          isLeaf: true\n        }, ],\n      });\n    }, 100);\n  }\n  onSelect(info) {\n    console.log('selected', info);\n  }\n  onLoadData(treeNode) {\n    return new Promise((resolve) => {\n      setTimeout(() => {\n        const treeData = [...this.state.treeData];\n        getNewTreeData(treeData, treeNode.props.eventKey, generateTreeNodes(treeNode), 2);\n        this.setState({\n          treeData\n        });\n        resolve();\n      }, 1000);\n    });\n  }\n  render() {\n    const loop = data => data.map((item) => {\n      if (item.children) {\n        return <TreeNode title={item.name} key={item.key}>{loop(item.children)}</TreeNode>;\n      }\n      return <TreeNode title={item.name} key={item.key} isLeaf={item.isLeaf} disabled={item.key === '0-0-0'} />;\n    });\n    const treeNodes = loop(this.state.treeData);\n    return (\n      <Tree className=\"myCls\" onSelect={this.onSelect} loadData={this.onLoadData} >\n        {treeNodes}\n      </Tree>\n    );\n  }\n};\n\nexport default Demo5", "desc": " 当点击展开，异步获取子节点数据" }, { "example": _react2['default'].createElement(Demo6, null), "title": " Tree基本使用示例自定义图标", "code": "/**\r\n *\r\n * @title Tree基本使用示例自定义图标\r\n * @description 添加openIcon、closeIcon属性\r\n *\r\n */\r\n\r\n\r\nimport React, {\r\n\tComponent\r\n} from 'react';\r\n\r\n\nconst TreeNode = Tree.TreeNode;\r\n\r\nconst defaultProps = {\r\n\tkeys: ['0-0-0', '0-0-1']\r\n}\r\nclass Demo1 extends Component {\r\n\tconstructor(props) {\r\n\t\tsuper(props);\r\n\t\tconst keys = this.props.keys;\r\n\t\tthis.state = {\r\n\t\t\tdefaultExpandedKeys: keys,\r\n\t\t\tdefaultSelectedKeys: keys,\r\n\t\t\tdefaultCheckedKeys: keys,\r\n\t\t};\r\n\t}\r\n\tonSelect(info) {\r\n\t\tconsole.log('selected', info);\r\n\t}\r\n\tonCheck(info) {\r\n\t\tconsole.log('onCheck', info);\r\n\t}\r\n\trender() {\r\n\t\treturn (\r\n\r\n\t\t\t<Tree className=\"myCls\"  checkable openIcon={<Icon type=\"uf-minus\" />} closeIcon={<Icon type=\"uf-plus\" />}\r\n\t        defaultExpandedKeys={this.state.defaultExpandedKeys}\r\n\t        defaultSelectedKeys={this.state.defaultSelectedKeys}\r\n\t        defaultCheckedKeys={this.state.defaultCheckedKeys}\r\n\t        onSelect={this.onSelect} onCheck={this.onCheck}\r\n\t      >\r\n\t        <TreeNode title=\"parent 1\" key=\"0-0\">\r\n\t          <TreeNode title=\"parent 1-0\" key=\"0-0-0\" disabled>\r\n\t            <TreeNode title=\"leaf\" key=\"0-0-0-0\" disableCheckbox />\r\n\t            <TreeNode title=\"leaf\" key=\"0-0-0-1\" />\r\n\t          </TreeNode>\r\n\t          <TreeNode title=\"parent 1-1\" key=\"0-0-1\">\r\n\t            <TreeNode title={<span>sss</span>} key=\"0-0-1-0\" />\r\n\t          </TreeNode>\r\n\t        </TreeNode>\r\n\t      </Tree>\r\n\t\t);\r\n\t}\r\n}\r\n\r\nDemo1.defaultProps = defaultProps;\r\n\r\n\r\nexport default Demo1;", "desc": " 添加openIcon、closeIcon属性" }, { "example": _react2['default'].createElement(Demo7, null), "title": " Tree增加节点", "code": "/**\n *\n * @title Tree增加节点\n * @description 增加节点和拖拽组合使用示例\n *\n */\n\n\nimport React, {\n  Component\n} from 'react';\n\n\nconst TreeNode = Tree.TreeNode;\n\n\nclass Demo7 extends Component {\n  constructor(props) {\n    super(props);\n    this.state = {\n      treeData: [],\n      defaultExpandedKeys: ['0-0', '0-1', '0-2'],\n      parentNode: {}\n    };\n    this.onSelect = this.onSelect.bind(this);\n    this.addNode = this.addNode.bind(this);\n    this.clickFun = this.clickFun.bind(this);\n    this.getNodeByKey = this.getNodeByKey.bind(this);\n    this.parentNode = null\n  }\n  componentDidMount() {\n      setTimeout(() => {\n        this.setState({\n          treeData: [{\n            name: 'pNode 01',\n            key: '0-0',\n            children: [{\n              name: 'leaf 0-0-0',\n              key: '0-0-0'\n            }, {\n              name: 'leaf 0-0-1',\n              key: '0-0-1'\n            }]\n          }, {\n            name: 'pNode 02',\n            key: '0-1',\n            children: [{\n              name: 'leaf 0-1-0',\n              key: '0-1-0'\n            }, {\n              name: 'leaf 0-1-1',\n              key: '0-1-1'\n            }]\n          }, {\n            name: 'pNode 03',\n            key: '0-2',\n            isLeaf: true\n          }, ],\n        });\n      }, 100);\n    }\n    /**\n     * 增加节点\n     * @param string prKey    [父节点key]\n     * @param object nodeItem [子节点信息]\n     */\n  addNode(prKey, nodeItem) {\n    const data = this.state.treeData;\n    let parNode;\n    if (prKey) {\n      // 如果prKey存在则搜索父节点进行添加\n      parNode = this.getNodeByKey(data, prKey);\n      //如果父节点存在的话，添加到父节点上\n      if (parNode) {\n        if (!parNode.children) {\n          parNode.children = [];\n        }\n        // 如果key不存在就动态生成一个\n        if (!nodeItem.key) {\n          nodeItem.key = prKey + parNode.children.length + 1;\n        }\n        parNode.children.push(nodeItem);\n      }\n    } else {\n      // 没有穿prKey添加到根下成为一级节点\n      if (!nodeItem.key) {\n        nodeItem.key = \"0-\" + data.length + 1;\n      }\n      data.push(nodeItem);\n    }\n\n    this.setState({\n      data\n    });\n  }\n\n  getNodeByKey(data, key) {\n    if (!this.parentNode) {\n      data.find(item => {\n        if (item.key === key) {\n          console.log('item.name---' + item.name)\n          this.parentNode = item;\n          return (true);\n        } else if (item.children) {\n          return this.getNodeByKey(item.children, key);\n\n        }\n      })\n    }\n    return this.parentNode;\n  }\n\n\n\n  onSelect(info) {\n      console.log('selected', info);\n    }\n    /**\n     * 点击button事件\n     */\n  clickFun() {\n    let prKey, nodeItem;\n    prKey = '0-1';\n    nodeItem = {\n      name: 'leaf 0-0-4'\n    }\n    this.addNode(prKey, nodeItem);\n  }\n\n  onDragEnter = (info) => {\n    console.log(info);\n    // expandedKeys 需要受控时设置\n    // this.setState({\n    //   expandedKeys: info.expandedKeys,\n    // });\n  }\n  onDrop = (info) => {\n    console.log(info);\n    const dropKey = info.node.props.eventKey;\n    const dragKey = info.dragNode.props.eventKey;\n    // const dragNodesKeys = info.dragNodesKeys;\n    const loop = (data, key, callback) => {\n      data.forEach((item, index, arr) => {\n        if (item.key === key) {\n          return callback(item, index, arr);\n        }\n        if (item.children) {\n          return loop(item.children, key, callback);\n        }\n      });\n    };\n    const data = [...this.state.treeData];\n    let dragObj;\n    loop(data, dragKey, (item, index, arr) => {\n      arr.splice(index, 1);\n      dragObj = item;\n    });\n    if (info.dropToGap) {\n      let ar;\n      let i;\n      loop(data, dropKey, (item, index, arr) => {\n        ar = arr;\n        i = index;\n      });\n      ar.splice(i, 0, dragObj);\n    } else {\n      loop(data, dropKey, (item) => {\n        item.children = item.children || [];\n        // where to insert 示例添加到尾部，可以是随意位置\n        item.children.push(dragObj);\n      });\n    }\n    this.setState({\n      treeData: data,\n    });\n  }\n\n  render() {\n    const loop = data => data.map((item) => {\n      if (item.children) {\n        return <TreeNode title={item.name} key={item.key}>{loop(item.children)}</TreeNode>;\n      }\n      return <TreeNode title={item.name} key={item.key} isLeaf={item.isLeaf} disabled={item.key === '0-0-0'} />;\n    });\n    const treeNodes = loop(this.state.treeData);\n    console.log('defaultKeys--' + this.state.defaultExpandedKeys);\n    return (\n      <div>\n        <Button colors=\"primary\" onClick={this.clickFun}>增加节点</Button>\n        <Tree \n        className=\"myCls\"\n        onSelect={this.onSelect} \n        defaultExpandedKeys={this.state.defaultExpandedKeys} \n        draggable\n        onDragEnter={this.onDragEnter}\n        onDrop={this.onDrop}>\n          {treeNodes}\n        </Tree>\n      </div>\n    );\n  }\n};\n\nexport default Demo7", "desc": " 增加节点和拖拽组合使用示例" }, { "example": _react2['default'].createElement(Demo8, null), "title": " Tree 节点可编辑", "code": "/**\n *\n * @title Tree 节点可编辑\n * @description 鼠标移动到节点上点击编辑图标进行编辑。e.node.props.eventKey代表当前节点key值。editKey指当前操作的节点key\n */\n\n\nimport React, {\n\tComponent\n} from 'react';\n\n\nconst TreeNode = Tree.TreeNode;\n\nclass Demo8 extends Component {\n\tconstructor(props) {\n\t\tsuper(props);\n\n\t\tthis.state = {\n\t\t\ttreeData: [],\n\t\t\tisHover: \"\",\n\t\t\teditKey: \"\"\n\t\t};\n\n\t}\n\n\n\tonMouseEnter = (e) => {\n\t\tthis.setState({\n\t\t\tisHover: e.node.props.eventKey\n\t\t})\n\t}\n\tonMouseLeave = (e, treenode) => {\n\t\tthis.setState({\n\t\t\tisHover: \"\",\n\t\t\teditKey: \"\"\n\t\t})\n\n\t}\n\n\teditRender = (item) => {\n\t\tthis.setState({\n\t\t\teditKey: item.key\n\t\t});\n\t}\n\tnodechange = (item, value) => {\n\t\titem.name = value;\n\t}\n\trenderTreeTitle = (item) => {\n\t\tlet titleIcon, titleInfo;\n\t\t//编辑时input框\n\t\tif (this.state.editKey == item.key) {\n\t\t\ttitleInfo = <input type=\"text\" id=\"itemKey\" defaultValue={item.name} onChange={(e) => this.nodechange(item, e.target.value)} />\n\t\t} else {\n\t\t\ttitleInfo = <span className=\"title-middle\">{item.name}</span>\n\t\t}\n\t\t//编辑图标\n\t\tif (this.state.isHover == item.key) {\n\t\t\ttitleIcon = <Icon className=\"title-middle edit-icon\" type=\"uf-pencil\" onClick={(e) => this.editRender(item)}></Icon>;\n\t\t}\n\t\treturn (<div className=\"title-con\">\n\n\t\t\t{titleInfo}\n\t\t\t{titleIcon}\n\t\t</div>);\n\t}\n\n\tcomponentDidMount = () => {\n\t\tsetTimeout(() => {\n\t\t\tthis.setState({\n\t\t\t\ttreeData: [{\n\t\t\t\t\tname: 'pNode 01',\n\t\t\t\t\tkey: '0-0',\n\t\t\t\t\tchildren: [{\n\t\t\t\t\t\tname: 'leaf 0-0-0',\n\t\t\t\t\t\tkey: '0-0-0'\n\t\t\t\t\t}, {\n\t\t\t\t\t\tname: 'leaf 0-0-1',\n\t\t\t\t\t\tkey: '0-0-1'\n\t\t\t\t\t}]\n\t\t\t\t}, {\n\t\t\t\t\tname: 'pNode 02',\n\t\t\t\t\tkey: '0-1',\n\t\t\t\t\tchildren: [{\n\t\t\t\t\t\tname: 'leaf 0-1-0',\n\t\t\t\t\t\tkey: '0-1-0'\n\t\t\t\t\t}, {\n\t\t\t\t\t\tname: 'leaf 0-1-1',\n\t\t\t\t\t\tkey: '0-1-1'\n\t\t\t\t\t}]\n\t\t\t\t}, {\n\t\t\t\t\tname: 'pNode 03',\n\t\t\t\t\tkey: '0-2',\n\t\t\t\t\tisLeaf: true\n\t\t\t\t}, ],\n\t\t\t});\n\t\t\n\t\t}, 100);\n\t}\n\trender() {\n\t\tconst loop = data => data.map((item) => {\n\t\t\tif (item.children) {\n\t\t\t\treturn <TreeNode title={this.renderTreeTitle(item)} key={item.key}>{loop(item.children)}</TreeNode>;\n\t\t\t}\n\t\t\treturn <TreeNode title={this.renderTreeTitle(item)} key={item.key} isLeaf={item.isLeaf} disabled={item.key === '0-0-0'} />;\n\t\t});\n\t\tconst treeNodes = loop(this.state.treeData);\n\t\treturn (\n\t\t\t<Tree onMouseLeave={this.onMouseLeave} onMouseEnter={this.onMouseEnter} className=\"myCls\">\n\t\t\t\t{treeNodes}\n\t\t\t</Tree>\n\n\t\t);\n\t}\n}\n\n\n\nexport default Demo8;", "desc": " 鼠标移动到节点上点击编辑图标进行编辑。e.node.props.eventKey代表当前节点key值。editKey指当前操作的节点key", "scss_code": ".title-middle {\n  display: inline-block;\n  vertical-align: middle;\n}\n.edit-icon {\n  float:right;\n  font-size: 16px;\n  height: 16px;\n  line-height: 20px;\n}\n.title-con {\n  min-width: 150px;\n}" }, { "example": _react2['default'].createElement(Demo9, null), "title": " 连接线Tree", "code": "/**\n *\n * @title 连接线Tree\n * @description \n *\n */\n\n\nimport React, {\n\tComponent\n} from 'react';\n\n\nconst TreeNode = Tree.TreeNode;\nclass Demo9 extends Component {\n\tconstructor(props) {\n\t\tsuper(props);\n\t\tconst keys = this.props.keys;\n\t\tthis.state = {\n\t\t\tdefaultExpandedKeys: keys\n\t\t};\n\n\t}\n\n\trender() {\n\t\treturn (\n\t\t\t<Tree className=\"myCls\" showLine checkable  defaultExpandAll={true}>\n\t        <TreeNode title=\"parent 1\" key=\"0-0\">\n\t          <TreeNode title=\"parent 1-0\" key=\"0-0-0\" >\n\t            <TreeNode title=\"leaf\" key=\"0-0-0-0\"  />\n\t            <TreeNode title=\"leaf\" key=\"0-0-0-1\" />\n\t          </TreeNode>\n\t          <TreeNode title=\"parent 1-1\" key=\"0-0-1\">\n\t            <TreeNode title={<span>sss</span>} key=\"0-0-1-0\" />\n\t          </TreeNode>\n\t        </TreeNode>\n\t      </Tree>\n\t\t);\n\t}\n}\n\nexport default Demo9;", "desc": " " }, { "example": _react2['default'].createElement(Demo10, null), "title": " Tree基本使用示例", "code": "/**\n *\n * @title Tree基本使用示例\n * @description 如何获取选中对象自定义对象和数据\n *\n */\n\n\nimport React, {\n\tComponent\n} from 'react';\n\n\nconst TreeNode = Tree.TreeNode;\n\nconst defaultProps = {\n\tkeys: ['0-0-0', '0-0-1']\n}\nclass Demo10 extends Component {\n\tconstructor(props) {\n\t\tsuper(props);\n\t\tconst keys = this.props.keys;\n\t\tthis.state = {\n\t\t\tdefaultExpandedKeys: keys,\n\t\t\tdefaultSelectedKeys: keys,\n\t\t\tdefaultCheckedKeys:keys\n\t\t\t// checkedKeys: {checked:keys},\n\t\t};\n    }\n    /**\n     * 获取当前选中行的item对象。\n     * @param {*} value \n     */\n\tonSelect(selectedKeys, e) {\n        console.log(`${selectedKeys} selected`);//获取key\n        let currentObject = {};\n        currentObject.title = e.node.props.title; //获取选中对象的数据\n        currentObject.key = e.node.props.eventKey;\n        console.log(currentObject); \n\t}\n\tonCheck = (checkedKeys) => {\n\t\tlet self = this;\n\t\tconsole.log('onCheck', checkedKeys);\n\t\tconst cks = {\n\t\t\tchecked: checkedKeys.checked || checkedKeys,\n\t\t};\n\t\t// this.setState({checkedKeys:cks});\n\t}\n\n\tonDoubleClick=(key,treeNode)=>{\n\t\tconsole.log('---onDblClick---'+key+'--treeNode--'+treeNode);\n\t}\n\trender() {\n\t\n\t\treturn (\n\t\t\t<Tree className=\"myCls\" showLine checkable\n                defaultExpandedKeys={this.state.defaultExpandedKeys}\n                defaultSelectedKeys={this.state.defaultSelectedKeys}\n                defaultCheckedKeys = {this.state.defaultCheckedKeys}\n                checkStrictly\n                onSelect={this.onSelect} onCheck={this.onCheck}\n                onDoubleClick={this.onDoubleClick}\n            >\n                <TreeNode title=\"parent 1\" key=\"0-0\" >\n                <TreeNode title=\"parent 1-0\" key=\"0-0-0\" disabled>\n                    <TreeNode title=\"leaf\" key=\"0-0-0-0\" disableCheckbox />\n                    <TreeNode title=\"leaf\" key=\"0-0-0-1\" />\n                </TreeNode>\n                <TreeNode title=\"parent 1-1\" key=\"0-0-1\">\n                    <TreeNode title={<span>sss</span>} key=\"0-0-1-0\" />\n                </TreeNode>\n                <TreeNode title=\"parent 1-2\" key=\"0-0-2\" >\n                    <TreeNode title=\"leaf\" key=\"0-0-2-0\" />\n                    <TreeNode title=\"leaf\" key=\"0-0-2-1\" />\n                </TreeNode>\n                </TreeNode>\n\t      </Tree>\n\t\t);\n\t}\n}\n\nDemo10.defaultProps = defaultProps;\n\n\nexport default Demo10;", "desc": " 如何获取选中对象自定义对象和数据" }, { "example": _react2['default'].createElement(Demo11, null), "title": " 用户自定义节点属性ext", "code": "/**\n*\n* @title 用户自定义节点属性ext\n* @description 业务中扩展的数据可以定义在ext属性中，用户可以在TreeNode节点中获取ext属性。此例中将treeNode的数据存放在了ext中，方便用户获取。\n* \b\n*/\n\nimport React, { Component } from 'react';\nimport { Tree } from 'tinper-bee';\n\n\nconst x = 6;\nconst y = 5;\nconst z = 2;\nconst gData = [];\n\nconst generateData = (_level, _preKey, _tns) => {\n    const preKey = _preKey || '0';\n    const tns = _tns || gData;\n\n    const children = [];\n    for (let i = 0; i < x; i++) {\n        const key = `${preKey}-${i}`;\n        tns.push({ title: key, key });\n        if (i < y) {\n            children.push(key);\n        }\n    }\n    if (_level < 0) {\n        return tns;\n    }\n    const level = _level - 1;\n    children.forEach((key, index) => {\n        tns[index].children = [];\n        return generateData(level, key, tns[index].children);\n    });\n};\ngenerateData(z);\n\nconst TreeNode = Tree.TreeNode;\n\n\nclass Demo11 extends Component{\n  constructor(props) {\n  \tsuper(props);\n    this.state = {\n      expandedKeys: [],\n      autoExpandParent: true,\n      checkedKeys: ['0-0-0'],\n      selectedKeys: [],\n    };\n    this.onExpand = this.onExpand.bind(this);\n    this.onCheck = this.onCheck.bind(this);\n    this.onSelect = this.onSelect.bind(this);\n  }\n  onExpand(expandedKeys,nodeInfo) {\n    console.log('onExpand---显示ext数据', nodeInfo.node.props.ext.data);\n\n    this.setState({\n      expandedKeys,\n      autoExpandParent: false,\n    });\n  }\n  onCheck(checkedKeys) {\n    this.setState({\n      checkedKeys,\n      selectedKeys: ['0-3', '0-4'],\n    });\n  }\n  onSelect(selectedKeys, info) {\n    console.log('onSelect', info);\n    this.setState({ selectedKeys });\n  }\n  // keydown的钩子事件\n  onKeyDown = (e,treeNode)=>{\n    console.log('***',e);\n    return false;\n  }\n  render() {\n    const loop = data => data.map((item) => {\n      if (item.children) {\n        return (\n          <TreeNode key={item.key} title={item.key} disableCheckbox={item.key === '0-0-0'} ext={{'data':item}}>\n            {loop(item.children)}\n          </TreeNode>\n        );\n      }\n      return <TreeNode key={item.key} title={item.key} isLeaf={true}/>;\n    });\n    return (\n      <Tree\n        checkable\n        focusable\n        className=\"demo2 myCls\"\n        onExpand={this.onExpand} expandedKeys={this.state.expandedKeys}\n        autoExpandParent={this.state.autoExpandParent}\n        onCheck={this.onCheck} \n        onSelect={this.onSelect} \n        keyFun={this.onKeyDown}\n      >\n        {loop(gData)}\n      </Tree>\n    );\n  }\n};\n\n\nexport default Demo11;", "desc": " 业务中扩展的数据可以定义在ext属性中，用户可以在TreeNode节点中获取ext属性。此例中将treeNode的数据存放在了ext中，方便用户获取。" }, { "example": _react2['default'].createElement(Demo12, null), "title": " 根据 treeData 数组渲染树节点", "code": "/**\r\n*\r\n* @title 根据 treeData 数组渲染树节点\r\n* @description 设置 treeData 属性，则不需要手动构造 TreeNode 节点（key 在整个树范围内唯一）\r\n*/\r\n\r\nimport React, { Component } from 'react';\nimport { Tree } from 'tinper-bee';\r\n\r\n\r\nconst treeData = [\r\n  {\r\n    title: '0-0',\r\n    key: '0-0',\r\n    ext: '自定义属性',\r\n    children: [\r\n      {\r\n        title: '0-0-0',\r\n        key: '0-0-0',\r\n        children: [\r\n          { title: '0-0-0-0', key: '0-0-0-0' },\r\n          { title: '0-0-0-1', key: '0-0-0-1' },\r\n          { title: '0-0-0-2', key: '0-0-0-2' },\r\n        ],\r\n      },\r\n      {\r\n        title: '0-0-1',\r\n        key: '0-0-1',\r\n        children: [\r\n          { title: '0-0-1-0', key: '0-0-1-0' },\r\n          { title: '0-0-1-1', key: '0-0-1-1' },\r\n          { title: '0-0-1-2', key: '0-0-1-2' },\r\n        ],\r\n      },\r\n      {\r\n        title: '0-0-2',\r\n        key: '0-0-2',\r\n      },\r\n    ],\r\n  },\r\n  {\r\n    title: '0-1',\r\n    key: '0-1',\r\n    children: [\r\n      { title: '0-1-0-0', key: '0-1-0-0' },\r\n      { title: '0-1-0-1', key: '0-1-0-1' },\r\n      { title: '0-1-0-2', key: '0-1-0-2' },\r\n    ],\r\n  },\r\n  {\r\n    title: '0-2',\r\n    key: '0-2',\r\n    ext: '自定义属性'\r\n  },\r\n];\r\n\r\nclass Demo12 extends Component {\r\n  state = {\r\n    expandedKeys: ['0-0-0', '0-0-1'],\r\n    autoExpandParent: true,\r\n    checkedKeys: ['0-0-0'],\r\n    selectedKeys: [],\r\n  };\r\n\r\n  onExpand = expandedKeys => {\r\n    console.log('onExpand', expandedKeys);\r\n    // if not set autoExpandParent to false, if children expanded, parent can not collapse.\r\n    // or, you can remove all expanded children keys.\r\n    this.setState({\r\n      expandedKeys,\r\n      autoExpandParent: false,\r\n    });\r\n  };\r\n\r\n  onCheck = checkedKeys => {\r\n    console.log('onCheck', checkedKeys);\r\n    this.setState({ checkedKeys });\r\n  };\r\n\r\n  onSelect = (selectedKeys, info) => {\r\n    console.log('onSelect', info);\r\n    this.setState({ selectedKeys });\r\n  };\r\n\r\n  render() {\r\n    return (\r\n      <Tree\r\n        checkable\r\n        treeData={treeData}\r\n        onExpand={this.onExpand}\r\n        expandedKeys={this.state.expandedKeys}\r\n        autoExpandParent={this.state.autoExpandParent}\r\n        onCheck={this.onCheck}\r\n        checkedKeys={this.state.checkedKeys}\r\n        onSelect={this.onSelect}\r\n        selectedKeys={this.state.selectedKeys}\r\n      />\r\n    );\r\n  }\r\n}\r\n\r\nexport default Demo12;", "desc": " 设置 treeData 属性，则不需要手动构造 TreeNode 节点（key 在整个树范围内唯一）" }, { "example": _react2['default'].createElement(Demo13, null), "title": " 滚动加载树节点", "code": "/**\r\n*\r\n* @title 滚动加载树节点\r\n* @description 适用于大数据场景。注意：使用懒加载，需要通过 treeData 属性传入完整的数据结构，并设置 lazyLoad = {true}。可视区域的高度可以自定义，在 Tree 组件外层包裹一层div即可。\r\n*/\r\n\r\nimport React, { Component } from 'react';\nimport { Button, Tree } from 'tinper-bee';\r\n\n\r\n\r\nconst {TreeNode} = Tree;\r\n\r\nconst x = 1000;\r\nconst y = 1;\r\nconst z = 1;\r\nconst gData = [];\r\n\r\nconst generateData = (_level, _preKey, _tns) => {\r\n    const preKey = _preKey || '0';\r\n    const tns = _tns || gData;\r\n\r\n    const children = [];\r\n    for (let i = 0; i < x; i++) {\r\n        const key = `${preKey}-${i}`;\r\n        tns.push({ title: key, key });\r\n        if (i < y) {\r\n            children.push(key);\r\n        }\r\n    }\r\n    if (_level < 0) {\r\n        return tns;\r\n    }\r\n    const level = _level - 1;\r\n    children.forEach((key, index) => {\r\n        tns[index].children = [];\r\n        return generateData(level, key, tns[index].children);\r\n    });\r\n};\r\ngenerateData(z);\r\n\r\nconst data = [ ...new Array(10000) ].map((e, i) => {\r\n  const rs = { key: i + 'a', title: i + 'a'};\r\n  return rs;\r\n})\r\n\r\nclass Demo13 extends Component{\r\n  constructor(props) {\r\n  \tsuper(props);\r\n    this.state = {\r\n      expandedKeys: ['0-0','0-1','0-2','0-3', '0-4','0-5','0-6','0-0-0','0-0-1'],\r\n      autoExpandParent: true,\r\n      checkedKeys: ['0-0-0'],\r\n      selectedKeys: [],\r\n      treeData: data\r\n    };\r\n    this.onExpand = this.onExpand.bind(this);\r\n    this.onCheck = this.onCheck.bind(this);\r\n    this.onSelect = this.onSelect.bind(this);\r\n  }\r\n  onExpand(expandedKeys,nodeInfo) {\r\n    // console.log('onExpand---显示ext数据', nodeInfo.node.props.ext.data);\r\n\r\n    this.setState({\r\n      expandedKeys,\r\n      autoExpandParent: false,\r\n    });\r\n  }\r\n  onCheck(checkedKeys) {\r\n    this.setState({\r\n      checkedKeys,\r\n      selectedKeys: ['0-3', '0-4'],\r\n    });\r\n  }\r\n  onSelect(selectedKeys, info) {\r\n    console.log('onSelect', info);\r\n    this.setState({ selectedKeys });\r\n  }\r\n  // keydown的钩子事件\r\n  onKeyDown = (e,treeNode)=>{\r\n    console.log('***',e);\r\n    return false;\r\n  }\r\n\r\n  //使用 treeData 渲染树节点时，可使用该函数自定义节点显示内容（非必须）\r\n  //注意：isLeaf 属性是必传的，否则节点层级和展示会有问题\r\n  renderTreeNodes = (data) => {\r\n    const loop = data => data.map((item) => {\r\n      if (item.children) {\r\n        return (\r\n          <TreeNode key={item.key} title={item.key} isLeaf={item.isLeaf}>\r\n            {loop(item.children)}\r\n          </TreeNode>\r\n        );\r\n      }\r\n      return <TreeNode key={item.key} title={item.key} isLeaf={true}/>;\r\n    });\r\n    return loop(data);\r\n  }\r\n\r\n  changeTreeData = () => {\r\n    this.setState({\r\n      treeData: gData\r\n    })\r\n  }\r\n\r\n  render() {\r\n    return (\r\n      <div>\r\n        <Button onClick={this.changeTreeData}>改变数据源</Button>\r\n        <div style={{height:'300px', overflow:'auto'}}>\r\n          <Tree\r\n            checkable\r\n            focusable\r\n            treeData={this.state.treeData}\r\n            lazyLoad={true}\r\n            renderTreeNodes={this.renderTreeNodes}\r\n            onExpand={this.onExpand}\r\n            defaultExpandAll={true} \r\n            expandedKeys={this.state.expandedKeys}\r\n            autoExpandParent={this.state.autoExpandParent}\r\n            onCheck={this.onCheck} \r\n            onSelect={this.onSelect} \r\n            keyFun={this.onKeyDown}\r\n          >\r\n          </Tree>\r\n        </div>\r\n      </div>\r\n    );\r\n  }\r\n};\r\n\r\n\r\nexport default Demo13;", "desc": " 适用于大数据场景。注意：使用懒加载，需要通过 treeData 属性传入完整的数据结构，并设置 lazyLoad = {true}。可视区域的高度可以自定义，在 Tree 组件外层包裹一层div即可。" }, { "example": _react2['default'].createElement(Demo14, null), "title": " 自定义滚动容器", "code": "/**\r\n*\r\n* @title 自定义滚动容器\r\n* @description 使用 getScrollParent 设置需要监听滚动事件的容器。\r\n*/\r\n\r\nimport React, { Component } from 'react';\nimport { Tree } from 'tinper-bee';\r\n\r\n\r\nconst {TreeNode} = Tree;\r\n\r\nconst x = 1000;\r\nconst y = 1;\r\nconst z = 1;\r\nconst gData = [];\r\n\r\nconst generateData = (_level, _preKey, _tns) => {\r\n    const preKey = _preKey || '0';\r\n    const tns = _tns || gData;\r\n\r\n    const children = [];\r\n    for (let i = 0; i < x; i++) {\r\n        const key = `${preKey}-${i}`;\r\n        tns.push({ title: key, key });\r\n        if (i < y) {\r\n            children.push(key);\r\n        }\r\n    }\r\n    if (_level < 0) {\r\n        return tns;\r\n    }\r\n    const level = _level - 1;\r\n    children.forEach((key, index) => {\r\n        tns[index].children = [];\r\n        return generateData(level, key, tns[index].children);\r\n    });\r\n};\r\ngenerateData(z);\r\n\r\nclass Demo14 extends Component{\r\n  constructor(props) {\r\n  \tsuper(props);\r\n    this.state = {\r\n      expandedKeys: ['0-0','0-1','0-2','0-3', '0-4','0-5','0-6','0-0-0','0-0-1'],\r\n      autoExpandParent: true,\r\n      checkedKeys: ['0-0-0'],\r\n      selectedKeys: [],\r\n    };\r\n    this.onExpand = this.onExpand.bind(this);\r\n    this.onCheck = this.onCheck.bind(this);\r\n    this.onSelect = this.onSelect.bind(this);\r\n  }\r\n  onExpand(expandedKeys,nodeInfo) {\r\n    // console.log('onExpand---显示ext数据', nodeInfo.node.props.ext.data);\r\n\r\n    this.setState({\r\n      expandedKeys,\r\n      autoExpandParent: false,\r\n    });\r\n  }\r\n  onCheck(checkedKeys) {\r\n    this.setState({\r\n      checkedKeys,\r\n      selectedKeys: ['0-3', '0-4'],\r\n    });\r\n  }\r\n  onSelect(selectedKeys, info) {\r\n    console.log('onSelect', info);\r\n    this.setState({ selectedKeys });\r\n  }\r\n  // keydown的钩子事件\r\n  onKeyDown = (e,treeNode)=>{\r\n    console.log('***',e);\r\n    return false;\r\n  }\r\n\r\n  //使用 treeData 渲染树节点时，可使用该函数自定义节点显示内容（非必须）\r\n  //注意：isLeaf 属性是必传的，否则节点层级和展示会有问题\r\n  renderTreeNodes = (data) => {\r\n    const loop = data => data.map((item) => {\r\n      if (item.children) {\r\n        return (\r\n          <TreeNode key={item.key} title={item.key} isLeaf={item.isLeaf}>\r\n            {loop(item.children)}\r\n          </TreeNode>\r\n        );\r\n      }\r\n      return <TreeNode key={item.key} title={item.key} isLeaf={true}/>;\r\n    });\r\n    return loop(data);\r\n  }\r\n\r\n  render() {\r\n    return (\r\n        <div className=\"container\" style={{height:'300px', overflow:'auto'}}>\r\n            <div>\r\n                <Tree\r\n                checkable\r\n                focusable\r\n                treeData={gData}\r\n                lazyLoad={true}\r\n                renderTreeNodes={this.renderTreeNodes}\r\n                onExpand={this.onExpand}\r\n                defaultExpandAll={true} \r\n                expandedKeys={this.state.expandedKeys}\r\n                autoExpandParent={this.state.autoExpandParent}\r\n                onCheck={this.onCheck} \r\n                onSelect={this.onSelect} \r\n                keyFun={this.onKeyDown}\r\n                getScrollContainer={() => {\r\n                    return document.querySelector('.container')\r\n                }}\r\n                >\r\n                </Tree>\r\n            </div>\r\n        </div>\r\n    );\r\n  }\r\n};\r\n\r\n\r\nexport default Demo14;", "desc": " 使用 getScrollParent 设置需要监听滚动事件的容器。" }];
+	var Demo1 = __webpack_require__(304);var Demo2 = __webpack_require__(305);var Demo3 = __webpack_require__(306);var Demo4 = __webpack_require__(307);var Demo5 = __webpack_require__(308);var Demo6 = __webpack_require__(309);var Demo7 = __webpack_require__(310);var Demo8 = __webpack_require__(311);var Demo9 = __webpack_require__(312);var Demo10 = __webpack_require__(313);var Demo11 = __webpack_require__(314);var Demo12 = __webpack_require__(315);var Demo13 = __webpack_require__(316);var Demo14 = __webpack_require__(317);var DemoArray = [{ "example": _react2['default'].createElement(Demo1, null), "title": " Tree基本使用示例", "code": "/**\n *\n * @title Tree基本使用示例\n * @description 示例涵盖 checkbox如何选择，disable状态和部分选择状态。checkStrictly为true时，子节点与父节点的选择情况都不会影响到对方\n *\n */\n\n\nimport React, {\n\tComponent\n} from 'react';\n\nconst TreeNode = Tree.TreeNode;\n\nconst defaultProps = {\n\tkeys: ['0-0-0', '0-0-1']\n}\nclass Demo1 extends Component {\n\tconstructor(props) {\n\t\tsuper(props);\n\t\tconst keys = this.props.keys;\n\t\tthis.state = {\n\t\t\tdefaultExpandedKeys: keys,\n\t\t\tdefaultSelectedKeys: keys,\n\t\t\tdefaultCheckedKeys:keys,\n\t\t\tcheckedKeys: {checked:keys},\n\t\t};\n\t}\n\tonSelect(info) {\n\t\tconsole.log('selected', info);\n\t}\n\tonCheck = (checkedKeys,newst) => {\n\t\t//用户可以自定义当前选中和半选中的节点。\n\t\tconsole.log('onCheck', checkedKeys);\n\t\tconst cks = {\n\t\t\tchecked: checkedKeys.checked || checkedKeys,\n\t\t\thalfChecked:checkedKeys.halfChecked\n\t\t};\n\t\tthis.setState({checkedKeys:cks});\n\t}\n\n\tonDoubleClick=(key,treeNode)=>{\n\t\tconsole.log('---onDblClick---',key,'--treeNode--',treeNode);\n\t}\n\trender() {\n\t\n\t\treturn (\n\t\t\t<Tree \n                className=\"myCls\" \n                showLine \n                checkable\n                defaultExpandedKeys={this.state.defaultExpandedKeys}\n                defaultSelectedKeys={this.state.defaultSelectedKeys}\n                defaultCheckedKeys = {this.state.defaultCheckedKeys}\n                checkStrictly\n                showIcon\n                cancelUnSelect={true}\n                onSelect={this.onSelect} \n                onCheck={this.onCheck}\n                onDoubleClick={this.onDoubleClick}\n\t        >\n\t        <TreeNode title=\"parent 1\" key=\"0-0\"  icon={<Icon type=\"uf-treefolder\"  />}>\n\t          <TreeNode title=\"parent 1-0\" key=\"0-0-0\" disabled  icon={<Icon type=\"uf-treefolder\" />}>\n\t            <TreeNode title=\"leaf\" key=\"0-0-0-0\" disableCheckbox icon={<Icon type=\"uf-list-s-o\" />}/>\n\t            <TreeNode title=\"leaf\" key=\"0-0-0-1\" icon={<Icon type=\"uf-list-s-o\" />}/>\n\t          </TreeNode>\n\t          <TreeNode title=\"parent 1-1\" key=\"0-0-1\" icon={<Icon type=\"uf-treefolder\" />}>\n\t            <TreeNode title={<span>sss</span>} key=\"0-0-1-0\" icon={<Icon type=\"uf-list-s-o\" />}/>\n\t          </TreeNode>\n\t        </TreeNode>\n\t      </Tree>\n\t\t);\n\t}\n}\n\nDemo1.defaultProps = defaultProps;\n\n\nexport default Demo1;", "desc": " 示例涵盖 checkbox如何选择，disable状态和部分选择状态。checkStrictly为true时，子节点与父节点的选择情况都不会影响到对方" }, { "example": _react2['default'].createElement(Demo2, null), "title": " Tree数据可控示例", "code": "/**\n*\n* @title Tree数据可控示例\n* @description\n* \b\n*/\n\nimport React, { Component } from 'react';\nimport { Tree } from 'tinper-bee';\n\n\nconst x = 6;\nconst y = 5;\nconst z = 2;\nconst gData = [];\n\nconst generateData = (_level, _preKey, _tns) => {\n    const preKey = _preKey || '0';\n    const tns = _tns || gData;\n\n    const children = [];\n    for (let i = 0; i < x; i++) {\n        const key = `${preKey}-${i}`;\n        tns.push({ title: key, key });\n        if (i < y) {\n            children.push(key);\n        }\n    }\n    if (_level < 0) {\n        return tns;\n    }\n    const level = _level - 1;\n    children.forEach((key, index) => {\n        tns[index].children = [];\n        return generateData(level, key, tns[index].children);\n    });\n};\ngenerateData(z);\n\nconst TreeNode = Tree.TreeNode;\n\n\nclass Demo2 extends Component{\n  constructor(props) {\n  \tsuper(props);\n    this.state = {\n      expandedKeys: [],\n      autoExpandParent: true,\n      checkedKeys: ['0-0-0'],\n      selectedKeys: [],\n    };\n    this.onExpand = this.onExpand.bind(this);\n    this.onCheck = this.onCheck.bind(this);\n    this.onSelect = this.onSelect.bind(this);\n  }\n  onExpand(expandedKeys) {\n    console.log('onExpand', arguments);\n    // if not set autoExpandParent to false, if children expanded, parent can not collapse.\n    // or, you can remove all expanded children keys.\n    this.setState({\n      expandedKeys,\n      autoExpandParent: false,\n    });\n  }\n  onCheck(checkedKeys) {\n    this.setState({\n      checkedKeys,\n      selectedKeys: ['0-3', '0-4'],\n    });\n  }\n  onSelect(selectedKeys, info) {\n    console.log('onSelect', info);\n    this.setState({ selectedKeys });\n  }\n  // keydown的钩子事件\n  onKeyDown = (e,treeNode)=>{\n    console.log('***',e);\n    return false;\n  }\n  render() {\n    const loop = data => data.map((item) => {\n      if (item.children) {\n        return (\n          <TreeNode key={item.key} title={item.key} disableCheckbox={item.key === '0-0-0'} ext={{'as':'sdfa'}}>\n            {loop(item.children)}\n          </TreeNode>\n        );\n      }\n      return <TreeNode key={item.key} title={item.key} isLeaf={true}/>;\n    });\n    return (\n      <Tree\n        checkable\n        focusable\n        className=\"demo2 myCls\"\n        onExpand={this.onExpand} expandedKeys={this.state.expandedKeys}\n        autoExpandParent={this.state.autoExpandParent}\n        onCheck={this.onCheck} \n        onSelect={this.onSelect} \n        keyFun={this.onKeyDown}\n      >\n        {loop(gData)}\n      </Tree>\n    );\n  }\n};\n\n\nexport default Demo2;", "desc": "", "scss_code": "// .demo2.u-tree {\n//   li a.u-tree-node-content-wrapper:hover::before {\n//     background: rgb(235, 236, 240);\n//   }\n//   li a.u-tree-node-content-wrapper.u-tree-node-selected {\n//     color: rgb(245, 60, 50);\n//     .u-tree-title{\n//         color: rgb(245, 60, 50);\n//     }\n//     background: transparent;\n//     &::before {\n//       background: rgb(235, 236, 240);\n//     }\n//   }\n\n//   li a.u-tree-node-content-wrapper::before {\n//     position: absolute;\n//     right: 0;\n//     left: 0;\n//     height: 20px;\n//     -webkit-transition: all 0.3s;\n//     transition: all 0.3s;\n//     content: \"\";\n//   }\n\n//   li  span {\n//     position: relative;\n//     z-index: 1;\n//   }\n// }\n" }, { "example": _react2['default'].createElement(Demo3, null), "title": " Tree 拖拽使用示例", "code": "/**\n*\n* @title Tree 拖拽使用示例\n* @description 拖动结点插入到另一个结点后面或者其他的父节点里面。\n*\n*/\n\n\n\nimport React, { Component } from 'react';\nimport { Tree } from 'tinper-bee';\n\n\nconst x = 3;\nconst y = 2;\nconst z = 1;\nconst gData = [];\n\nconst generateData = (_level, _preKey, _tns) => {\n    const preKey = _preKey || '0';\n    const tns = _tns || gData;\n\n    const children = [];\n    for (let i = 0; i < x; i++) {\n        const key = `${preKey}-${i}`;\n        tns.push({ title: key, key });\n        if (i < y) {\n            children.push(key);\n        }\n    }\n    if (_level < 0) {\n        return tns;\n    }\n    const level = _level - 1;\n    children.forEach((key, index) => {\n        tns[index].children = [];\n        return generateData(level, key, tns[index].children);\n    });\n};\ngenerateData(z);\n\nconst TreeNode = Tree.TreeNode;\n\nclass Demo3 extends Component{\n  constructor(props) {\n    super(props);\n    this.state = {\n      gData,\n      expandedKeys: ['0-0', '0-0-0', '0-0-0-0'],\n    };\n    this.onDragEnter = this.onDragEnter.bind(this);\n    this.onDrop = this.onDrop.bind(this);\n  }\n  onDragEnter(info) {\n    console.log(info);\n    // expandedKeys 需要受控时设置\n    // this.setState({\n    //   expandedKeys: info.expandedKeys,\n    // });\n  }\n  onDrop(info) {\n    console.log(info);\n    const dropKey = info.node.props.eventKey;\n    const dragKey = info.dragNode.props.eventKey;\n    // const dragNodesKeys = info.dragNodesKeys;\n    const loop = (data, key, callback) => {\n      data.forEach((item, index, arr) => {\n        if (item.key === key) {\n          return callback(item, index, arr);\n        }\n        if (item.children) {\n          return loop(item.children, key, callback);\n        }\n      });\n    };\n    const data = [...this.state.gData];\n    let dragObj;\n    loop(data, dragKey, (item, index, arr) => {\n      arr.splice(index, 1);\n      dragObj = item;\n    });\n    if (info.dropToGap) {\n      let ar;\n      let i;\n      loop(data, dropKey, (item, index, arr) => {\n        ar = arr;\n        i = index;\n      });\n      ar.splice(i, 0, dragObj);\n    } else {\n      loop(data, dropKey, (item) => {\n        item.children = item.children || [];\n        // where to insert 示例添加到尾部，可以是随意位置\n        item.children.push(dragObj);\n      });\n    }\n    this.setState({\n      gData: data,\n    });\n  }\n  render() {\n    const loop = data => data.map((item) => {\n      if (item.children && item.children.length) {\n        return <TreeNode key={item.key} title={item.key}>{loop(item.children)}</TreeNode>;\n      }\n      return <TreeNode key={item.key} title={item.key} />;\n    });\n    return (\n      <Tree\n        className=\"myCls\"\n        defaultExpandedKeys={this.state.expandedKeys}\n        draggable\n        onDragEnter={this.onDragEnter}\n        onDrop={this.onDrop}\n      >\n        {loop(this.state.gData)}\n      </Tree>\n    );\n  }\n};\n\nexport default Demo3;", "desc": " 拖动结点插入到另一个结点后面或者其他的父节点里面。" }, { "example": _react2['default'].createElement(Demo4, null), "title": " Tree可搜索示例", "code": "/**\n *\n * @title Tree可搜索示例\n * @description\n *\n */\n\n\nimport React, {\n  Component\n} from 'react';\n\n\nconst x = 3;\nconst y = 2;\nconst z = 1;\nconst gData = [];\n\nconst generateData = (_level, _preKey, _tns) => {\n  const preKey = _preKey || '0';\n  const tns = _tns || gData;\n\n  const children = [];\n  for (let i = 0; i < x; i++) {\n    const key = `${preKey}-${i}`;\n    tns.push({\n      title: key,\n      key\n    });\n    if (i < y) {\n      children.push(key);\n    }\n  }\n  if (_level < 0) {\n    return tns;\n  }\n  const level = _level - 1;\n  children.forEach((key, index) => {\n    tns[index].children = [];\n    return generateData(level, key, tns[index].children);\n  });\n};\ngenerateData(z);\n\nconst TreeNode = Tree.TreeNode;\n\nconst dataList = [];\nconst generateList = (data) => {\n  for (let i = 0; i < data.length; i++) {\n    const node = data[i];\n    const key = node.key;\n    dataList.push({\n      key,\n      title: key\n    });\n    if (node.children) {\n      generateList(node.children, node.key);\n    }\n  }\n};\ngenerateList(gData);\n\nconst getParentKey = (key, tree) => {\n  let parentKey;\n  for (let i = 0; i < tree.length; i++) {\n    const node = tree[i];\n    if (node.children) {\n      if (node.children.some(item => item.key === key)) {\n        parentKey = node.key;\n      } else if (getParentKey(key, node.children)) {\n        parentKey = getParentKey(key, node.children);\n      }\n    }\n  }\n  return parentKey;\n};\n\n\nclass Demo4 extends Component {\n  constructor(props) {\n    super(props);\n    this.state = {\n      expandedKeys: [],\n      searchValue: '',\n      autoExpandParent: true,\n    }\n  }\n  onExpand = (expandedKeys) => {\n    this.setState({\n      expandedKeys,\n      autoExpandParent: false,\n    });\n  }\n  onChange = (value) => {\n\n    const expandedKeys = [];\n    dataList.forEach((item) => {\n      if (item.key.indexOf(value) > -1) {\n        expandedKeys.push(getParentKey(item.key, gData));\n      }\n    });\n    const uniqueExpandedKeys = [];\n    expandedKeys.forEach((item) => {\n      if (item && uniqueExpandedKeys.indexOf(item) === -1) {\n        uniqueExpandedKeys.push(item);\n      }\n    });\n    this.setState({\n      expandedKeys: uniqueExpandedKeys,\n      searchValue: value,\n      autoExpandParent: true,\n    });\n  }\n  render() {\n    const {\n      searchValue,\n      expandedKeys,\n      autoExpandParent\n    } = this.state;\n    const loop = data => data.map((item) => {\n      const index = item.key.search(searchValue);\n      const beforeStr = item.key.substr(0, index);\n      const afterStr = item.key.substr(index + searchValue.length);\n      const title = index > -1 ? (\n        <span>\n          {beforeStr}\n          <span className=\"u-tree-searchable-filter\">{searchValue}</span>\n          {afterStr}\n        </span>\n      ) : <span>{item.key}</span>;\n      if (item.children) {\n        return (\n          <TreeNode key={item.key} title={title}>\n            {loop(item.children)}\n          </TreeNode>\n        );\n      }\n      return <TreeNode key={item.key} title={title} />;\n    });\n    return (\n      <div>\n        <FormControl\n          style={{ width: 200 }}\n          placeholder=\"Search\"\n          onChange={this.onChange}\n        />\n        <Tree\n          className=\"myCls\"\n          onExpand={this.onExpand}\n          expandedKeys={expandedKeys}\n          autoExpandParent={autoExpandParent}\n        >\n          {loop(gData)}\n        </Tree>\n      </div>\n    );\n  }\n}\n\nexport default Demo4;", "desc": "", "scss_code": ".u-tree-searchable-filter {\n  color: #f50;\n  transition: all .3s ease;\n}" }, { "example": _react2['default'].createElement(Demo5, null), "title": " Tree异步数据加载", "code": "/**\n *\n * @title Tree异步数据加载\n * @description 当点击展开，异步获取子节点数据\n *\n */\n\n\nimport React, {\n  Component\n} from 'react';\n\n\nconst x = 3;\nconst y = 2;\nconst z = 1;\nconst gData = [];\n\nconst generateData = (_level, _preKey, _tns) => {\n  const preKey = _preKey || '0';\n  const tns = _tns || gData;\n\n  const children = [];\n  for (let i = 0; i < x; i++) {\n    const key = `${preKey}-${i}`;\n    tns.push({\n      title: key,\n      key\n    });\n    if (i < y) {\n      children.push(key);\n    }\n  }\n  if (_level < 0) {\n    return tns;\n  }\n  const level = _level - 1;\n  children.forEach((key, index) => {\n    tns[index].children = [];\n    return generateData(level, key, tns[index].children);\n  });\n};\ngenerateData(z);\n\nconst TreeNode = Tree.TreeNode;\n\nfunction generateTreeNodes(treeNode) {\n  const arr = [];\n  const key = treeNode.props.eventKey;\n  for (let i = 0; i < 3; i++) {\n    arr.push({\n      name: `leaf ${key}-${i}`,\n      key: `${key}-${i}`\n    });\n  }\n  return arr;\n}\n\nfunction setLeaf(treeData, curKey, level) {\n  const loopLeaf = (data, lev) => {\n    const l = lev - 1;\n    data.forEach((item) => {\n      if ((item.key.length > curKey.length) ? item.key.indexOf(curKey) !== 0 :\n        curKey.indexOf(item.key) !== 0) {\n        return;\n      }\n      if (item.children) {\n        loopLeaf(item.children, l);\n      } else if (l < 1) {\n        item.isLeaf = true;\n      }\n    });\n  };\n  loopLeaf(treeData, level + 1);\n}\n\nfunction getNewTreeData(treeData, curKey, child, level) {\n  const loop = (data) => {\n    if (level < 1 || curKey.length - 3 > level * 2) return;\n    data.forEach((item) => {\n      if (curKey.indexOf(item.key) === 0) {\n        if (item.children) {\n          loop(item.children);\n        } else {\n          item.children = child;\n        }\n      }\n    });\n  };\n  loop(treeData);\n  setLeaf(treeData, curKey, level);\n}\n\nclass Demo5 extends Component {\n  constructor(props) {\n    super(props);\n    this.state = {\n      treeData: [],\n    };\n    this.onSelect = this.onSelect.bind(this);\n    this.onLoadData = this.onLoadData.bind(this);\n  }\n  componentDidMount() {\n    setTimeout(() => {\n      this.setState({\n        treeData: [{\n          name: 'pNode 01',\n          key: '0-0'\n        }, {\n          name: 'pNode 02',\n          key: '0-1'\n        }, {\n          name: 'pNode 03',\n          key: '0-2',\n          isLeaf: true\n        }, ],\n      });\n    }, 100);\n  }\n  onSelect(info) {\n    console.log('selected', info);\n  }\n  onLoadData(treeNode) {\n    return new Promise((resolve) => {\n      setTimeout(() => {\n        const treeData = [...this.state.treeData];\n        getNewTreeData(treeData, treeNode.props.eventKey, generateTreeNodes(treeNode), 2);\n        this.setState({\n          treeData\n        });\n        resolve();\n      }, 1000);\n    });\n  }\n  render() {\n    const loop = data => data.map((item) => {\n      if (item.children) {\n        return <TreeNode title={item.name} key={item.key}>{loop(item.children)}</TreeNode>;\n      }\n      return <TreeNode title={item.name} key={item.key} isLeaf={item.isLeaf} disabled={item.key === '0-0-0'} />;\n    });\n    const treeNodes = loop(this.state.treeData);\n    return (\n      <Tree className=\"myCls\" onSelect={this.onSelect} loadData={this.onLoadData} >\n        {treeNodes}\n      </Tree>\n    );\n  }\n};\n\nexport default Demo5", "desc": " 当点击展开，异步获取子节点数据" }, { "example": _react2['default'].createElement(Demo6, null), "title": " Tree基本使用示例自定义图标", "code": "/**\r\n *\r\n * @title Tree基本使用示例自定义图标\r\n * @description 添加openIcon、closeIcon属性\r\n *\r\n */\r\n\r\n\r\nimport React, {\r\n\tComponent\r\n} from 'react';\r\n\r\n\nconst TreeNode = Tree.TreeNode;\r\n\r\nconst defaultProps = {\r\n\tkeys: ['0-0-0', '0-0-1']\r\n}\r\nclass Demo1 extends Component {\r\n\tconstructor(props) {\r\n\t\tsuper(props);\r\n\t\tconst keys = this.props.keys;\r\n\t\tthis.state = {\r\n\t\t\tdefaultExpandedKeys: keys,\r\n\t\t\tdefaultSelectedKeys: keys,\r\n\t\t\tdefaultCheckedKeys: keys,\r\n\t\t};\r\n\t}\r\n\tonSelect(info) {\r\n\t\tconsole.log('selected', info);\r\n\t}\r\n\tonCheck(info) {\r\n\t\tconsole.log('onCheck', info);\r\n\t}\r\n\trender() {\r\n\t\treturn (\r\n\r\n\t\t\t<Tree className=\"myCls\"  checkable openIcon={<Icon type=\"uf-minus\" />} closeIcon={<Icon type=\"uf-plus\" />}\r\n\t        defaultExpandedKeys={this.state.defaultExpandedKeys}\r\n\t        defaultSelectedKeys={this.state.defaultSelectedKeys}\r\n\t        defaultCheckedKeys={this.state.defaultCheckedKeys}\r\n\t        onSelect={this.onSelect} onCheck={this.onCheck}\r\n\t      >\r\n\t        <TreeNode title=\"parent 1\" key=\"0-0\">\r\n\t          <TreeNode title=\"parent 1-0\" key=\"0-0-0\" disabled>\r\n\t            <TreeNode title=\"leaf\" key=\"0-0-0-0\" disableCheckbox />\r\n\t            <TreeNode title=\"leaf\" key=\"0-0-0-1\" />\r\n\t          </TreeNode>\r\n\t          <TreeNode title=\"parent 1-1\" key=\"0-0-1\">\r\n\t            <TreeNode title={<span>sss</span>} key=\"0-0-1-0\" />\r\n\t          </TreeNode>\r\n\t        </TreeNode>\r\n\t      </Tree>\r\n\t\t);\r\n\t}\r\n}\r\n\r\nDemo1.defaultProps = defaultProps;\r\n\r\n\r\nexport default Demo1;", "desc": " 添加openIcon、closeIcon属性" }, { "example": _react2['default'].createElement(Demo7, null), "title": " Tree增加节点", "code": "/**\n *\n * @title Tree增加节点\n * @description 增加节点和拖拽组合使用示例\n *\n */\n\n\nimport React, {\n  Component\n} from 'react';\n\n\nconst TreeNode = Tree.TreeNode;\n\n\nclass Demo7 extends Component {\n  constructor(props) {\n    super(props);\n    this.state = {\n      treeData: [],\n      defaultExpandedKeys: ['0-0', '0-1', '0-2'],\n      parentNode: {}\n    };\n    this.onSelect = this.onSelect.bind(this);\n    this.addNode = this.addNode.bind(this);\n    this.clickFun = this.clickFun.bind(this);\n    this.getNodeByKey = this.getNodeByKey.bind(this);\n    this.parentNode = null\n  }\n  componentDidMount() {\n      setTimeout(() => {\n        this.setState({\n          treeData: [{\n            name: 'pNode 01',\n            key: '0-0',\n            children: [{\n              name: 'leaf 0-0-0',\n              key: '0-0-0'\n            }, {\n              name: 'leaf 0-0-1',\n              key: '0-0-1'\n            }]\n          }, {\n            name: 'pNode 02',\n            key: '0-1',\n            children: [{\n              name: 'leaf 0-1-0',\n              key: '0-1-0'\n            }, {\n              name: 'leaf 0-1-1',\n              key: '0-1-1'\n            }]\n          }, {\n            name: 'pNode 03',\n            key: '0-2',\n            isLeaf: true\n          }, ],\n        });\n      }, 100);\n    }\n    /**\n     * 增加节点\n     * @param string prKey    [父节点key]\n     * @param object nodeItem [子节点信息]\n     */\n  addNode(prKey, nodeItem) {\n    const data = this.state.treeData;\n    let parNode;\n    if (prKey) {\n      // 如果prKey存在则搜索父节点进行添加\n      parNode = this.getNodeByKey(data, prKey);\n      //如果父节点存在的话，添加到父节点上\n      if (parNode) {\n        if (!parNode.children) {\n          parNode.children = [];\n        }\n        // 如果key不存在就动态生成一个\n        if (!nodeItem.key) {\n          nodeItem.key = prKey + parNode.children.length + 1;\n        }\n        parNode.children.push(nodeItem);\n      }\n    } else {\n      // 没有穿prKey添加到根下成为一级节点\n      if (!nodeItem.key) {\n        nodeItem.key = \"0-\" + data.length + 1;\n      }\n      data.push(nodeItem);\n    }\n\n    this.setState({\n      data\n    });\n  }\n\n  getNodeByKey(data, key) {\n    if (!this.parentNode) {\n      data.find(item => {\n        if (item.key === key) {\n          console.log('item.name---' + item.name)\n          this.parentNode = item;\n          return (true);\n        } else if (item.children) {\n          return this.getNodeByKey(item.children, key);\n\n        }\n      })\n    }\n    return this.parentNode;\n  }\n\n\n\n  onSelect(info) {\n      console.log('selected', info);\n    }\n    /**\n     * 点击button事件\n     */\n  clickFun() {\n    let prKey, nodeItem;\n    prKey = '0-1';\n    nodeItem = {\n      name: 'leaf 0-0-4'\n    }\n    this.addNode(prKey, nodeItem);\n  }\n\n  onDragEnter = (info) => {\n    console.log(info);\n    // expandedKeys 需要受控时设置\n    // this.setState({\n    //   expandedKeys: info.expandedKeys,\n    // });\n  }\n  onDrop = (info) => {\n    console.log(info);\n    const dropKey = info.node.props.eventKey;\n    const dragKey = info.dragNode.props.eventKey;\n    // const dragNodesKeys = info.dragNodesKeys;\n    const loop = (data, key, callback) => {\n      data.forEach((item, index, arr) => {\n        if (item.key === key) {\n          return callback(item, index, arr);\n        }\n        if (item.children) {\n          return loop(item.children, key, callback);\n        }\n      });\n    };\n    const data = [...this.state.treeData];\n    let dragObj;\n    loop(data, dragKey, (item, index, arr) => {\n      arr.splice(index, 1);\n      dragObj = item;\n    });\n    if (info.dropToGap) {\n      let ar;\n      let i;\n      loop(data, dropKey, (item, index, arr) => {\n        ar = arr;\n        i = index;\n      });\n      ar.splice(i, 0, dragObj);\n    } else {\n      loop(data, dropKey, (item) => {\n        item.children = item.children || [];\n        // where to insert 示例添加到尾部，可以是随意位置\n        item.children.push(dragObj);\n      });\n    }\n    this.setState({\n      treeData: data,\n    });\n  }\n\n  render() {\n    const loop = data => data.map((item) => {\n      if (item.children) {\n        return <TreeNode title={item.name} key={item.key}>{loop(item.children)}</TreeNode>;\n      }\n      return <TreeNode title={item.name} key={item.key} isLeaf={item.isLeaf} disabled={item.key === '0-0-0'} />;\n    });\n    const treeNodes = loop(this.state.treeData);\n    console.log('defaultKeys--' + this.state.defaultExpandedKeys);\n    return (\n      <div>\n        <Button colors=\"primary\" onClick={this.clickFun}>增加节点</Button>\n        <Tree \n        className=\"myCls\"\n        onSelect={this.onSelect} \n        defaultExpandedKeys={this.state.defaultExpandedKeys} \n        draggable\n        onDragEnter={this.onDragEnter}\n        onDrop={this.onDrop}>\n          {treeNodes}\n        </Tree>\n      </div>\n    );\n  }\n};\n\nexport default Demo7", "desc": " 增加节点和拖拽组合使用示例" }, { "example": _react2['default'].createElement(Demo8, null), "title": " Tree 节点可编辑", "code": "/**\n *\n * @title Tree 节点可编辑\n * @description 鼠标移动到节点上点击编辑图标进行编辑。e.node.props.eventKey代表当前节点key值。editKey指当前操作的节点key\n */\n\n\nimport React, {\n\tComponent\n} from 'react';\n\n\nconst TreeNode = Tree.TreeNode;\n\nclass Demo8 extends Component {\n\tconstructor(props) {\n\t\tsuper(props);\n\n\t\tthis.state = {\n\t\t\ttreeData: [],\n\t\t\tisHover: \"\",\n\t\t\teditKey: \"\"\n\t\t};\n\n\t}\n\n\n\tonMouseEnter = (e) => {\n\t\tthis.setState({\n\t\t\tisHover: e.node.props.eventKey\n\t\t})\n\t}\n\tonMouseLeave = (e, treenode) => {\n\t\tthis.setState({\n\t\t\tisHover: \"\",\n\t\t\teditKey: \"\"\n\t\t})\n\n\t}\n\n\teditRender = (item) => {\n\t\tthis.setState({\n\t\t\teditKey: item.key\n\t\t});\n\t}\n\tnodechange = (item, value) => {\n\t\titem.name = value;\n\t}\n\trenderTreeTitle = (item) => {\n\t\tlet titleIcon, titleInfo;\n\t\t//编辑时input框\n\t\tif (this.state.editKey == item.key) {\n\t\t\ttitleInfo = <input type=\"text\" id=\"itemKey\" defaultValue={item.name} onChange={(e) => this.nodechange(item, e.target.value)} />\n\t\t} else {\n\t\t\ttitleInfo = <span className=\"title-middle\">{item.name}</span>\n\t\t}\n\t\t//编辑图标\n\t\tif (this.state.isHover == item.key) {\n\t\t\ttitleIcon = <Icon className=\"title-middle edit-icon\" type=\"uf-pencil\" onClick={(e) => this.editRender(item)}></Icon>;\n\t\t}\n\t\treturn (<div className=\"title-con\">\n\n\t\t\t{titleInfo}\n\t\t\t{titleIcon}\n\t\t</div>);\n\t}\n\n\tcomponentDidMount = () => {\n\t\tsetTimeout(() => {\n\t\t\tthis.setState({\n\t\t\t\ttreeData: [{\n\t\t\t\t\tname: 'pNode 01',\n\t\t\t\t\tkey: '0-0',\n\t\t\t\t\tchildren: [{\n\t\t\t\t\t\tname: 'leaf 0-0-0',\n\t\t\t\t\t\tkey: '0-0-0'\n\t\t\t\t\t}, {\n\t\t\t\t\t\tname: 'leaf 0-0-1',\n\t\t\t\t\t\tkey: '0-0-1'\n\t\t\t\t\t}]\n\t\t\t\t}, {\n\t\t\t\t\tname: 'pNode 02',\n\t\t\t\t\tkey: '0-1',\n\t\t\t\t\tchildren: [{\n\t\t\t\t\t\tname: 'leaf 0-1-0',\n\t\t\t\t\t\tkey: '0-1-0'\n\t\t\t\t\t}, {\n\t\t\t\t\t\tname: 'leaf 0-1-1',\n\t\t\t\t\t\tkey: '0-1-1'\n\t\t\t\t\t}]\n\t\t\t\t}, {\n\t\t\t\t\tname: 'pNode 03',\n\t\t\t\t\tkey: '0-2',\n\t\t\t\t\tisLeaf: true\n\t\t\t\t}, ],\n\t\t\t});\n\t\t\n\t\t}, 100);\n\t}\n\trender() {\n\t\tconst loop = data => data.map((item) => {\n\t\t\tif (item.children) {\n\t\t\t\treturn <TreeNode title={this.renderTreeTitle(item)} key={item.key}>{loop(item.children)}</TreeNode>;\n\t\t\t}\n\t\t\treturn <TreeNode title={this.renderTreeTitle(item)} key={item.key} isLeaf={item.isLeaf} disabled={item.key === '0-0-0'} />;\n\t\t});\n\t\tconst treeNodes = loop(this.state.treeData);\n\t\treturn (\n\t\t\t<Tree onMouseLeave={this.onMouseLeave} onMouseEnter={this.onMouseEnter} className=\"myCls\">\n\t\t\t\t{treeNodes}\n\t\t\t</Tree>\n\n\t\t);\n\t}\n}\n\n\n\nexport default Demo8;", "desc": " 鼠标移动到节点上点击编辑图标进行编辑。e.node.props.eventKey代表当前节点key值。editKey指当前操作的节点key", "scss_code": ".title-middle {\n  display: inline-block;\n  vertical-align: middle;\n}\n.edit-icon {\n  float:right;\n  font-size: 16px;\n  height: 16px;\n  line-height: 20px;\n}\n.title-con {\n  min-width: 150px;\n}" }, { "example": _react2['default'].createElement(Demo9, null), "title": " 连接线Tree", "code": "/**\n *\n * @title 连接线Tree\n * @description \n *\n */\n\n\nimport React, {\n\tComponent\n} from 'react';\n\n\nconst TreeNode = Tree.TreeNode;\nclass Demo9 extends Component {\n\tconstructor(props) {\n\t\tsuper(props);\n\t\tconst keys = this.props.keys;\n\t\tthis.state = {\n\t\t\tdefaultExpandedKeys: keys\n\t\t};\n\n\t}\n\n\trender() {\n\t\treturn (\n\t\t\t<Tree className=\"myCls\" showLine checkable  defaultExpandAll={true}>\n\t        <TreeNode title=\"parent 1\" key=\"0-0\">\n\t          <TreeNode title=\"parent 1-0\" key=\"0-0-0\" >\n\t            <TreeNode title=\"leaf\" key=\"0-0-0-0\"  />\n\t            <TreeNode title=\"leaf\" key=\"0-0-0-1\" />\n\t          </TreeNode>\n\t          <TreeNode title=\"parent 1-1\" key=\"0-0-1\">\n\t            <TreeNode title={<span>sss</span>} key=\"0-0-1-0\" />\n\t          </TreeNode>\n\t        </TreeNode>\n\t      </Tree>\n\t\t);\n\t}\n}\n\nexport default Demo9;", "desc": " " }, { "example": _react2['default'].createElement(Demo10, null), "title": " Tree基本使用示例", "code": "/**\n *\n * @title Tree基本使用示例\n * @description 如何获取选中对象自定义对象和数据\n *\n */\n\n\nimport React, {\n\tComponent\n} from 'react';\n\n\nconst TreeNode = Tree.TreeNode;\n\nconst defaultProps = {\n\tkeys: ['0-0-0', '0-0-1']\n}\nclass Demo10 extends Component {\n\tconstructor(props) {\n\t\tsuper(props);\n\t\tconst keys = this.props.keys;\n\t\tthis.state = {\n\t\t\tdefaultExpandedKeys: keys,\n\t\t\tdefaultSelectedKeys: keys,\n\t\t\tdefaultCheckedKeys:keys\n\t\t\t// checkedKeys: {checked:keys},\n\t\t};\n    }\n    /**\n     * 获取当前选中行的item对象。\n     * @param {*} value \n     */\n\tonSelect(selectedKeys, e) {\n        console.log(`${selectedKeys} selected`);//获取key\n        let currentObject = {};\n        currentObject.title = e.node.props.title; //获取选中对象的数据\n        currentObject.key = e.node.props.eventKey;\n        console.log(currentObject); \n\t}\n\tonCheck = (checkedKeys) => {\n\t\tlet self = this;\n\t\tconsole.log('onCheck', checkedKeys);\n\t\tconst cks = {\n\t\t\tchecked: checkedKeys.checked || checkedKeys,\n\t\t};\n\t\t// this.setState({checkedKeys:cks});\n\t}\n\n\tonDoubleClick=(key,treeNode)=>{\n\t\tconsole.log('---onDblClick---'+key+'--treeNode--'+treeNode);\n\t}\n\trender() {\n\t\n\t\treturn (\n\t\t\t<Tree className=\"myCls\" showLine checkable\n                defaultExpandedKeys={this.state.defaultExpandedKeys}\n                defaultSelectedKeys={this.state.defaultSelectedKeys}\n                defaultCheckedKeys = {this.state.defaultCheckedKeys}\n                checkStrictly\n                onSelect={this.onSelect} onCheck={this.onCheck}\n                onDoubleClick={this.onDoubleClick}\n            >\n                <TreeNode title=\"parent 1\" key=\"0-0\" >\n                <TreeNode title=\"parent 1-0\" key=\"0-0-0\" disabled>\n                    <TreeNode title=\"leaf\" key=\"0-0-0-0\" disableCheckbox />\n                    <TreeNode title=\"leaf\" key=\"0-0-0-1\" />\n                </TreeNode>\n                <TreeNode title=\"parent 1-1\" key=\"0-0-1\">\n                    <TreeNode title={<span>sss</span>} key=\"0-0-1-0\" />\n                </TreeNode>\n                <TreeNode title=\"parent 1-2\" key=\"0-0-2\" >\n                    <TreeNode title=\"leaf\" key=\"0-0-2-0\" />\n                    <TreeNode title=\"leaf\" key=\"0-0-2-1\" />\n                </TreeNode>\n                </TreeNode>\n\t      </Tree>\n\t\t);\n\t}\n}\n\nDemo10.defaultProps = defaultProps;\n\n\nexport default Demo10;", "desc": " 如何获取选中对象自定义对象和数据" }, { "example": _react2['default'].createElement(Demo11, null), "title": " 用户自定义节点属性ext", "code": "/**\n*\n* @title 用户自定义节点属性ext\n* @description 业务中扩展的数据可以定义在ext属性中，用户可以在TreeNode节点中获取ext属性。此例中将treeNode的数据存放在了ext中，方便用户获取。\n* \b\n*/\n\nimport React, { Component } from 'react';\nimport { Tree } from 'tinper-bee';\n\n\nconst x = 6;\nconst y = 5;\nconst z = 2;\nconst gData = [];\n\nconst generateData = (_level, _preKey, _tns) => {\n    const preKey = _preKey || '0';\n    const tns = _tns || gData;\n\n    const children = [];\n    for (let i = 0; i < x; i++) {\n        const key = `${preKey}-${i}`;\n        tns.push({ title: key, key });\n        if (i < y) {\n            children.push(key);\n        }\n    }\n    if (_level < 0) {\n        return tns;\n    }\n    const level = _level - 1;\n    children.forEach((key, index) => {\n        tns[index].children = [];\n        return generateData(level, key, tns[index].children);\n    });\n};\ngenerateData(z);\n\nconst TreeNode = Tree.TreeNode;\n\n\nclass Demo11 extends Component{\n  constructor(props) {\n  \tsuper(props);\n    this.state = {\n      expandedKeys: [],\n      autoExpandParent: true,\n      checkedKeys: ['0-0-0'],\n      selectedKeys: [],\n    };\n    this.onExpand = this.onExpand.bind(this);\n    this.onCheck = this.onCheck.bind(this);\n    this.onSelect = this.onSelect.bind(this);\n  }\n  onExpand(expandedKeys,nodeInfo) {\n    console.log('onExpand---显示ext数据', nodeInfo.node.props.ext.data);\n\n    this.setState({\n      expandedKeys,\n      autoExpandParent: false,\n    });\n  }\n  onCheck(checkedKeys) {\n    this.setState({\n      checkedKeys,\n      selectedKeys: ['0-3', '0-4'],\n    });\n  }\n  onSelect(selectedKeys, info) {\n    console.log('onSelect', info);\n    this.setState({ selectedKeys });\n  }\n  // keydown的钩子事件\n  onKeyDown = (e,treeNode)=>{\n    console.log('***',e);\n    return false;\n  }\n  render() {\n    const loop = data => data.map((item) => {\n      if (item.children) {\n        return (\n          <TreeNode key={item.key} title={item.key} disableCheckbox={item.key === '0-0-0'} ext={{'data':item}}>\n            {loop(item.children)}\n          </TreeNode>\n        );\n      }\n      return <TreeNode key={item.key} title={item.key} isLeaf={true}/>;\n    });\n    return (\n      <Tree\n        checkable\n        focusable\n        className=\"demo2 myCls\"\n        onExpand={this.onExpand} expandedKeys={this.state.expandedKeys}\n        autoExpandParent={this.state.autoExpandParent}\n        onCheck={this.onCheck} \n        onSelect={this.onSelect} \n        keyFun={this.onKeyDown}\n      >\n        {loop(gData)}\n      </Tree>\n    );\n  }\n};\n\n\nexport default Demo11;", "desc": " 业务中扩展的数据可以定义在ext属性中，用户可以在TreeNode节点中获取ext属性。此例中将treeNode的数据存放在了ext中，方便用户获取。" }, { "example": _react2['default'].createElement(Demo12, null), "title": " 根据 treeData 数组渲染树节点", "code": "/**\r\n*\r\n* @title 根据 treeData 数组渲染树节点\r\n* @description 设置 treeData 属性，则不需要手动构造 TreeNode 节点（key 在整个树范围内唯一）\r\n*/\r\n\r\nimport React, { Component } from 'react';\nimport { Tree } from 'tinper-bee';\r\n\r\n\r\nconst treeData = [\r\n  {\r\n    title: '0-0',\r\n    key: '0-0',\r\n    ext: '自定义属性',\r\n    children: [\r\n      {\r\n        title: '0-0-0',\r\n        key: '0-0-0',\r\n        children: [\r\n          { title: '0-0-0-0', key: '0-0-0-0' },\r\n          { title: '0-0-0-1', key: '0-0-0-1' },\r\n          { title: '0-0-0-2', key: '0-0-0-2' },\r\n        ],\r\n      },\r\n      {\r\n        title: '0-0-1',\r\n        key: '0-0-1',\r\n        children: [\r\n          { title: '0-0-1-0', key: '0-0-1-0' },\r\n          { title: '0-0-1-1', key: '0-0-1-1' },\r\n          { title: '0-0-1-2', key: '0-0-1-2' },\r\n        ],\r\n      },\r\n      {\r\n        title: '0-0-2',\r\n        key: '0-0-2',\r\n      },\r\n    ],\r\n  },\r\n  {\r\n    title: '0-1',\r\n    key: '0-1',\r\n    children: [\r\n      { title: '0-1-0-0', key: '0-1-0-0' },\r\n      { title: '0-1-0-1', key: '0-1-0-1' },\r\n      { title: '0-1-0-2', key: '0-1-0-2' },\r\n    ],\r\n  },\r\n  {\r\n    title: '0-2',\r\n    key: '0-2',\r\n    ext: '自定义属性'\r\n  },\r\n];\r\n\r\nclass Demo12 extends Component {\r\n  state = {\r\n    expandedKeys: ['0-0-0', '0-0-1'],\r\n    autoExpandParent: true,\r\n    checkedKeys: ['0-0-0'],\r\n    selectedKeys: [],\r\n  };\r\n\r\n  onExpand = expandedKeys => {\r\n    console.log('onExpand', expandedKeys);\r\n    // if not set autoExpandParent to false, if children expanded, parent can not collapse.\r\n    // or, you can remove all expanded children keys.\r\n    this.setState({\r\n      expandedKeys,\r\n      autoExpandParent: false,\r\n    });\r\n  };\r\n\r\n  onCheck = checkedKeys => {\r\n    console.log('onCheck', checkedKeys);\r\n    this.setState({ checkedKeys });\r\n  };\r\n\r\n  onSelect = (selectedKeys, info) => {\r\n    console.log('onSelect', info);\r\n    this.setState({ selectedKeys });\r\n  };\r\n\r\n  render() {\r\n    return (\r\n      <Tree\r\n        checkable\r\n        treeData={treeData}\r\n        onExpand={this.onExpand}\r\n        expandedKeys={this.state.expandedKeys}\r\n        autoExpandParent={this.state.autoExpandParent}\r\n        onCheck={this.onCheck}\r\n        checkedKeys={this.state.checkedKeys}\r\n        onSelect={this.onSelect}\r\n        selectedKeys={this.state.selectedKeys}\r\n      />\r\n    );\r\n  }\r\n}\r\n\r\nexport default Demo12;", "desc": " 设置 treeData 属性，则不需要手动构造 TreeNode 节点（key 在整个树范围内唯一）" }, { "example": _react2['default'].createElement(Demo13, null), "title": " 滚动加载树节点", "code": "/**\r\n*\r\n* @title 滚动加载树节点\r\n* @description 适用于大数据场景。注意：使用懒加载，需要通过 treeData 属性传入完整的数据结构，并设置 lazyLoad = {true}。可视区域的高度可以自定义，在 Tree 组件外层包裹一层div即可。\r\n*/\r\n\r\nimport React, { Component } from 'react';\nimport { Button, Tree } from 'tinper-bee';\r\n\n\r\n\r\nconst {TreeNode} = Tree;\r\n\r\nconst x = 1000;\r\nconst y = 1;\r\nconst z = 1;\r\nconst gData = [];\r\n\r\nconst generateData = (_level, _preKey, _tns) => {\r\n    const preKey = _preKey || '0';\r\n    const tns = _tns || gData;\r\n\r\n    const children = [];\r\n    for (let i = 0; i < x; i++) {\r\n        const key = `${preKey}-${i}`;\r\n        tns.push({ title: key, key });\r\n        if (i < y) {\r\n            children.push(key);\r\n        }\r\n    }\r\n    if (_level < 0) {\r\n        return tns;\r\n    }\r\n    const level = _level - 1;\r\n    children.forEach((key, index) => {\r\n        tns[index].children = [];\r\n        return generateData(level, key, tns[index].children);\r\n    });\r\n};\r\ngenerateData(z);\r\n\r\nconst data = [ ...new Array(10000) ].map((e, i) => {\r\n  const rs = { key: i + 'a', title: i + 'a'};\r\n  return rs;\r\n})\r\n\r\nclass Demo13 extends Component{\r\n  constructor(props) {\r\n  \tsuper(props);\r\n    this.state = {\r\n      expandedKeys: ['0-0','0-1','0-2','0-3', '0-4','0-5','0-6','0-0-0','0-0-1'],\r\n      autoExpandParent: true,\r\n      checkedKeys: ['0-0-0'],\r\n      selectedKeys: [],\r\n      treeData: data\r\n    };\r\n    this.onExpand = this.onExpand.bind(this);\r\n    this.onCheck = this.onCheck.bind(this);\r\n    this.onSelect = this.onSelect.bind(this);\r\n  }\r\n  onExpand(expandedKeys,nodeInfo) {\r\n    // console.log('onExpand---显示ext数据', nodeInfo.node.props.ext.data);\r\n\r\n    this.setState({\r\n      expandedKeys,\r\n      autoExpandParent: false,\r\n    });\r\n  }\r\n  onCheck(checkedKeys) {\r\n    this.setState({\r\n      checkedKeys,\r\n      selectedKeys: ['0-3', '0-4'],\r\n    });\r\n  }\r\n  onSelect(selectedKeys, info) {\r\n    console.log('onSelect', info);\r\n    this.setState({ selectedKeys });\r\n  }\r\n  // keydown的钩子事件\r\n  onKeyDown = (e,treeNode)=>{\r\n    console.log('***',e);\r\n    return false;\r\n  }\r\n\r\n  //使用 treeData 渲染树节点时，可使用该函数自定义节点显示内容（非必须）\r\n  //注意：isLeaf 属性是必传的，否则节点层级和展示会有问题\r\n  renderTreeNodes = (data) => {\r\n    const loop = data => data.map((item) => {\r\n      if (item.children) {\r\n        return (\r\n          <TreeNode key={item.key} title={item.key} isLeaf={item.isLeaf}>\r\n            {loop(item.children)}\r\n          </TreeNode>\r\n        );\r\n      }\r\n      return <TreeNode key={item.key} title={item.key} isLeaf={true}/>;\r\n    });\r\n    return loop(data);\r\n  }\r\n\r\n  changeTreeData = () => {\r\n    this.setState({\r\n      treeData: gData\r\n    })\r\n  }\r\n\r\n  render() {\r\n    return (\r\n      <div>\r\n        <Button onClick={this.changeTreeData}>改变数据源</Button>\r\n        <div style={{height:'300px', overflow:'auto'}}>\r\n          <Tree\r\n            checkable\r\n            focusable\r\n            treeData={this.state.treeData}\r\n            lazyLoad={true}\r\n            renderTreeNodes={this.renderTreeNodes}\r\n            onExpand={this.onExpand}\r\n            defaultExpandAll={true} \r\n            expandedKeys={this.state.expandedKeys}\r\n            autoExpandParent={this.state.autoExpandParent}\r\n            onCheck={this.onCheck} \r\n            onSelect={this.onSelect} \r\n            keyFun={this.onKeyDown}\r\n          >\r\n          </Tree>\r\n        </div>\r\n      </div>\r\n    );\r\n  }\r\n};\r\n\r\n\r\nexport default Demo13;", "desc": " 适用于大数据场景。注意：使用懒加载，需要通过 treeData 属性传入完整的数据结构，并设置 lazyLoad = {true}。可视区域的高度可以自定义，在 Tree 组件外层包裹一层div即可。" }, { "example": _react2['default'].createElement(Demo14, null), "title": " 自定义滚动容器", "code": "/**\r\n*\r\n* @title 自定义滚动容器\r\n* @description 使用 getScrollParent 设置需要监听滚动事件的容器。\r\n*/\r\n\r\nimport React, { Component } from 'react';\nimport { Tree } from 'tinper-bee';\r\n\r\n\r\nconst {TreeNode} = Tree;\r\n\r\nconst x = 1000;\r\nconst y = 1;\r\nconst z = 1;\r\nconst gData = [];\r\n\r\nconst generateData = (_level, _preKey, _tns) => {\r\n    const preKey = _preKey || '0';\r\n    const tns = _tns || gData;\r\n\r\n    const children = [];\r\n    for (let i = 0; i < x; i++) {\r\n        const key = `${preKey}-${i}`;\r\n        tns.push({ title: key, key });\r\n        if (i < y) {\r\n            children.push(key);\r\n        }\r\n    }\r\n    if (_level < 0) {\r\n        return tns;\r\n    }\r\n    const level = _level - 1;\r\n    children.forEach((key, index) => {\r\n        tns[index].children = [];\r\n        return generateData(level, key, tns[index].children);\r\n    });\r\n};\r\ngenerateData(z);\r\n\r\nclass Demo14 extends Component{\r\n  constructor(props) {\r\n  \tsuper(props);\r\n    this.state = {\r\n      expandedKeys: ['0-0','0-1','0-2','0-3', '0-4','0-5','0-6','0-0-0','0-0-1'],\r\n      autoExpandParent: true,\r\n      checkedKeys: ['0-0-0'],\r\n      selectedKeys: [],\r\n    };\r\n    this.onExpand = this.onExpand.bind(this);\r\n    this.onCheck = this.onCheck.bind(this);\r\n    this.onSelect = this.onSelect.bind(this);\r\n  }\r\n  onExpand(expandedKeys,nodeInfo) {\r\n    // console.log('onExpand---显示ext数据', nodeInfo.node.props.ext.data);\r\n\r\n    this.setState({\r\n      expandedKeys,\r\n      autoExpandParent: false,\r\n    });\r\n  }\r\n  onCheck(checkedKeys) {\r\n    this.setState({\r\n      checkedKeys,\r\n      selectedKeys: ['0-3', '0-4'],\r\n    });\r\n  }\r\n  onSelect(selectedKeys, info) {\r\n    console.log('onSelect', info);\r\n    this.setState({ selectedKeys });\r\n  }\r\n  // keydown的钩子事件\r\n  onKeyDown = (e,treeNode)=>{\r\n    console.log('***',e);\r\n    return false;\r\n  }\r\n\r\n  //使用 treeData 渲染树节点时，可使用该函数自定义节点显示内容（非必须）\r\n  //注意：isLeaf 属性是必传的，否则节点层级和展示会有问题\r\n  renderTreeNodes = (data) => {\r\n    const loop = data => data.map((item) => {\r\n      if (item.children) {\r\n        return (\r\n          <TreeNode key={item.key} title={item.key} isLeaf={item.isLeaf}>\r\n            {loop(item.children)}\r\n          </TreeNode>\r\n        );\r\n      }\r\n      return <TreeNode key={item.key} title={item.key} isLeaf={true}/>;\r\n    });\r\n    return loop(data);\r\n  }\r\n\r\n  render() {\r\n    return (\r\n        <div className=\"container\" style={{height:'300px', overflow:'auto'}}>\r\n            <div>\r\n                <Tree\r\n                checkable\r\n                focusable\r\n                treeData={gData}\r\n                lazyLoad={true}\r\n                renderTreeNodes={this.renderTreeNodes}\r\n                onExpand={this.onExpand}\r\n                defaultExpandAll={true} \r\n                expandedKeys={this.state.expandedKeys}\r\n                autoExpandParent={this.state.autoExpandParent}\r\n                onCheck={this.onCheck} \r\n                onSelect={this.onSelect} \r\n                keyFun={this.onKeyDown}\r\n                getScrollContainer={() => {\r\n                    return document.querySelector('.container')\r\n                }}\r\n                >\r\n                </Tree>\r\n            </div>\r\n        </div>\r\n    );\r\n  }\r\n};\r\n\r\n\r\nexport default Demo14;", "desc": " 使用 getScrollParent 设置需要监听滚动事件的容器。" }];
 	
 	var Demo = function (_Component) {
 	    _inherits(Demo, _Component);
@@ -6163,25 +6163,24 @@
 	var notificationStyle_copy = {};
 	var messageStyle_copy = {};
 	var positionType = ['topRight', 'bottomRight', 'top', 'bottom', 'topLeft', 'bottomLeft', ''];
+	var defaultStyle = {};
 	
 	var positionObj = {
 	    "top": {
-	        messageStyle: {
-	            transform: 'translateX( -50%)'
-	        },
+	        messageStyle: {},
 	        notificationStyle: {
 	            top: defaultTop,
-	            left: '50%'
+	            left: '50%',
+	            transform: 'translateX( -50%)'
 	        },
 	        transitionName: 'top'
 	    },
 	    "bottom": {
-	        messageStyle: {
-	            transform: 'translateX( -50%)'
-	        },
+	        messageStyle: {},
 	        notificationStyle: {
 	            bottom: defaultBottom,
-	            left: '50%'
+	            left: '50%',
+	            transform: 'translateX( -50%)'
 	        },
 	        transitionName: 'bottom'
 	    },
@@ -6264,7 +6263,7 @@
 	    var instanceObj = {
 	        clsPrefix: clsPrefix,
 	        transitionName: clsPrefix + '-' + positionObj[position].transitionName,
-	        style: style, // 覆盖原来的样式
+	        style: _extends({}, style, defaultStyle), // 覆盖原来的样式
 	        position: position
 	    };
 	    if (typeof keyboard === 'boolean') {
@@ -6279,7 +6278,7 @@
 	    });
 	}
 	
-	function notice(content, duration_arg, type, onClose, position, style, keyboard, onEscapeKeyUp, showIcon) {
+	function notice(content, duration_arg, type, onClose, position, style, keyboard, onEscapeKeyUp, showIcon, icon, props) {
 	    if (positionType.findIndex(function (item) {
 	        return item === position;
 	    }) < 0) {
@@ -6305,8 +6304,9 @@
 	    }[type];
 	
 	    var positionStyle = JSON.stringify(messageStyle_copy) == "{}" ? positionObj[position].messageStyle : messageStyle_copy;
+	    defaultStyle = _extends({}, positionStyle, style);
 	    getMessageInstance(position, function (instance) {
-	        instance.notice({
+	        instance.notice(_extends({}, props, {
 	            key: key,
 	            duration: duration,
 	            color: type,
@@ -6317,7 +6317,7 @@
 	                showIcon ? _react2["default"].createElement(
 	                    'div',
 	                    { className: clsPrefix + '-notice-description-icon' },
-	                    _react2["default"].createElement('i', { className: (0, _classnames2["default"])(iconType) })
+	                    icon ? _react2["default"].createElement('i', { className: (0, _classnames2["default"])('' + icon) }) : _react2["default"].createElement('i', { className: (0, _classnames2["default"])(iconType) })
 	                ) : null,
 	                _react2["default"].createElement(
 	                    'div',
@@ -6326,7 +6326,7 @@
 	                )
 	            ),
 	            onClose: onClose
-	        });
+	        }));
 	    }, keyboard, onEscapeKeyUp);
 	    return function () {
 	        var target = key++;
@@ -6350,8 +6350,9 @@
 	        var onClose = obj.onClose || noop;
 	        var position = obj.position || "top";
 	        var style = obj.style || {};
-	        var showIcon = obj.showIcon || true;
-	        return notice(content, duration, color, onClose, position, style, obj.keyboard, obj.onEscapeKeyUp, showIcon);
+	        var showIcon = obj.hasOwnProperty('showIcon') ? obj.showIcon : true;
+	        var icon = obj.hasOwnProperty('icon') ? obj.icon : false;
+	        return notice(content, duration, color, onClose, position, style, obj.keyboard, obj.onEscapeKeyUp, showIcon, icon, obj);
 	    },
 	    config: function config(options) {
 	        if (options.top !== undefined) {
@@ -6378,6 +6379,16 @@
 	        if (messageInstance) {
 	            messageInstance.destroy();
 	            messageInstance = null;
+	            defaultDuration = 1.5;
+	            newDuration = undefined;
+	            defaultTop = 24;
+	            defaultBottom = 48;
+	            bottom = 90;
+	            padding = 30;
+	            width = 240;
+	            notificationStyle_copy = null;
+	            messageStyle_copy = null;
+	            defaultStyle = null;
 	        }
 	    }
 	};
@@ -6613,13 +6624,19 @@
 	Notification.defaultProps = defaultProps;
 	
 	Notification.newInstance = function newNotificationInstance(properties, callback) {
+	
 	  if (typeof callback !== 'function') {
 	    console.error('You must introduce callback as the second parameter of Notification.newInstance().');
 	    return;
 	  }
 	  var props = properties || {};
+	  var container = props.container || document.body;
+	  if (typeof container == 'function') {
+	    container = container();
+	  }
+	
 	  var div = document.createElement('div');
-	  document.body.appendChild(div);
+	  container.appendChild(div);
 	
 	  var called = false;
 	  function ref(notification) {
@@ -6638,7 +6655,7 @@
 	      component: notification,
 	      destroy: function destroy() {
 	        _reactDom2["default"].unmountComponentAtNode(div);
-	        document.body.removeChild(div);
+	        container.removeChild(div);
 	      }
 	    });
 	  }
@@ -7456,6 +7473,8 @@
 	  value: true
 	});
 	
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+	
 	var _react = __webpack_require__(1);
 	
 	var _react2 = _interopRequireDefault(_react);
@@ -7477,6 +7496,8 @@
 	function _defaults(obj, defaults) { var keys = Object.getOwnPropertyNames(defaults); for (var i = 0; i < keys.length; i++) { var key = keys[i]; var value = Object.getOwnPropertyDescriptor(defaults, key); if (value && value.configurable && obj[key] === undefined) { Object.defineProperty(obj, key, value); } } return obj; }
 	
 	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+	
+	function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
@@ -7550,7 +7571,12 @@
 	        style = _props.style,
 	        children = _props.children,
 	        color = _props.color,
-	        title = _props.title;
+	        title = _props.title,
+	        content = _props.content,
+	        onEnd = _props.onEnd,
+	        onClose = _props.onClose,
+	        duration = _props.duration,
+	        others = _objectWithoutProperties(_props, ['closable', 'clsPrefix', 'className', 'style', 'children', 'color', 'title', 'content', 'onEnd', 'onClose', 'duration']);
 	
 	    var componentClass = clsPrefix + '-notice';
 	    var classes = (_classes = {}, _defineProperty(_classes, '' + componentClass, 1), _defineProperty(_classes, componentClass + '-closable', closable), _defineProperty(_classes, className, !!className), _classes);
@@ -7559,7 +7585,7 @@
 	    }
 	    return _react2["default"].createElement(
 	      'div',
-	      { className: (0, _classnames2["default"])(classes), style: style, onClick: this.close },
+	      _extends({ className: (0, _classnames2["default"])(classes), style: style, onClick: this.close }, others),
 	      _react2["default"].createElement(
 	        'div',
 	        { className: componentClass + '-content' },
@@ -7703,6 +7729,12 @@
 	
 	var deselectCurrent = __webpack_require__(82);
 	
+	var clipboardToIE11Formatting = {
+	  "text/plain": "Text",
+	  "text/html": "Url",
+	  "default": "Text"
+	}
+	
 	var defaultMessage = "Copy to clipboard: #{key}, Enter";
 	
 	function format(message) {
@@ -7745,6 +7777,23 @@
 	    mark.style.userSelect = "text";
 	    mark.addEventListener("copy", function(e) {
 	      e.stopPropagation();
+	      if (options.format) {
+	        e.preventDefault();
+	        if (typeof e.clipboardData === "undefined") { // IE 11
+	          debug && console.warn("unable to use e.clipboardData");
+	          debug && console.warn("trying IE specific stuff");
+	          window.clipboardData.clearData();
+	          var format = clipboardToIE11Formatting[options.format] || clipboardToIE11Formatting["default"]
+	          window.clipboardData.setData(format, text);
+	        } else { // all other browsers
+	          e.clipboardData.clearData();
+	          e.clipboardData.setData(options.format, text);
+	        }
+	      }
+	      if (options.onCopy) {
+	        e.preventDefault();
+	        options.onCopy(e.clipboardData);
+	      }
 	    });
 	
 	    document.body.appendChild(mark);
@@ -7761,7 +7810,8 @@
 	    debug && console.error("unable to copy using execCommand: ", err);
 	    debug && console.warn("trying IE specific stuff");
 	    try {
-	      window.clipboardData.setData("text", text);
+	      window.clipboardData.setData(options.format || "text", text);
+	      options.onCopy && options.onCopy(window.clipboardData);
 	      success = true;
 	    } catch (err) {
 	      debug && console.error("unable to copy using clipboardData: ", err);
@@ -10227,7 +10277,6 @@
 	        return _react2["default"].createElement(
 	            _beeTooltip2["default"],
 	            { className: 'u-clipboard-tooltip',
-	                positionTop: '20px',
 	                overlay: tootipContent,
 	                placement: 'top' },
 	            _react2["default"].createElement(
@@ -11208,7 +11257,7 @@
 	    /**
 	     * 相对目标元素显示上下左右的位置
 	     */
-	    placement: _propTypes2["default"].oneOf(['top', 'right', 'bottom', 'left']),
+	    placement: _propTypes2["default"].oneOf(['top', 'right', 'bottom', 'left', 'topLeft', 'topRight', 'bottomLeft', 'bottomRight', 'leftTop', 'leftBottom', 'rightTop', 'rightBottom']),
 	
 	    /**
 	     * 绝对定位上边距.
@@ -11234,25 +11283,32 @@
 	    clsPrefix: 'u-tooltip'
 	};
 	function OverlayNode(props) {
-	    var className = props.className,
+	    var id = props.id,
+	        className = props.className,
 	        classNames = props.classNames,
 	        style = props.style,
 	        overlay = props.overlay,
-	        arrowOffsetTop = props.arrowOffsetTop,
-	        arrowOffsetLeft = props.arrowOffsetLeft;
+	        overlayStyle = props.overlayStyle,
+	        otherProps = props.otherProps;
+	    // style 包含用户传入的自定义样式，以及 bee-overlay 计算返回的样式。
+	    // overlayStyle 是用户传入的自定义样式。
 	
+	    if (overlayStyle && overlayStyle.width) {
+	        style.width = overlayStyle.width;
+	    } else {
+	        delete style.width;
+	    }
 	    return _react2["default"].createElement(
 	        'div',
-	        {
+	        _extends({
+	            id: id,
+	            role: 'tooltip',
 	            className: (0, _classnames2["default"])(className, classNames),
 	            onMouseEnter: props.onMouseEnter,
 	            onMouseLeave: props.onMouseLeave,
 	            style: style
-	        },
-	        overlay ? _react2["default"].createElement('div', { className: 'tooltip-arrow', style: {
-	                top: arrowOffsetTop,
-	                left: arrowOffsetLeft
-	            } }) : '',
+	        }, otherProps),
+	        overlay ? _react2["default"].createElement('div', { className: 'tooltip-arrow' }) : '',
 	        overlay ? _react2["default"].createElement(
 	            'div',
 	            { className: 'tooltip-inner' },
@@ -11270,15 +11326,27 @@
 	        var _this = _possibleConstructorReturn(this, _React$Component.call(this, props));
 	
 	        _this.onMouseEnter = function () {
+	            var trigger = _this.props.trigger;
+	
+	            if (trigger === 'click') return;
 	            _this.setState({
 	                isHoverShow: true
 	            });
 	        };
 	
 	        _this.onMouseLeave = function () {
+	            var trigger = _this.props.trigger;
+	
+	            if (trigger === 'click') return;
 	            _this.setState({
 	                isHoverShow: false
 	            });
+	        };
+	
+	        _this.handleOnHide = function () {
+	            var onHide = _this.props.onHide;
+	
+	            onHide && onHide(false);
 	        };
 	
 	        var initState = {
@@ -11294,15 +11362,12 @@
 	    }
 	
 	    Tooltip.prototype.componentDidUpdate = function componentDidUpdate(prevProps) {
-	        var _props = this.props,
-	            visible = _props.visible,
-	            onVisibleChange = _props.onVisibleChange;
+	        var visible = this.props.visible;
 	
 	        if ('visible' in this.props && prevProps.visible !== visible) {
 	            this.setState({
 	                visible: visible
 	            });
-	            onVisibleChange && onVisibleChange(visible);
 	        }
 	    };
 	
@@ -11320,26 +11385,28 @@
 	        var _classes,
 	            _this2 = this;
 	
-	        var _props2 = this.props,
-	            placement = _props2.placement,
-	            positionTop = _props2.positionTop,
-	            positionLeft = _props2.positionLeft,
-	            arrowOffsetTop = _props2.arrowOffsetTop,
-	            arrowOffsetLeft = _props2.arrowOffsetLeft,
-	            className = _props2.className,
-	            style = _props2.style,
-	            children = _props2.children,
-	            clsPrefix = _props2.clsPrefix,
-	            overlay = _props2.overlay,
-	            inverse = _props2.inverse,
-	            others = _objectWithoutProperties(_props2, ['placement', 'positionTop', 'positionLeft', 'arrowOffsetTop', 'arrowOffsetLeft', 'className', 'style', 'children', 'clsPrefix', 'overlay', 'inverse']);
+	        var _props = this.props,
+	            placement = _props.placement,
+	            id = _props.id,
+	            arrowOffsetTop = _props.arrowOffsetTop,
+	            arrowOffsetLeft = _props.arrowOffsetLeft,
+	            className = _props.className,
+	            style = _props.style,
+	            children = _props.children,
+	            clsPrefix = _props.clsPrefix,
+	            overlay = _props.overlay,
+	            inverse = _props.inverse,
+	            trigger = _props.trigger,
+	            onVisibleChange = _props.onVisibleChange,
+	            onHide = _props.onHide,
+	            rootClose = _props.rootClose,
+	            visible = _props.visible,
+	            defaultOverlayShown = _props.defaultOverlayShown,
+	            positionTop = _props.positionTop,
+	            positionLeft = _props.positionLeft,
+	            others = _objectWithoutProperties(_props, ['placement', 'id', 'arrowOffsetTop', 'arrowOffsetLeft', 'className', 'style', 'children', 'clsPrefix', 'overlay', 'inverse', 'trigger', 'onVisibleChange', 'onHide', 'rootClose', 'visible', 'defaultOverlayShown', 'positionTop', 'positionLeft']);
 	
 	        var classes = (_classes = {}, _defineProperty(_classes, placement, true), _defineProperty(_classes, 'inverse', inverse), _classes);
-	
-	        var outerStyle = _extends({
-	            top: positionTop,
-	            left: positionLeft
-	        }, style);
 	
 	        var arrowStyle = {
 	            top: arrowOffsetTop,
@@ -11349,26 +11416,55 @@
 	        var classNames = (0, _classnames2["default"])(clsPrefix, classes);
 	
 	        var overlayNode = _react2["default"].createElement(OverlayNode, {
+	            id: id,
 	            className: className,
 	            classNames: classNames,
 	            overlay: overlay,
 	            onMouseEnter: this.onMouseEnter,
 	            onMouseLeave: this.onMouseLeave,
-	            style: true,
-	            arrowOffsetTop: true,
-	            arrowOffsetLeft: true
+	            style: style,
+	            overlayStyle: style // 用户自定义样式
+	            , arrowOffsetTop: arrowOffsetTop,
+	            arrowOffsetLeft: arrowOffsetLeft,
+	            otherProps: others
 	        });
 	        return 'visible' in this.props ? _react2["default"].createElement(
 	            _OverlayTrigger2["default"],
-	            _extends({ visible: this.state.visible, ref: function ref(_ref) {
+	            _extends({}, others, {
+	                visible: this.state.visible,
+	                onVisibleChange: onVisibleChange,
+	                ref: function ref(_ref) {
 	                    return _this2.trigger = _ref;
-	                }, shouldUpdatePosition: true, placement: placement }, others, { overlay: overlayNode }),
+	                },
+	                shouldUpdatePosition: true,
+	                placement: placement,
+	                overlay: overlayNode,
+	                onHide: this.handleOnHide,
+	                rootClose: rootClose,
+	                defaultOverlayShown: defaultOverlayShown,
+	                positionTop: positionTop,
+	                positionLeft: positionLeft,
+	                trigger: trigger
+	            }),
 	            children
 	        ) : _react2["default"].createElement(
 	            _OverlayTrigger2["default"],
-	            _extends({ isHoverShow: this.state.isHoverShow, ref: function ref(_ref2) {
+	            _extends({}, others, {
+	                isHoverShow: this.state.isHoverShow,
+	                onVisibleChange: onVisibleChange,
+	                ref: function ref(_ref2) {
 	                    return _this2.trigger = _ref2;
-	                }, shouldUpdatePosition: true, placement: placement }, others, { overlay: overlayNode }),
+	                },
+	                shouldUpdatePosition: true,
+	                placement: placement,
+	                overlay: overlayNode,
+	                onHide: this.handleOnHide,
+	                rootClose: rootClose,
+	                defaultOverlayShown: defaultOverlayShown,
+	                positionTop: positionTop,
+	                positionLeft: positionLeft,
+	                trigger: trigger
+	            }),
 	            children
 	        );
 	    };
@@ -13982,12 +14078,12 @@
 	    'close': '关闭',
 	
 	    'en-us': {
-	        'copy': 'copy',
-	        'cut': 'cut',
-	        'copyReady': 'copied',
-	        'cutReady': 'cut',
-	        'copyToClipboard': 'copy to clipboard',
-	        'close': 'close'
+	        'copy': 'Copy',
+	        'cut': 'Cut',
+	        'copyReady': 'Copied',
+	        'cutReady': 'Cut',
+	        'copyToClipboard': 'Copy to Clipboard',
+	        'close': 'Close'
 	    },
 	    'zh-tw': {
 	        'copy': '複製',
@@ -33844,6 +33940,10 @@
 	
 	var _propTypes2 = _interopRequireDefault(_propTypes);
 	
+	var _rcTextarea = __webpack_require__(268);
+	
+	var _rcTextarea2 = _interopRequireDefault(_rcTextarea);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 	
 	function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
@@ -33865,7 +33965,8 @@
 	    onBlur: _propTypes2["default"].func,
 	    showClose: _propTypes2["default"].bool,
 	    focusSelect: _propTypes2["default"].bool,
-	    debounceDelay: _propTypes2["default"].number
+	    debounceDelay: _propTypes2["default"].number,
+	    maxLength: _propTypes2["default"].number
 	};
 	
 	var defaultProps = {
@@ -33881,6 +33982,12 @@
 	    }
 	    return value;
 	}
+	var cutValue = function cutValue(value, maxLength) {
+	    if (maxLength && value) {
+	        value = value.toString().substring(0, maxLength);
+	    }
+	    return value;
+	};
 	
 	var FormControl = function (_React$Component) {
 	    _inherits(FormControl, _React$Component);
@@ -33892,19 +33999,22 @@
 	
 	        _initialiseProps.call(_this);
 	
-	        var value = typeof props.value === 'undefined' ? props.defaultValue : props.value;
+	        var value = typeof props.value === 'undefined' ? cutValue(props.defaultValue, props.maxLength) : cutValue(props.value, props.maxLength);
 	        _this.state = {
 	            showSearch: !props.value,
 	            value: value
 	        };
 	        _this.input = {};
+	        _this.clickClearBtn = false;
 	        return _this;
 	    }
 	
 	    FormControl.prototype.componentWillReceiveProps = function componentWillReceiveProps(nextProp) {
 	        if ("value" in nextProp) {
 	            if (nextProp.value !== this.state.value) {
-	                this.setState({ value: nextProp.value });
+	                this.setState({
+	                    value: nextProp.value
+	                });
 	            }
 	        }
 	    };
@@ -33947,7 +34057,7 @@
 	
 	        var onChange = _this2.props.onChange;
 	
-	        var value = _this2.input.value;
+	        var value = _this2.input.value || e.target.value;
 	        if (!('value' in _this2.props)) {
 	            _this2.setState({ value: value });
 	        }
@@ -33957,23 +34067,30 @@
 	    };
 	
 	    this.clearValue = function () {
-	        var onChange = _this2.props.onChange;
+	        var _props = _this2.props,
+	            onChange = _props.onChange,
+	            showClose = _props.showClose;
 	
 	        _this2.setState({
 	            showSearch: true,
 	            value: ""
 	        });
+	        if (_this2.e && _this2.e.target) _this2.e.target.value = "";
 	        if (onChange) {
-	            onChange("");
+	            onChange("", _this2.e);
+	        }
+	        if (showClose) {
+	            _this2.blurTime && clearTimeout(_this2.blurTime);
+	            _this2.blurTime = null;
 	        }
 	        _this2.input.focus();
 	    };
 	
 	    this.handleKeyDown = function (e) {
-	        var _props = _this2.props,
-	            onSearch = _props.onSearch,
-	            type = _props.type,
-	            onKeyDown = _props.onKeyDown;
+	        var _props2 = _this2.props,
+	            onSearch = _props2.onSearch,
+	            type = _props2.type,
+	            onKeyDown = _props2.onKeyDown;
 	
 	        if (e.keyCode === 13 && type === "search") {
 	            if (onSearch) {
@@ -33991,11 +34108,19 @@
 	
 	    this.handleBlur = function (e) {
 	        var value = _this2.state.value;
-	        var onBlur = _this2.props.onBlur;
+	        var _props3 = _this2.props,
+	            onBlur = _props3.onBlur,
+	            showClose = _props3.showClose;
 	
-	
+	        var _e = _extends({}, e);
+	        _this2.e = _e;
 	        if (onBlur) {
-	            onBlur(value, e);
+	            if (showClose && _this2.clickClearBtn) {
+	                _this2.clickClearBtn = false;
+	                onBlur(value, _e, true);
+	            } else {
+	                onBlur(value, _e);
+	            }
 	        }
 	    };
 	
@@ -34011,21 +34136,26 @@
 	        }
 	    };
 	
+	    this.onClearBtnMouseDown = function () {
+	        _this2.clickClearBtn = true;
+	    };
+	
 	    this.renderInput = function () {
-	        var _props2 = _this2.props,
-	            Component = _props2.componentClass,
-	            type = _props2.type,
-	            className = _props2.className,
-	            size = _props2.size,
-	            clsPrefix = _props2.clsPrefix,
-	            onChange = _props2.onChange,
-	            onSearch = _props2.onSearch,
-	            onBlur = _props2.onBlur,
-	            showClose = _props2.showClose,
-	            focusSelect = _props2.focusSelect,
-	            prefix = _props2.prefix,
-	            suffix = _props2.suffix,
-	            others = _objectWithoutProperties(_props2, ['componentClass', 'type', 'className', 'size', 'clsPrefix', 'onChange', 'onSearch', 'onBlur', 'showClose', 'focusSelect', 'prefix', 'suffix']);
+	        var Component = _this2.props.componentClass;
+	
+	        var _props4 = _this2.props,
+	            type = _props4.type,
+	            className = _props4.className,
+	            size = _props4.size,
+	            clsPrefix = _props4.clsPrefix,
+	            onChange = _props4.onChange,
+	            onSearch = _props4.onSearch,
+	            onBlur = _props4.onBlur,
+	            showClose = _props4.showClose,
+	            focusSelect = _props4.focusSelect,
+	            prefix = _props4.prefix,
+	            suffix = _props4.suffix,
+	            others = _objectWithoutProperties(_props4, ['type', 'className', 'size', 'clsPrefix', 'onChange', 'onSearch', 'onBlur', 'showClose', 'focusSelect', 'prefix', 'suffix']);
 	        // input[type="file"] 不应该有类名 .form-control.
 	
 	
@@ -34034,6 +34164,9 @@
 	        var classes = {};
 	        if (size) {
 	            classes['' + size] = true;
+	        }
+	        if (Component === 'textarea') {
+	            Component = _rcTextarea2["default"];
 	        }
 	
 	        var classNames = void 0;
@@ -34061,12 +34194,13 @@
 	                    onChange: _this2.handleChange,
 	                    onBlur: _this2.handleBlur,
 	                    onFocus: _this2.handleFocus,
-	                    className: (0, _classnames2["default"])(classNames)
+	                    className: (0, _classnames2["default"])(classNames),
+	                    maxLength: _this2.props.maxLength
 	                })),
-	                showClose ? _react2["default"].createElement(
+	                showClose && value ? _react2["default"].createElement(
 	                    'div',
-	                    { className: clsPrefix + '-suffix' },
-	                    value ? _react2["default"].createElement(_beeIcon2["default"], { onClick: _this2.clearValue, type: 'uf-close-c' }) : ''
+	                    { className: clsPrefix + '-suffix has-close', onMouseDown: _this2.onClearBtnMouseDown, onClick: _this2.clearValue },
+	                    _react2["default"].createElement(_beeIcon2["default"], { type: 'uf-close-c' })
 	                ) : '',
 	                suffix ? _react2["default"].createElement(
 	                    'span',
@@ -34084,22 +34218,23 @@
 	                onChange: _this2.handleChange,
 	                onBlur: _this2.handleBlur,
 	                onFocus: _this2.handleFocus,
-	                className: (0, _classnames2["default"])(classNames)
+	                className: (0, _classnames2["default"])(classNames),
+	                maxLength: _this2.props.maxLength
 	            }));
 	        }
 	    };
 	
 	    this.renderSearch = function () {
-	        var _props3 = _this2.props,
-	            Component = _props3.componentClass,
-	            type = _props3.type,
-	            className = _props3.className,
-	            size = _props3.size,
-	            clsPrefix = _props3.clsPrefix,
-	            onChange = _props3.onChange,
-	            onSearch = _props3.onSearch,
-	            onBlur = _props3.onBlur,
-	            others = _objectWithoutProperties(_props3, ['componentClass', 'type', 'className', 'size', 'clsPrefix', 'onChange', 'onSearch', 'onBlur']);
+	        var _props5 = _this2.props,
+	            Component = _props5.componentClass,
+	            type = _props5.type,
+	            className = _props5.className,
+	            size = _props5.size,
+	            clsPrefix = _props5.clsPrefix,
+	            onChange = _props5.onChange,
+	            onSearch = _props5.onSearch,
+	            onBlur = _props5.onBlur,
+	            others = _objectWithoutProperties(_props5, ['componentClass', 'type', 'className', 'size', 'clsPrefix', 'onChange', 'onSearch', 'onBlur']);
 	        // input[type="file"] 不应该有类名 .form-control.
 	
 	
@@ -34125,7 +34260,8 @@
 	                    onKeyDown: _this2.handleKeyDown,
 	                    onBlur: _this2.handleBlur,
 	                    onFocus: _this2.handleFocus,
-	                    className: (0, _classnames2["default"])(clsPrefix, classes)
+	                    className: (0, _classnames2["default"])(clsPrefix, classes),
+	                    maxLength: _this2.props.maxLength
 	                })),
 	                _react2["default"].createElement(
 	                    'div',
@@ -34147,6 +34283,2177 @@
 /* 268 */
 /***/ (function(module, exports, __webpack_require__) {
 
+	"use strict";
+	
+	var _interopRequireWildcard = __webpack_require__(216);
+	
+	var _interopRequireDefault = __webpack_require__(14);
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	Object.defineProperty(exports, "ResizableTextArea", {
+	  enumerable: true,
+	  get: function get() {
+	    return _ResizableTextArea.default;
+	  }
+	});
+	exports.default = void 0;
+	
+	var _classCallCheck2 = _interopRequireDefault(__webpack_require__(269));
+	
+	var _createClass2 = _interopRequireDefault(__webpack_require__(270));
+	
+	var _inherits2 = _interopRequireDefault(__webpack_require__(271));
+	
+	var _possibleConstructorReturn2 = _interopRequireDefault(__webpack_require__(273));
+	
+	var _getPrototypeOf2 = _interopRequireDefault(__webpack_require__(275));
+	
+	var React = _interopRequireWildcard(__webpack_require__(1));
+	
+	var _ResizableTextArea = _interopRequireDefault(__webpack_require__(276));
+	
+	function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = (0, _getPrototypeOf2.default)(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = (0, _getPrototypeOf2.default)(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return (0, _possibleConstructorReturn2.default)(this, result); }; }
+	
+	function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+	
+	var TextArea = /*#__PURE__*/function (_React$Component) {
+	  (0, _inherits2.default)(TextArea, _React$Component);
+	
+	  var _super = _createSuper(TextArea);
+	
+	  function TextArea(props) {
+	    var _this;
+	
+	    (0, _classCallCheck2.default)(this, TextArea);
+	    _this = _super.call(this, props);
+	
+	    _this.focus = function () {
+	      _this.resizableTextArea.textArea.focus();
+	    };
+	
+	    _this.saveTextArea = function (resizableTextArea) {
+	      _this.resizableTextArea = resizableTextArea;
+	    };
+	
+	    _this.handleChange = function (e) {
+	      var onChange = _this.props.onChange;
+	
+	      _this.setValue(e.target.value, function () {
+	        _this.resizableTextArea.resizeTextarea();
+	      });
+	
+	      if (onChange) {
+	        onChange(e);
+	      }
+	    };
+	
+	    _this.handleKeyDown = function (e) {
+	      var _this$props = _this.props,
+	          onPressEnter = _this$props.onPressEnter,
+	          onKeyDown = _this$props.onKeyDown;
+	
+	      if (e.keyCode === 13 && onPressEnter) {
+	        onPressEnter(e);
+	      }
+	
+	      if (onKeyDown) {
+	        onKeyDown(e);
+	      }
+	    };
+	
+	    var value = typeof props.value === 'undefined' || props.value === null ? props.defaultValue : props.value;
+	    _this.state = {
+	      value: value
+	    };
+	    return _this;
+	  }
+	
+	  (0, _createClass2.default)(TextArea, [{
+	    key: "setValue",
+	    value: function setValue(value, callback) {
+	      if (!('value' in this.props)) {
+	        this.setState({
+	          value: value
+	        }, callback);
+	      }
+	    }
+	  }, {
+	    key: "blur",
+	    value: function blur() {
+	      this.resizableTextArea.textArea.blur();
+	    }
+	  }, {
+	    key: "render",
+	    value: function render() {
+	      return React.createElement(_ResizableTextArea.default, Object.assign({}, this.props, {
+	        value: this.state.value,
+	        onKeyDown: this.handleKeyDown,
+	        onChange: this.handleChange,
+	        ref: this.saveTextArea
+	      }));
+	    }
+	  }], [{
+	    key: "getDerivedStateFromProps",
+	    value: function getDerivedStateFromProps(nextProps) {
+	      if ('value' in nextProps) {
+	        return {
+	          value: nextProps.value
+	        };
+	      }
+	
+	      return null;
+	    }
+	  }]);
+	  return TextArea;
+	}(React.Component);
+	
+	var _default = TextArea;
+	exports.default = _default;
+
+/***/ }),
+/* 269 */
+/***/ (function(module, exports) {
+
+	function _classCallCheck(instance, Constructor) {
+	  if (!(instance instanceof Constructor)) {
+	    throw new TypeError("Cannot call a class as a function");
+	  }
+	}
+	
+	module.exports = _classCallCheck;
+
+/***/ }),
+/* 270 */
+/***/ (function(module, exports) {
+
+	function _defineProperties(target, props) {
+	  for (var i = 0; i < props.length; i++) {
+	    var descriptor = props[i];
+	    descriptor.enumerable = descriptor.enumerable || false;
+	    descriptor.configurable = true;
+	    if ("value" in descriptor) descriptor.writable = true;
+	    Object.defineProperty(target, descriptor.key, descriptor);
+	  }
+	}
+	
+	function _createClass(Constructor, protoProps, staticProps) {
+	  if (protoProps) _defineProperties(Constructor.prototype, protoProps);
+	  if (staticProps) _defineProperties(Constructor, staticProps);
+	  return Constructor;
+	}
+	
+	module.exports = _createClass;
+
+/***/ }),
+/* 271 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	var setPrototypeOf = __webpack_require__(272);
+	
+	function _inherits(subClass, superClass) {
+	  if (typeof superClass !== "function" && superClass !== null) {
+	    throw new TypeError("Super expression must either be null or a function");
+	  }
+	
+	  subClass.prototype = Object.create(superClass && superClass.prototype, {
+	    constructor: {
+	      value: subClass,
+	      writable: true,
+	      configurable: true
+	    }
+	  });
+	  if (superClass) setPrototypeOf(subClass, superClass);
+	}
+	
+	module.exports = _inherits;
+
+/***/ }),
+/* 272 */
+/***/ (function(module, exports) {
+
+	function _setPrototypeOf(o, p) {
+	  module.exports = _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) {
+	    o.__proto__ = p;
+	    return o;
+	  };
+	
+	  return _setPrototypeOf(o, p);
+	}
+	
+	module.exports = _setPrototypeOf;
+
+/***/ }),
+/* 273 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	var _typeof = __webpack_require__(274);
+	
+	var assertThisInitialized = __webpack_require__(222);
+	
+	function _possibleConstructorReturn(self, call) {
+	  if (call && (_typeof(call) === "object" || typeof call === "function")) {
+	    return call;
+	  }
+	
+	  return assertThisInitialized(self);
+	}
+	
+	module.exports = _possibleConstructorReturn;
+
+/***/ }),
+/* 274 */
+/***/ (function(module, exports) {
+
+	function _typeof2(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof2 = function _typeof2(obj) { return typeof obj; }; } else { _typeof2 = function _typeof2(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof2(obj); }
+	
+	function _typeof(obj) {
+	  if (typeof Symbol === "function" && _typeof2(Symbol.iterator) === "symbol") {
+	    module.exports = _typeof = function _typeof(obj) {
+	      return _typeof2(obj);
+	    };
+	  } else {
+	    module.exports = _typeof = function _typeof(obj) {
+	      return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : _typeof2(obj);
+	    };
+	  }
+	
+	  return _typeof(obj);
+	}
+	
+	module.exports = _typeof;
+
+/***/ }),
+/* 275 */
+/***/ (function(module, exports) {
+
+	function _getPrototypeOf(o) {
+	  module.exports = _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) {
+	    return o.__proto__ || Object.getPrototypeOf(o);
+	  };
+	  return _getPrototypeOf(o);
+	}
+	
+	module.exports = _getPrototypeOf;
+
+/***/ }),
+/* 276 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	var _interopRequireWildcard = __webpack_require__(216);
+	
+	var _interopRequireDefault = __webpack_require__(14);
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.default = void 0;
+	
+	var _defineProperty2 = _interopRequireDefault(__webpack_require__(277));
+	
+	var _classCallCheck2 = _interopRequireDefault(__webpack_require__(269));
+	
+	var _createClass2 = _interopRequireDefault(__webpack_require__(270));
+	
+	var _inherits2 = _interopRequireDefault(__webpack_require__(271));
+	
+	var _possibleConstructorReturn2 = _interopRequireDefault(__webpack_require__(273));
+	
+	var _getPrototypeOf2 = _interopRequireDefault(__webpack_require__(275));
+	
+	var React = _interopRequireWildcard(__webpack_require__(1));
+	
+	var _rcResizeObserver = _interopRequireDefault(__webpack_require__(278));
+	
+	var _omit = _interopRequireDefault(__webpack_require__(292));
+	
+	var _classnames = _interopRequireDefault(__webpack_require__(5));
+	
+	var _calculateNodeHeight = _interopRequireDefault(__webpack_require__(295));
+	
+	function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+	
+	function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { (0, _defineProperty2.default)(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+	
+	function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = (0, _getPrototypeOf2.default)(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = (0, _getPrototypeOf2.default)(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return (0, _possibleConstructorReturn2.default)(this, result); }; }
+	
+	function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+	
+	// eslint-disable-next-line @typescript-eslint/naming-convention
+	var RESIZE_STATUS;
+	
+	(function (RESIZE_STATUS) {
+	  RESIZE_STATUS[RESIZE_STATUS["NONE"] = 0] = "NONE";
+	  RESIZE_STATUS[RESIZE_STATUS["RESIZING"] = 1] = "RESIZING";
+	  RESIZE_STATUS[RESIZE_STATUS["RESIZED"] = 2] = "RESIZED";
+	})(RESIZE_STATUS || (RESIZE_STATUS = {}));
+	
+	var ResizableTextArea = /*#__PURE__*/function (_React$Component) {
+	  (0, _inherits2.default)(ResizableTextArea, _React$Component);
+	
+	  var _super = _createSuper(ResizableTextArea);
+	
+	  function ResizableTextArea(props) {
+	    var _this;
+	
+	    (0, _classCallCheck2.default)(this, ResizableTextArea);
+	    _this = _super.call(this, props);
+	
+	    _this.saveTextArea = function (textArea) {
+	      _this.textArea = textArea;
+	    };
+	
+	    _this.handleResize = function (size) {
+	      var resizeStatus = _this.state.resizeStatus;
+	      var _this$props = _this.props,
+	          autoSize = _this$props.autoSize,
+	          onResize = _this$props.onResize;
+	
+	      if (resizeStatus !== RESIZE_STATUS.NONE) {
+	        return;
+	      }
+	
+	      if (typeof onResize === 'function') {
+	        onResize(size);
+	      }
+	
+	      if (autoSize) {
+	        _this.resizeOnNextFrame();
+	      }
+	    };
+	
+	    _this.resizeOnNextFrame = function () {
+	      cancelAnimationFrame(_this.nextFrameActionId);
+	      _this.nextFrameActionId = requestAnimationFrame(_this.resizeTextarea);
+	    };
+	
+	    _this.resizeTextarea = function () {
+	      var autoSize = _this.props.autoSize;
+	
+	      if (!autoSize || !_this.textArea) {
+	        return;
+	      }
+	
+	      var minRows = autoSize.minRows,
+	          maxRows = autoSize.maxRows;
+	      var textareaStyles = (0, _calculateNodeHeight.default)(_this.textArea, false, minRows, maxRows);
+	
+	      _this.setState({
+	        textareaStyles: textareaStyles,
+	        resizeStatus: RESIZE_STATUS.RESIZING
+	      }, function () {
+	        cancelAnimationFrame(_this.resizeFrameId);
+	        _this.resizeFrameId = requestAnimationFrame(function () {
+	          _this.setState({
+	            resizeStatus: RESIZE_STATUS.RESIZED
+	          }, function () {
+	            _this.resizeFrameId = requestAnimationFrame(function () {
+	              _this.setState({
+	                resizeStatus: RESIZE_STATUS.NONE
+	              });
+	
+	              _this.fixFirefoxAutoScroll();
+	            });
+	          });
+	        });
+	      });
+	    };
+	
+	    _this.renderTextArea = function () {
+	      var _this$props2 = _this.props,
+	          _this$props2$prefixCl = _this$props2.prefixCls,
+	          prefixCls = _this$props2$prefixCl === void 0 ? 'rc-textarea' : _this$props2$prefixCl,
+	          autoSize = _this$props2.autoSize,
+	          onResize = _this$props2.onResize,
+	          className = _this$props2.className,
+	          disabled = _this$props2.disabled;
+	      var _this$state = _this.state,
+	          textareaStyles = _this$state.textareaStyles,
+	          resizeStatus = _this$state.resizeStatus;
+	      var otherProps = (0, _omit.default)(_this.props, ['prefixCls', 'onPressEnter', 'autoSize', 'defaultValue', 'onResize']);
+	      var cls = (0, _classnames.default)(prefixCls, className, (0, _defineProperty2.default)({}, "".concat(prefixCls, "-disabled"), disabled)); // Fix https://github.com/ant-design/ant-design/issues/6776
+	      // Make sure it could be reset when using form.getFieldDecorator
+	
+	      if ('value' in otherProps) {
+	        otherProps.value = otherProps.value || '';
+	      }
+	
+	      var style = _objectSpread(_objectSpread(_objectSpread({}, _this.props.style), textareaStyles), resizeStatus === RESIZE_STATUS.RESIZING ? // React will warning when mix `overflow` & `overflowY`.
+	      // We need to define this separately.
+	      {
+	        overflowX: 'hidden',
+	        overflowY: 'hidden'
+	      } : null);
+	
+	      return React.createElement(_rcResizeObserver.default, {
+	        onResize: _this.handleResize,
+	        disabled: !(autoSize || onResize)
+	      }, React.createElement("textarea", Object.assign({}, otherProps, {
+	        className: cls,
+	        style: style,
+	        ref: _this.saveTextArea
+	      })));
+	    };
+	
+	    _this.state = {
+	      textareaStyles: {},
+	      resizeStatus: RESIZE_STATUS.NONE
+	    };
+	    return _this;
+	  }
+	
+	  (0, _createClass2.default)(ResizableTextArea, [{
+	    key: "componentDidMount",
+	    value: function componentDidMount() {
+	      this.resizeTextarea();
+	    }
+	  }, {
+	    key: "componentDidUpdate",
+	    value: function componentDidUpdate(prevProps) {
+	      // Re-render with the new content then recalculate the height as required.
+	      if (prevProps.value !== this.props.value) {
+	        this.resizeTextarea();
+	      }
+	    }
+	  }, {
+	    key: "componentWillUnmount",
+	    value: function componentWillUnmount() {
+	      cancelAnimationFrame(this.nextFrameActionId);
+	      cancelAnimationFrame(this.resizeFrameId);
+	    } // https://github.com/ant-design/ant-design/issues/21870
+	
+	  }, {
+	    key: "fixFirefoxAutoScroll",
+	    value: function fixFirefoxAutoScroll() {
+	      try {
+	        if (document.activeElement === this.textArea) {
+	          var currentStart = this.textArea.selectionStart;
+	          var currentEnd = this.textArea.selectionEnd;
+	          this.textArea.setSelectionRange(currentStart, currentEnd);
+	        }
+	      } catch (e) {// Fix error in Chrome:
+	        // Failed to read the 'selectionStart' property from 'HTMLInputElement'
+	        // http://stackoverflow.com/q/21177489/3040605
+	      }
+	    }
+	  }, {
+	    key: "render",
+	    value: function render() {
+	      return this.renderTextArea();
+	    }
+	  }]);
+	  return ResizableTextArea;
+	}(React.Component);
+	
+	var _default = ResizableTextArea;
+	exports.default = _default;
+
+/***/ }),
+/* 277 */
+/***/ (function(module, exports) {
+
+	function _defineProperty(obj, key, value) {
+	  if (key in obj) {
+	    Object.defineProperty(obj, key, {
+	      value: value,
+	      enumerable: true,
+	      configurable: true,
+	      writable: true
+	    });
+	  } else {
+	    obj[key] = value;
+	  }
+	
+	  return obj;
+	}
+	
+	module.exports = _defineProperty;
+
+/***/ }),
+/* 278 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	var _interopRequireWildcard = __webpack_require__(216);
+	
+	var _interopRequireDefault = __webpack_require__(14);
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.default = void 0;
+	
+	var _objectSpread2 = _interopRequireDefault(__webpack_require__(279));
+	
+	var _classCallCheck2 = _interopRequireDefault(__webpack_require__(269));
+	
+	var _createClass2 = _interopRequireDefault(__webpack_require__(270));
+	
+	var _inherits2 = _interopRequireDefault(__webpack_require__(271));
+	
+	var _createSuper2 = _interopRequireDefault(__webpack_require__(281));
+	
+	var React = _interopRequireWildcard(__webpack_require__(1));
+	
+	var _findDOMNode = _interopRequireDefault(__webpack_require__(287));
+	
+	var _toArray = _interopRequireDefault(__webpack_require__(288));
+	
+	var _warning = _interopRequireDefault(__webpack_require__(289));
+	
+	var _ref = __webpack_require__(290);
+	
+	var _resizeObserverPolyfill = _interopRequireDefault(__webpack_require__(291));
+	
+	var INTERNAL_PREFIX_KEY = 'rc-observer-key'; // Still need to be compatible with React 15, we use class component here
+	
+	var ReactResizeObserver = /*#__PURE__*/function (_React$Component) {
+	  (0, _inherits2.default)(ReactResizeObserver, _React$Component);
+	
+	  var _super = (0, _createSuper2.default)(ReactResizeObserver);
+	
+	  function ReactResizeObserver() {
+	    var _this;
+	
+	    (0, _classCallCheck2.default)(this, ReactResizeObserver);
+	    _this = _super.apply(this, arguments);
+	    _this.resizeObserver = null;
+	    _this.childNode = null;
+	    _this.currentElement = null;
+	    _this.state = {
+	      width: 0,
+	      height: 0,
+	      offsetHeight: 0,
+	      offsetWidth: 0
+	    };
+	
+	    _this.onResize = function (entries) {
+	      var onResize = _this.props.onResize;
+	      var target = entries[0].target;
+	
+	      var _target$getBoundingCl = target.getBoundingClientRect(),
+	          width = _target$getBoundingCl.width,
+	          height = _target$getBoundingCl.height;
+	
+	      var offsetWidth = target.offsetWidth,
+	          offsetHeight = target.offsetHeight;
+	      /**
+	       * Resize observer trigger when content size changed.
+	       * In most case we just care about element size,
+	       * let's use `boundary` instead of `contentRect` here to avoid shaking.
+	       */
+	
+	      var fixedWidth = Math.floor(width);
+	      var fixedHeight = Math.floor(height);
+	
+	      if (_this.state.width !== fixedWidth || _this.state.height !== fixedHeight || _this.state.offsetWidth !== offsetWidth || _this.state.offsetHeight !== offsetHeight) {
+	        var size = {
+	          width: fixedWidth,
+	          height: fixedHeight,
+	          offsetWidth: offsetWidth,
+	          offsetHeight: offsetHeight
+	        };
+	
+	        _this.setState(size);
+	
+	        if (onResize) {
+	          // defer the callback but not defer to next frame
+	          Promise.resolve().then(function () {
+	            onResize((0, _objectSpread2.default)((0, _objectSpread2.default)({}, size), {}, {
+	              offsetWidth: offsetWidth,
+	              offsetHeight: offsetHeight
+	            }));
+	          });
+	        }
+	      }
+	    };
+	
+	    _this.setChildNode = function (node) {
+	      _this.childNode = node;
+	    };
+	
+	    return _this;
+	  }
+	
+	  (0, _createClass2.default)(ReactResizeObserver, [{
+	    key: "componentDidMount",
+	    value: function componentDidMount() {
+	      this.onComponentUpdated();
+	    }
+	  }, {
+	    key: "componentDidUpdate",
+	    value: function componentDidUpdate() {
+	      this.onComponentUpdated();
+	    }
+	  }, {
+	    key: "componentWillUnmount",
+	    value: function componentWillUnmount() {
+	      this.destroyObserver();
+	    }
+	  }, {
+	    key: "onComponentUpdated",
+	    value: function onComponentUpdated() {
+	      var disabled = this.props.disabled; // Unregister if disabled
+	
+	      if (disabled) {
+	        this.destroyObserver();
+	        return;
+	      } // Unregister if element changed
+	
+	
+	      var element = (0, _findDOMNode.default)(this.childNode || this);
+	      var elementChanged = element !== this.currentElement;
+	
+	      if (elementChanged) {
+	        this.destroyObserver();
+	        this.currentElement = element;
+	      }
+	
+	      if (!this.resizeObserver && element) {
+	        this.resizeObserver = new _resizeObserverPolyfill.default(this.onResize);
+	        this.resizeObserver.observe(element);
+	      }
+	    }
+	  }, {
+	    key: "destroyObserver",
+	    value: function destroyObserver() {
+	      if (this.resizeObserver) {
+	        this.resizeObserver.disconnect();
+	        this.resizeObserver = null;
+	      }
+	    }
+	  }, {
+	    key: "render",
+	    value: function render() {
+	      var children = this.props.children;
+	      var childNodes = (0, _toArray.default)(children);
+	
+	      if (childNodes.length > 1) {
+	        (0, _warning.default)(false, 'Find more than one child node with `children` in ResizeObserver. Will only observe first one.');
+	      } else if (childNodes.length === 0) {
+	        (0, _warning.default)(false, '`children` of ResizeObserver is empty. Nothing is in observe.');
+	        return null;
+	      }
+	
+	      var childNode = childNodes[0];
+	
+	      if (React.isValidElement(childNode) && (0, _ref.supportRef)(childNode)) {
+	        var ref = childNode.ref;
+	        childNodes[0] = React.cloneElement(childNode, {
+	          ref: (0, _ref.composeRef)(ref, this.setChildNode)
+	        });
+	      }
+	
+	      return childNodes.length === 1 ? childNodes[0] : childNodes.map(function (node, index) {
+	        if (!React.isValidElement(node) || 'key' in node && node.key !== null) {
+	          return node;
+	        }
+	
+	        return React.cloneElement(node, {
+	          key: "".concat(INTERNAL_PREFIX_KEY, "-").concat(index)
+	        });
+	      });
+	    }
+	  }]);
+	  return ReactResizeObserver;
+	}(React.Component);
+	
+	ReactResizeObserver.displayName = 'ResizeObserver';
+	var _default = ReactResizeObserver;
+	exports.default = _default;
+
+/***/ }),
+/* 279 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	var defineProperty = __webpack_require__(280);
+	
+	function ownKeys(object, enumerableOnly) {
+	  var keys = Object.keys(object);
+	
+	  if (Object.getOwnPropertySymbols) {
+	    var symbols = Object.getOwnPropertySymbols(object);
+	    if (enumerableOnly) symbols = symbols.filter(function (sym) {
+	      return Object.getOwnPropertyDescriptor(object, sym).enumerable;
+	    });
+	    keys.push.apply(keys, symbols);
+	  }
+	
+	  return keys;
+	}
+	
+	function _objectSpread2(target) {
+	  for (var i = 1; i < arguments.length; i++) {
+	    var source = arguments[i] != null ? arguments[i] : {};
+	
+	    if (i % 2) {
+	      ownKeys(Object(source), true).forEach(function (key) {
+	        defineProperty(target, key, source[key]);
+	      });
+	    } else if (Object.getOwnPropertyDescriptors) {
+	      Object.defineProperties(target, Object.getOwnPropertyDescriptors(source));
+	    } else {
+	      ownKeys(Object(source)).forEach(function (key) {
+	        Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));
+	      });
+	    }
+	  }
+	
+	  return target;
+	}
+	
+	module.exports = _objectSpread2;
+
+/***/ }),
+/* 280 */
+/***/ (function(module, exports) {
+
+	function _defineProperty(obj, key, value) {
+	  if (key in obj) {
+	    Object.defineProperty(obj, key, {
+	      value: value,
+	      enumerable: true,
+	      configurable: true,
+	      writable: true
+	    });
+	  } else {
+	    obj[key] = value;
+	  }
+	
+	  return obj;
+	}
+	
+	module.exports = _defineProperty;
+
+/***/ }),
+/* 281 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	var getPrototypeOf = __webpack_require__(282);
+	
+	var isNativeReflectConstruct = __webpack_require__(283);
+	
+	var possibleConstructorReturn = __webpack_require__(284);
+	
+	function _createSuper(Derived) {
+	  var hasNativeReflectConstruct = isNativeReflectConstruct();
+	  return function _createSuperInternal() {
+	    var Super = getPrototypeOf(Derived),
+	        result;
+	
+	    if (hasNativeReflectConstruct) {
+	      var NewTarget = getPrototypeOf(this).constructor;
+	      result = Reflect.construct(Super, arguments, NewTarget);
+	    } else {
+	      result = Super.apply(this, arguments);
+	    }
+	
+	    return possibleConstructorReturn(this, result);
+	  };
+	}
+	
+	module.exports = _createSuper;
+
+/***/ }),
+/* 282 */
+/***/ (function(module, exports) {
+
+	function _getPrototypeOf(o) {
+	  module.exports = _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) {
+	    return o.__proto__ || Object.getPrototypeOf(o);
+	  };
+	  return _getPrototypeOf(o);
+	}
+	
+	module.exports = _getPrototypeOf;
+
+/***/ }),
+/* 283 */
+/***/ (function(module, exports) {
+
+	function _isNativeReflectConstruct() {
+	  if (typeof Reflect === "undefined" || !Reflect.construct) return false;
+	  if (Reflect.construct.sham) return false;
+	  if (typeof Proxy === "function") return true;
+	
+	  try {
+	    Date.prototype.toString.call(Reflect.construct(Date, [], function () {}));
+	    return true;
+	  } catch (e) {
+	    return false;
+	  }
+	}
+	
+	module.exports = _isNativeReflectConstruct;
+
+/***/ }),
+/* 284 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	var _typeof = __webpack_require__(285);
+	
+	var assertThisInitialized = __webpack_require__(286);
+	
+	function _possibleConstructorReturn(self, call) {
+	  if (call && (_typeof(call) === "object" || typeof call === "function")) {
+	    return call;
+	  }
+	
+	  return assertThisInitialized(self);
+	}
+	
+	module.exports = _possibleConstructorReturn;
+
+/***/ }),
+/* 285 */
+/***/ (function(module, exports) {
+
+	function _typeof(obj) {
+	  "@babel/helpers - typeof";
+	
+	  if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") {
+	    module.exports = _typeof = function _typeof(obj) {
+	      return typeof obj;
+	    };
+	  } else {
+	    module.exports = _typeof = function _typeof(obj) {
+	      return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
+	    };
+	  }
+	
+	  return _typeof(obj);
+	}
+	
+	module.exports = _typeof;
+
+/***/ }),
+/* 286 */
+/***/ (function(module, exports) {
+
+	function _assertThisInitialized(self) {
+	  if (self === void 0) {
+	    throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
+	  }
+	
+	  return self;
+	}
+	
+	module.exports = _assertThisInitialized;
+
+/***/ }),
+/* 287 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.default = findDOMNode;
+	
+	var _reactDom = _interopRequireDefault(__webpack_require__(2));
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	/**
+	 * Return if a node is a DOM node. Else will return by `findDOMNode`
+	 */
+	function findDOMNode(node) {
+	  if (node instanceof HTMLElement) {
+	    return node;
+	  }
+	
+	  return _reactDom.default.findDOMNode(node);
+	}
+
+/***/ }),
+/* 288 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports['default'] = toArray;
+	
+	var _react = __webpack_require__(1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+	
+	function toArray(children) {
+	  var ret = [];
+	  _react2['default'].Children.forEach(children, function (c) {
+	    ret.push(c);
+	  });
+	  return ret;
+	}
+	module.exports = exports['default'];
+
+/***/ }),
+/* 289 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(process) {"use strict";
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.warning = warning;
+	exports.note = note;
+	exports.resetWarned = resetWarned;
+	exports.call = call;
+	exports.warningOnce = warningOnce;
+	exports.noteOnce = noteOnce;
+	exports.default = void 0;
+	
+	/* eslint-disable no-console */
+	var warned = {};
+	
+	function warning(valid, message) {
+	  // Support uglify
+	  if (process.env.NODE_ENV !== 'production' && !valid && console !== undefined) {
+	    console.error("Warning: ".concat(message));
+	  }
+	}
+	
+	function note(valid, message) {
+	  // Support uglify
+	  if (process.env.NODE_ENV !== 'production' && !valid && console !== undefined) {
+	    console.warn("Note: ".concat(message));
+	  }
+	}
+	
+	function resetWarned() {
+	  warned = {};
+	}
+	
+	function call(method, valid, message) {
+	  if (!valid && !warned[message]) {
+	    method(false, message);
+	    warned[message] = true;
+	  }
+	}
+	
+	function warningOnce(valid, message) {
+	  call(warning, valid, message);
+	}
+	
+	function noteOnce(valid, message) {
+	  call(note, valid, message);
+	}
+	
+	var _default = warningOnce;
+	/* eslint-enable */
+	
+	exports.default = _default;
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(33)))
+
+/***/ }),
+/* 290 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.fillRef = fillRef;
+	exports.composeRef = composeRef;
+	exports.supportRef = supportRef;
+	
+	var _reactIs = __webpack_require__(225);
+	
+	function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+	
+	function fillRef(ref, node) {
+	  if (typeof ref === 'function') {
+	    ref(node);
+	  } else if (_typeof(ref) === 'object' && ref && 'current' in ref) {
+	    ref.current = node;
+	  }
+	}
+	/**
+	 * Merge refs into one ref function to support ref passing.
+	 */
+	
+	
+	function composeRef() {
+	  for (var _len = arguments.length, refs = new Array(_len), _key = 0; _key < _len; _key++) {
+	    refs[_key] = arguments[_key];
+	  }
+	
+	  return function (node) {
+	    refs.forEach(function (ref) {
+	      fillRef(ref, node);
+	    });
+	  };
+	}
+	
+	function supportRef(nodeOrComponent) {
+	  var _type$prototype, _nodeOrComponent$prot;
+	
+	  var type = (0, _reactIs.isMemo)(nodeOrComponent) ? nodeOrComponent.type.type : nodeOrComponent.type; // Function component node
+	
+	  if (typeof type === 'function' && !((_type$prototype = type.prototype) === null || _type$prototype === void 0 ? void 0 : _type$prototype.render)) {
+	    return false;
+	  } // Class component
+	
+	
+	  if (typeof nodeOrComponent === 'function' && !((_nodeOrComponent$prot = nodeOrComponent.prototype) === null || _nodeOrComponent$prot === void 0 ? void 0 : _nodeOrComponent$prot.render)) {
+	    return false;
+	  }
+	
+	  return true;
+	}
+	/* eslint-enable */
+
+/***/ }),
+/* 291 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(global) {(function (global, factory) {
+	     true ? module.exports = factory() :
+	    typeof define === 'function' && define.amd ? define(factory) :
+	    (global.ResizeObserver = factory());
+	}(this, (function () { 'use strict';
+	
+	    /**
+	     * A collection of shims that provide minimal functionality of the ES6 collections.
+	     *
+	     * These implementations are not meant to be used outside of the ResizeObserver
+	     * modules as they cover only a limited range of use cases.
+	     */
+	    /* eslint-disable require-jsdoc, valid-jsdoc */
+	    var MapShim = (function () {
+	        if (typeof Map !== 'undefined') {
+	            return Map;
+	        }
+	        /**
+	         * Returns index in provided array that matches the specified key.
+	         *
+	         * @param {Array<Array>} arr
+	         * @param {*} key
+	         * @returns {number}
+	         */
+	        function getIndex(arr, key) {
+	            var result = -1;
+	            arr.some(function (entry, index) {
+	                if (entry[0] === key) {
+	                    result = index;
+	                    return true;
+	                }
+	                return false;
+	            });
+	            return result;
+	        }
+	        return /** @class */ (function () {
+	            function class_1() {
+	                this.__entries__ = [];
+	            }
+	            Object.defineProperty(class_1.prototype, "size", {
+	                /**
+	                 * @returns {boolean}
+	                 */
+	                get: function () {
+	                    return this.__entries__.length;
+	                },
+	                enumerable: true,
+	                configurable: true
+	            });
+	            /**
+	             * @param {*} key
+	             * @returns {*}
+	             */
+	            class_1.prototype.get = function (key) {
+	                var index = getIndex(this.__entries__, key);
+	                var entry = this.__entries__[index];
+	                return entry && entry[1];
+	            };
+	            /**
+	             * @param {*} key
+	             * @param {*} value
+	             * @returns {void}
+	             */
+	            class_1.prototype.set = function (key, value) {
+	                var index = getIndex(this.__entries__, key);
+	                if (~index) {
+	                    this.__entries__[index][1] = value;
+	                }
+	                else {
+	                    this.__entries__.push([key, value]);
+	                }
+	            };
+	            /**
+	             * @param {*} key
+	             * @returns {void}
+	             */
+	            class_1.prototype.delete = function (key) {
+	                var entries = this.__entries__;
+	                var index = getIndex(entries, key);
+	                if (~index) {
+	                    entries.splice(index, 1);
+	                }
+	            };
+	            /**
+	             * @param {*} key
+	             * @returns {void}
+	             */
+	            class_1.prototype.has = function (key) {
+	                return !!~getIndex(this.__entries__, key);
+	            };
+	            /**
+	             * @returns {void}
+	             */
+	            class_1.prototype.clear = function () {
+	                this.__entries__.splice(0);
+	            };
+	            /**
+	             * @param {Function} callback
+	             * @param {*} [ctx=null]
+	             * @returns {void}
+	             */
+	            class_1.prototype.forEach = function (callback, ctx) {
+	                if (ctx === void 0) { ctx = null; }
+	                for (var _i = 0, _a = this.__entries__; _i < _a.length; _i++) {
+	                    var entry = _a[_i];
+	                    callback.call(ctx, entry[1], entry[0]);
+	                }
+	            };
+	            return class_1;
+	        }());
+	    })();
+	
+	    /**
+	     * Detects whether window and document objects are available in current environment.
+	     */
+	    var isBrowser = typeof window !== 'undefined' && typeof document !== 'undefined' && window.document === document;
+	
+	    // Returns global object of a current environment.
+	    var global$1 = (function () {
+	        if (typeof global !== 'undefined' && global.Math === Math) {
+	            return global;
+	        }
+	        if (typeof self !== 'undefined' && self.Math === Math) {
+	            return self;
+	        }
+	        if (typeof window !== 'undefined' && window.Math === Math) {
+	            return window;
+	        }
+	        // eslint-disable-next-line no-new-func
+	        return Function('return this')();
+	    })();
+	
+	    /**
+	     * A shim for the requestAnimationFrame which falls back to the setTimeout if
+	     * first one is not supported.
+	     *
+	     * @returns {number} Requests' identifier.
+	     */
+	    var requestAnimationFrame$1 = (function () {
+	        if (typeof requestAnimationFrame === 'function') {
+	            // It's required to use a bounded function because IE sometimes throws
+	            // an "Invalid calling object" error if rAF is invoked without the global
+	            // object on the left hand side.
+	            return requestAnimationFrame.bind(global$1);
+	        }
+	        return function (callback) { return setTimeout(function () { return callback(Date.now()); }, 1000 / 60); };
+	    })();
+	
+	    // Defines minimum timeout before adding a trailing call.
+	    var trailingTimeout = 2;
+	    /**
+	     * Creates a wrapper function which ensures that provided callback will be
+	     * invoked only once during the specified delay period.
+	     *
+	     * @param {Function} callback - Function to be invoked after the delay period.
+	     * @param {number} delay - Delay after which to invoke callback.
+	     * @returns {Function}
+	     */
+	    function throttle (callback, delay) {
+	        var leadingCall = false, trailingCall = false, lastCallTime = 0;
+	        /**
+	         * Invokes the original callback function and schedules new invocation if
+	         * the "proxy" was called during current request.
+	         *
+	         * @returns {void}
+	         */
+	        function resolvePending() {
+	            if (leadingCall) {
+	                leadingCall = false;
+	                callback();
+	            }
+	            if (trailingCall) {
+	                proxy();
+	            }
+	        }
+	        /**
+	         * Callback invoked after the specified delay. It will further postpone
+	         * invocation of the original function delegating it to the
+	         * requestAnimationFrame.
+	         *
+	         * @returns {void}
+	         */
+	        function timeoutCallback() {
+	            requestAnimationFrame$1(resolvePending);
+	        }
+	        /**
+	         * Schedules invocation of the original function.
+	         *
+	         * @returns {void}
+	         */
+	        function proxy() {
+	            var timeStamp = Date.now();
+	            if (leadingCall) {
+	                // Reject immediately following calls.
+	                if (timeStamp - lastCallTime < trailingTimeout) {
+	                    return;
+	                }
+	                // Schedule new call to be in invoked when the pending one is resolved.
+	                // This is important for "transitions" which never actually start
+	                // immediately so there is a chance that we might miss one if change
+	                // happens amids the pending invocation.
+	                trailingCall = true;
+	            }
+	            else {
+	                leadingCall = true;
+	                trailingCall = false;
+	                setTimeout(timeoutCallback, delay);
+	            }
+	            lastCallTime = timeStamp;
+	        }
+	        return proxy;
+	    }
+	
+	    // Minimum delay before invoking the update of observers.
+	    var REFRESH_DELAY = 20;
+	    // A list of substrings of CSS properties used to find transition events that
+	    // might affect dimensions of observed elements.
+	    var transitionKeys = ['top', 'right', 'bottom', 'left', 'width', 'height', 'size', 'weight'];
+	    // Check if MutationObserver is available.
+	    var mutationObserverSupported = typeof MutationObserver !== 'undefined';
+	    /**
+	     * Singleton controller class which handles updates of ResizeObserver instances.
+	     */
+	    var ResizeObserverController = /** @class */ (function () {
+	        /**
+	         * Creates a new instance of ResizeObserverController.
+	         *
+	         * @private
+	         */
+	        function ResizeObserverController() {
+	            /**
+	             * Indicates whether DOM listeners have been added.
+	             *
+	             * @private {boolean}
+	             */
+	            this.connected_ = false;
+	            /**
+	             * Tells that controller has subscribed for Mutation Events.
+	             *
+	             * @private {boolean}
+	             */
+	            this.mutationEventsAdded_ = false;
+	            /**
+	             * Keeps reference to the instance of MutationObserver.
+	             *
+	             * @private {MutationObserver}
+	             */
+	            this.mutationsObserver_ = null;
+	            /**
+	             * A list of connected observers.
+	             *
+	             * @private {Array<ResizeObserverSPI>}
+	             */
+	            this.observers_ = [];
+	            this.onTransitionEnd_ = this.onTransitionEnd_.bind(this);
+	            this.refresh = throttle(this.refresh.bind(this), REFRESH_DELAY);
+	        }
+	        /**
+	         * Adds observer to observers list.
+	         *
+	         * @param {ResizeObserverSPI} observer - Observer to be added.
+	         * @returns {void}
+	         */
+	        ResizeObserverController.prototype.addObserver = function (observer) {
+	            if (!~this.observers_.indexOf(observer)) {
+	                this.observers_.push(observer);
+	            }
+	            // Add listeners if they haven't been added yet.
+	            if (!this.connected_) {
+	                this.connect_();
+	            }
+	        };
+	        /**
+	         * Removes observer from observers list.
+	         *
+	         * @param {ResizeObserverSPI} observer - Observer to be removed.
+	         * @returns {void}
+	         */
+	        ResizeObserverController.prototype.removeObserver = function (observer) {
+	            var observers = this.observers_;
+	            var index = observers.indexOf(observer);
+	            // Remove observer if it's present in registry.
+	            if (~index) {
+	                observers.splice(index, 1);
+	            }
+	            // Remove listeners if controller has no connected observers.
+	            if (!observers.length && this.connected_) {
+	                this.disconnect_();
+	            }
+	        };
+	        /**
+	         * Invokes the update of observers. It will continue running updates insofar
+	         * it detects changes.
+	         *
+	         * @returns {void}
+	         */
+	        ResizeObserverController.prototype.refresh = function () {
+	            var changesDetected = this.updateObservers_();
+	            // Continue running updates if changes have been detected as there might
+	            // be future ones caused by CSS transitions.
+	            if (changesDetected) {
+	                this.refresh();
+	            }
+	        };
+	        /**
+	         * Updates every observer from observers list and notifies them of queued
+	         * entries.
+	         *
+	         * @private
+	         * @returns {boolean} Returns "true" if any observer has detected changes in
+	         *      dimensions of it's elements.
+	         */
+	        ResizeObserverController.prototype.updateObservers_ = function () {
+	            // Collect observers that have active observations.
+	            var activeObservers = this.observers_.filter(function (observer) {
+	                return observer.gatherActive(), observer.hasActive();
+	            });
+	            // Deliver notifications in a separate cycle in order to avoid any
+	            // collisions between observers, e.g. when multiple instances of
+	            // ResizeObserver are tracking the same element and the callback of one
+	            // of them changes content dimensions of the observed target. Sometimes
+	            // this may result in notifications being blocked for the rest of observers.
+	            activeObservers.forEach(function (observer) { return observer.broadcastActive(); });
+	            return activeObservers.length > 0;
+	        };
+	        /**
+	         * Initializes DOM listeners.
+	         *
+	         * @private
+	         * @returns {void}
+	         */
+	        ResizeObserverController.prototype.connect_ = function () {
+	            // Do nothing if running in a non-browser environment or if listeners
+	            // have been already added.
+	            if (!isBrowser || this.connected_) {
+	                return;
+	            }
+	            // Subscription to the "Transitionend" event is used as a workaround for
+	            // delayed transitions. This way it's possible to capture at least the
+	            // final state of an element.
+	            document.addEventListener('transitionend', this.onTransitionEnd_);
+	            window.addEventListener('resize', this.refresh);
+	            if (mutationObserverSupported) {
+	                this.mutationsObserver_ = new MutationObserver(this.refresh);
+	                this.mutationsObserver_.observe(document, {
+	                    attributes: true,
+	                    childList: true,
+	                    characterData: true,
+	                    subtree: true
+	                });
+	            }
+	            else {
+	                document.addEventListener('DOMSubtreeModified', this.refresh);
+	                this.mutationEventsAdded_ = true;
+	            }
+	            this.connected_ = true;
+	        };
+	        /**
+	         * Removes DOM listeners.
+	         *
+	         * @private
+	         * @returns {void}
+	         */
+	        ResizeObserverController.prototype.disconnect_ = function () {
+	            // Do nothing if running in a non-browser environment or if listeners
+	            // have been already removed.
+	            if (!isBrowser || !this.connected_) {
+	                return;
+	            }
+	            document.removeEventListener('transitionend', this.onTransitionEnd_);
+	            window.removeEventListener('resize', this.refresh);
+	            if (this.mutationsObserver_) {
+	                this.mutationsObserver_.disconnect();
+	            }
+	            if (this.mutationEventsAdded_) {
+	                document.removeEventListener('DOMSubtreeModified', this.refresh);
+	            }
+	            this.mutationsObserver_ = null;
+	            this.mutationEventsAdded_ = false;
+	            this.connected_ = false;
+	        };
+	        /**
+	         * "Transitionend" event handler.
+	         *
+	         * @private
+	         * @param {TransitionEvent} event
+	         * @returns {void}
+	         */
+	        ResizeObserverController.prototype.onTransitionEnd_ = function (_a) {
+	            var _b = _a.propertyName, propertyName = _b === void 0 ? '' : _b;
+	            // Detect whether transition may affect dimensions of an element.
+	            var isReflowProperty = transitionKeys.some(function (key) {
+	                return !!~propertyName.indexOf(key);
+	            });
+	            if (isReflowProperty) {
+	                this.refresh();
+	            }
+	        };
+	        /**
+	         * Returns instance of the ResizeObserverController.
+	         *
+	         * @returns {ResizeObserverController}
+	         */
+	        ResizeObserverController.getInstance = function () {
+	            if (!this.instance_) {
+	                this.instance_ = new ResizeObserverController();
+	            }
+	            return this.instance_;
+	        };
+	        /**
+	         * Holds reference to the controller's instance.
+	         *
+	         * @private {ResizeObserverController}
+	         */
+	        ResizeObserverController.instance_ = null;
+	        return ResizeObserverController;
+	    }());
+	
+	    /**
+	     * Defines non-writable/enumerable properties of the provided target object.
+	     *
+	     * @param {Object} target - Object for which to define properties.
+	     * @param {Object} props - Properties to be defined.
+	     * @returns {Object} Target object.
+	     */
+	    var defineConfigurable = (function (target, props) {
+	        for (var _i = 0, _a = Object.keys(props); _i < _a.length; _i++) {
+	            var key = _a[_i];
+	            Object.defineProperty(target, key, {
+	                value: props[key],
+	                enumerable: false,
+	                writable: false,
+	                configurable: true
+	            });
+	        }
+	        return target;
+	    });
+	
+	    /**
+	     * Returns the global object associated with provided element.
+	     *
+	     * @param {Object} target
+	     * @returns {Object}
+	     */
+	    var getWindowOf = (function (target) {
+	        // Assume that the element is an instance of Node, which means that it
+	        // has the "ownerDocument" property from which we can retrieve a
+	        // corresponding global object.
+	        var ownerGlobal = target && target.ownerDocument && target.ownerDocument.defaultView;
+	        // Return the local global object if it's not possible extract one from
+	        // provided element.
+	        return ownerGlobal || global$1;
+	    });
+	
+	    // Placeholder of an empty content rectangle.
+	    var emptyRect = createRectInit(0, 0, 0, 0);
+	    /**
+	     * Converts provided string to a number.
+	     *
+	     * @param {number|string} value
+	     * @returns {number}
+	     */
+	    function toFloat(value) {
+	        return parseFloat(value) || 0;
+	    }
+	    /**
+	     * Extracts borders size from provided styles.
+	     *
+	     * @param {CSSStyleDeclaration} styles
+	     * @param {...string} positions - Borders positions (top, right, ...)
+	     * @returns {number}
+	     */
+	    function getBordersSize(styles) {
+	        var positions = [];
+	        for (var _i = 1; _i < arguments.length; _i++) {
+	            positions[_i - 1] = arguments[_i];
+	        }
+	        return positions.reduce(function (size, position) {
+	            var value = styles['border-' + position + '-width'];
+	            return size + toFloat(value);
+	        }, 0);
+	    }
+	    /**
+	     * Extracts paddings sizes from provided styles.
+	     *
+	     * @param {CSSStyleDeclaration} styles
+	     * @returns {Object} Paddings box.
+	     */
+	    function getPaddings(styles) {
+	        var positions = ['top', 'right', 'bottom', 'left'];
+	        var paddings = {};
+	        for (var _i = 0, positions_1 = positions; _i < positions_1.length; _i++) {
+	            var position = positions_1[_i];
+	            var value = styles['padding-' + position];
+	            paddings[position] = toFloat(value);
+	        }
+	        return paddings;
+	    }
+	    /**
+	     * Calculates content rectangle of provided SVG element.
+	     *
+	     * @param {SVGGraphicsElement} target - Element content rectangle of which needs
+	     *      to be calculated.
+	     * @returns {DOMRectInit}
+	     */
+	    function getSVGContentRect(target) {
+	        var bbox = target.getBBox();
+	        return createRectInit(0, 0, bbox.width, bbox.height);
+	    }
+	    /**
+	     * Calculates content rectangle of provided HTMLElement.
+	     *
+	     * @param {HTMLElement} target - Element for which to calculate the content rectangle.
+	     * @returns {DOMRectInit}
+	     */
+	    function getHTMLElementContentRect(target) {
+	        // Client width & height properties can't be
+	        // used exclusively as they provide rounded values.
+	        var clientWidth = target.clientWidth, clientHeight = target.clientHeight;
+	        // By this condition we can catch all non-replaced inline, hidden and
+	        // detached elements. Though elements with width & height properties less
+	        // than 0.5 will be discarded as well.
+	        //
+	        // Without it we would need to implement separate methods for each of
+	        // those cases and it's not possible to perform a precise and performance
+	        // effective test for hidden elements. E.g. even jQuery's ':visible' filter
+	        // gives wrong results for elements with width & height less than 0.5.
+	        if (!clientWidth && !clientHeight) {
+	            return emptyRect;
+	        }
+	        var styles = getWindowOf(target).getComputedStyle(target);
+	        var paddings = getPaddings(styles);
+	        var horizPad = paddings.left + paddings.right;
+	        var vertPad = paddings.top + paddings.bottom;
+	        // Computed styles of width & height are being used because they are the
+	        // only dimensions available to JS that contain non-rounded values. It could
+	        // be possible to utilize the getBoundingClientRect if only it's data wasn't
+	        // affected by CSS transformations let alone paddings, borders and scroll bars.
+	        var width = toFloat(styles.width), height = toFloat(styles.height);
+	        // Width & height include paddings and borders when the 'border-box' box
+	        // model is applied (except for IE).
+	        if (styles.boxSizing === 'border-box') {
+	            // Following conditions are required to handle Internet Explorer which
+	            // doesn't include paddings and borders to computed CSS dimensions.
+	            //
+	            // We can say that if CSS dimensions + paddings are equal to the "client"
+	            // properties then it's either IE, and thus we don't need to subtract
+	            // anything, or an element merely doesn't have paddings/borders styles.
+	            if (Math.round(width + horizPad) !== clientWidth) {
+	                width -= getBordersSize(styles, 'left', 'right') + horizPad;
+	            }
+	            if (Math.round(height + vertPad) !== clientHeight) {
+	                height -= getBordersSize(styles, 'top', 'bottom') + vertPad;
+	            }
+	        }
+	        // Following steps can't be applied to the document's root element as its
+	        // client[Width/Height] properties represent viewport area of the window.
+	        // Besides, it's as well not necessary as the <html> itself neither has
+	        // rendered scroll bars nor it can be clipped.
+	        if (!isDocumentElement(target)) {
+	            // In some browsers (only in Firefox, actually) CSS width & height
+	            // include scroll bars size which can be removed at this step as scroll
+	            // bars are the only difference between rounded dimensions + paddings
+	            // and "client" properties, though that is not always true in Chrome.
+	            var vertScrollbar = Math.round(width + horizPad) - clientWidth;
+	            var horizScrollbar = Math.round(height + vertPad) - clientHeight;
+	            // Chrome has a rather weird rounding of "client" properties.
+	            // E.g. for an element with content width of 314.2px it sometimes gives
+	            // the client width of 315px and for the width of 314.7px it may give
+	            // 314px. And it doesn't happen all the time. So just ignore this delta
+	            // as a non-relevant.
+	            if (Math.abs(vertScrollbar) !== 1) {
+	                width -= vertScrollbar;
+	            }
+	            if (Math.abs(horizScrollbar) !== 1) {
+	                height -= horizScrollbar;
+	            }
+	        }
+	        return createRectInit(paddings.left, paddings.top, width, height);
+	    }
+	    /**
+	     * Checks whether provided element is an instance of the SVGGraphicsElement.
+	     *
+	     * @param {Element} target - Element to be checked.
+	     * @returns {boolean}
+	     */
+	    var isSVGGraphicsElement = (function () {
+	        // Some browsers, namely IE and Edge, don't have the SVGGraphicsElement
+	        // interface.
+	        if (typeof SVGGraphicsElement !== 'undefined') {
+	            return function (target) { return target instanceof getWindowOf(target).SVGGraphicsElement; };
+	        }
+	        // If it's so, then check that element is at least an instance of the
+	        // SVGElement and that it has the "getBBox" method.
+	        // eslint-disable-next-line no-extra-parens
+	        return function (target) { return (target instanceof getWindowOf(target).SVGElement &&
+	            typeof target.getBBox === 'function'); };
+	    })();
+	    /**
+	     * Checks whether provided element is a document element (<html>).
+	     *
+	     * @param {Element} target - Element to be checked.
+	     * @returns {boolean}
+	     */
+	    function isDocumentElement(target) {
+	        return target === getWindowOf(target).document.documentElement;
+	    }
+	    /**
+	     * Calculates an appropriate content rectangle for provided html or svg element.
+	     *
+	     * @param {Element} target - Element content rectangle of which needs to be calculated.
+	     * @returns {DOMRectInit}
+	     */
+	    function getContentRect(target) {
+	        if (!isBrowser) {
+	            return emptyRect;
+	        }
+	        if (isSVGGraphicsElement(target)) {
+	            return getSVGContentRect(target);
+	        }
+	        return getHTMLElementContentRect(target);
+	    }
+	    /**
+	     * Creates rectangle with an interface of the DOMRectReadOnly.
+	     * Spec: https://drafts.fxtf.org/geometry/#domrectreadonly
+	     *
+	     * @param {DOMRectInit} rectInit - Object with rectangle's x/y coordinates and dimensions.
+	     * @returns {DOMRectReadOnly}
+	     */
+	    function createReadOnlyRect(_a) {
+	        var x = _a.x, y = _a.y, width = _a.width, height = _a.height;
+	        // If DOMRectReadOnly is available use it as a prototype for the rectangle.
+	        var Constr = typeof DOMRectReadOnly !== 'undefined' ? DOMRectReadOnly : Object;
+	        var rect = Object.create(Constr.prototype);
+	        // Rectangle's properties are not writable and non-enumerable.
+	        defineConfigurable(rect, {
+	            x: x, y: y, width: width, height: height,
+	            top: y,
+	            right: x + width,
+	            bottom: height + y,
+	            left: x
+	        });
+	        return rect;
+	    }
+	    /**
+	     * Creates DOMRectInit object based on the provided dimensions and the x/y coordinates.
+	     * Spec: https://drafts.fxtf.org/geometry/#dictdef-domrectinit
+	     *
+	     * @param {number} x - X coordinate.
+	     * @param {number} y - Y coordinate.
+	     * @param {number} width - Rectangle's width.
+	     * @param {number} height - Rectangle's height.
+	     * @returns {DOMRectInit}
+	     */
+	    function createRectInit(x, y, width, height) {
+	        return { x: x, y: y, width: width, height: height };
+	    }
+	
+	    /**
+	     * Class that is responsible for computations of the content rectangle of
+	     * provided DOM element and for keeping track of it's changes.
+	     */
+	    var ResizeObservation = /** @class */ (function () {
+	        /**
+	         * Creates an instance of ResizeObservation.
+	         *
+	         * @param {Element} target - Element to be observed.
+	         */
+	        function ResizeObservation(target) {
+	            /**
+	             * Broadcasted width of content rectangle.
+	             *
+	             * @type {number}
+	             */
+	            this.broadcastWidth = 0;
+	            /**
+	             * Broadcasted height of content rectangle.
+	             *
+	             * @type {number}
+	             */
+	            this.broadcastHeight = 0;
+	            /**
+	             * Reference to the last observed content rectangle.
+	             *
+	             * @private {DOMRectInit}
+	             */
+	            this.contentRect_ = createRectInit(0, 0, 0, 0);
+	            this.target = target;
+	        }
+	        /**
+	         * Updates content rectangle and tells whether it's width or height properties
+	         * have changed since the last broadcast.
+	         *
+	         * @returns {boolean}
+	         */
+	        ResizeObservation.prototype.isActive = function () {
+	            var rect = getContentRect(this.target);
+	            this.contentRect_ = rect;
+	            return (rect.width !== this.broadcastWidth ||
+	                rect.height !== this.broadcastHeight);
+	        };
+	        /**
+	         * Updates 'broadcastWidth' and 'broadcastHeight' properties with a data
+	         * from the corresponding properties of the last observed content rectangle.
+	         *
+	         * @returns {DOMRectInit} Last observed content rectangle.
+	         */
+	        ResizeObservation.prototype.broadcastRect = function () {
+	            var rect = this.contentRect_;
+	            this.broadcastWidth = rect.width;
+	            this.broadcastHeight = rect.height;
+	            return rect;
+	        };
+	        return ResizeObservation;
+	    }());
+	
+	    var ResizeObserverEntry = /** @class */ (function () {
+	        /**
+	         * Creates an instance of ResizeObserverEntry.
+	         *
+	         * @param {Element} target - Element that is being observed.
+	         * @param {DOMRectInit} rectInit - Data of the element's content rectangle.
+	         */
+	        function ResizeObserverEntry(target, rectInit) {
+	            var contentRect = createReadOnlyRect(rectInit);
+	            // According to the specification following properties are not writable
+	            // and are also not enumerable in the native implementation.
+	            //
+	            // Property accessors are not being used as they'd require to define a
+	            // private WeakMap storage which may cause memory leaks in browsers that
+	            // don't support this type of collections.
+	            defineConfigurable(this, { target: target, contentRect: contentRect });
+	        }
+	        return ResizeObserverEntry;
+	    }());
+	
+	    var ResizeObserverSPI = /** @class */ (function () {
+	        /**
+	         * Creates a new instance of ResizeObserver.
+	         *
+	         * @param {ResizeObserverCallback} callback - Callback function that is invoked
+	         *      when one of the observed elements changes it's content dimensions.
+	         * @param {ResizeObserverController} controller - Controller instance which
+	         *      is responsible for the updates of observer.
+	         * @param {ResizeObserver} callbackCtx - Reference to the public
+	         *      ResizeObserver instance which will be passed to callback function.
+	         */
+	        function ResizeObserverSPI(callback, controller, callbackCtx) {
+	            /**
+	             * Collection of resize observations that have detected changes in dimensions
+	             * of elements.
+	             *
+	             * @private {Array<ResizeObservation>}
+	             */
+	            this.activeObservations_ = [];
+	            /**
+	             * Registry of the ResizeObservation instances.
+	             *
+	             * @private {Map<Element, ResizeObservation>}
+	             */
+	            this.observations_ = new MapShim();
+	            if (typeof callback !== 'function') {
+	                throw new TypeError('The callback provided as parameter 1 is not a function.');
+	            }
+	            this.callback_ = callback;
+	            this.controller_ = controller;
+	            this.callbackCtx_ = callbackCtx;
+	        }
+	        /**
+	         * Starts observing provided element.
+	         *
+	         * @param {Element} target - Element to be observed.
+	         * @returns {void}
+	         */
+	        ResizeObserverSPI.prototype.observe = function (target) {
+	            if (!arguments.length) {
+	                throw new TypeError('1 argument required, but only 0 present.');
+	            }
+	            // Do nothing if current environment doesn't have the Element interface.
+	            if (typeof Element === 'undefined' || !(Element instanceof Object)) {
+	                return;
+	            }
+	            if (!(target instanceof getWindowOf(target).Element)) {
+	                throw new TypeError('parameter 1 is not of type "Element".');
+	            }
+	            var observations = this.observations_;
+	            // Do nothing if element is already being observed.
+	            if (observations.has(target)) {
+	                return;
+	            }
+	            observations.set(target, new ResizeObservation(target));
+	            this.controller_.addObserver(this);
+	            // Force the update of observations.
+	            this.controller_.refresh();
+	        };
+	        /**
+	         * Stops observing provided element.
+	         *
+	         * @param {Element} target - Element to stop observing.
+	         * @returns {void}
+	         */
+	        ResizeObserverSPI.prototype.unobserve = function (target) {
+	            if (!arguments.length) {
+	                throw new TypeError('1 argument required, but only 0 present.');
+	            }
+	            // Do nothing if current environment doesn't have the Element interface.
+	            if (typeof Element === 'undefined' || !(Element instanceof Object)) {
+	                return;
+	            }
+	            if (!(target instanceof getWindowOf(target).Element)) {
+	                throw new TypeError('parameter 1 is not of type "Element".');
+	            }
+	            var observations = this.observations_;
+	            // Do nothing if element is not being observed.
+	            if (!observations.has(target)) {
+	                return;
+	            }
+	            observations.delete(target);
+	            if (!observations.size) {
+	                this.controller_.removeObserver(this);
+	            }
+	        };
+	        /**
+	         * Stops observing all elements.
+	         *
+	         * @returns {void}
+	         */
+	        ResizeObserverSPI.prototype.disconnect = function () {
+	            this.clearActive();
+	            this.observations_.clear();
+	            this.controller_.removeObserver(this);
+	        };
+	        /**
+	         * Collects observation instances the associated element of which has changed
+	         * it's content rectangle.
+	         *
+	         * @returns {void}
+	         */
+	        ResizeObserverSPI.prototype.gatherActive = function () {
+	            var _this = this;
+	            this.clearActive();
+	            this.observations_.forEach(function (observation) {
+	                if (observation.isActive()) {
+	                    _this.activeObservations_.push(observation);
+	                }
+	            });
+	        };
+	        /**
+	         * Invokes initial callback function with a list of ResizeObserverEntry
+	         * instances collected from active resize observations.
+	         *
+	         * @returns {void}
+	         */
+	        ResizeObserverSPI.prototype.broadcastActive = function () {
+	            // Do nothing if observer doesn't have active observations.
+	            if (!this.hasActive()) {
+	                return;
+	            }
+	            var ctx = this.callbackCtx_;
+	            // Create ResizeObserverEntry instance for every active observation.
+	            var entries = this.activeObservations_.map(function (observation) {
+	                return new ResizeObserverEntry(observation.target, observation.broadcastRect());
+	            });
+	            this.callback_.call(ctx, entries, ctx);
+	            this.clearActive();
+	        };
+	        /**
+	         * Clears the collection of active observations.
+	         *
+	         * @returns {void}
+	         */
+	        ResizeObserverSPI.prototype.clearActive = function () {
+	            this.activeObservations_.splice(0);
+	        };
+	        /**
+	         * Tells whether observer has active observations.
+	         *
+	         * @returns {boolean}
+	         */
+	        ResizeObserverSPI.prototype.hasActive = function () {
+	            return this.activeObservations_.length > 0;
+	        };
+	        return ResizeObserverSPI;
+	    }());
+	
+	    // Registry of internal observers. If WeakMap is not available use current shim
+	    // for the Map collection as it has all required methods and because WeakMap
+	    // can't be fully polyfilled anyway.
+	    var observers = typeof WeakMap !== 'undefined' ? new WeakMap() : new MapShim();
+	    /**
+	     * ResizeObserver API. Encapsulates the ResizeObserver SPI implementation
+	     * exposing only those methods and properties that are defined in the spec.
+	     */
+	    var ResizeObserver = /** @class */ (function () {
+	        /**
+	         * Creates a new instance of ResizeObserver.
+	         *
+	         * @param {ResizeObserverCallback} callback - Callback that is invoked when
+	         *      dimensions of the observed elements change.
+	         */
+	        function ResizeObserver(callback) {
+	            if (!(this instanceof ResizeObserver)) {
+	                throw new TypeError('Cannot call a class as a function.');
+	            }
+	            if (!arguments.length) {
+	                throw new TypeError('1 argument required, but only 0 present.');
+	            }
+	            var controller = ResizeObserverController.getInstance();
+	            var observer = new ResizeObserverSPI(callback, controller, this);
+	            observers.set(this, observer);
+	        }
+	        return ResizeObserver;
+	    }());
+	    // Expose public methods of ResizeObserver.
+	    [
+	        'observe',
+	        'unobserve',
+	        'disconnect'
+	    ].forEach(function (method) {
+	        ResizeObserver.prototype[method] = function () {
+	            var _a;
+	            return (_a = observers.get(this))[method].apply(_a, arguments);
+	        };
+	    });
+	
+	    var index = (function () {
+	        // Export existing implementation if available.
+	        if (typeof global$1.ResizeObserver !== 'undefined') {
+	            return global$1.ResizeObserver;
+	        }
+	        return ResizeObserver;
+	    })();
+	
+	    return index;
+	
+	})));
+	
+	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
+
+/***/ }),
+/* 292 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _extends2 = __webpack_require__(293);
+	
+	var _extends3 = _interopRequireDefault(_extends2);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+	
+	function omit(obj, fields) {
+	  var shallowCopy = (0, _extends3["default"])({}, obj);
+	  for (var i = 0; i < fields.length; i++) {
+	    var key = fields[i];
+	    delete shallowCopy[key];
+	  }
+	  return shallowCopy;
+	}
+	
+	exports["default"] = omit;
+	module.exports = exports['default'];
+
+/***/ }),
+/* 293 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	exports.__esModule = true;
+	
+	var _assign = __webpack_require__(294);
+	
+	var _assign2 = _interopRequireDefault(_assign);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	exports.default = _assign2.default || function (target) {
+	  for (var i = 1; i < arguments.length; i++) {
+	    var source = arguments[i];
+	
+	    for (var key in source) {
+	      if (Object.prototype.hasOwnProperty.call(source, key)) {
+	        target[key] = source[key];
+	      }
+	    }
+	  }
+	
+	  return target;
+	};
+
+/***/ }),
+/* 294 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	module.exports = { "default": __webpack_require__(159), __esModule: true };
+
+/***/ }),
+/* 295 */
+/***/ (function(module, exports) {
+
+	"use strict";
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.calculateNodeStyling = calculateNodeStyling;
+	exports.default = calculateNodeHeight;
+	// Thanks to https://github.com/andreypopp/react-textarea-autosize/
+	
+	/**
+	 * calculateNodeHeight(uiTextNode, useCache = false)
+	 */
+	var HIDDEN_TEXTAREA_STYLE = "\n  min-height:0 !important;\n  max-height:none !important;\n  height:0 !important;\n  visibility:hidden !important;\n  overflow:hidden !important;\n  position:absolute !important;\n  z-index:-1000 !important;\n  top:0 !important;\n  right:0 !important\n";
+	var SIZING_STYLE = ['letter-spacing', 'line-height', 'padding-top', 'padding-bottom', 'font-family', 'font-weight', 'font-size', 'font-variant', 'text-rendering', 'text-transform', 'width', 'text-indent', 'padding-left', 'padding-right', 'border-width', 'box-sizing'];
+	var computedStyleCache = {};
+	var hiddenTextarea;
+	
+	function calculateNodeStyling(node) {
+	  var useCache = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+	  var nodeRef = node.getAttribute('id') || node.getAttribute('data-reactid') || node.getAttribute('name');
+	
+	  if (useCache && computedStyleCache[nodeRef]) {
+	    return computedStyleCache[nodeRef];
+	  }
+	
+	  var style = window.getComputedStyle(node);
+	  var boxSizing = style.getPropertyValue('box-sizing') || style.getPropertyValue('-moz-box-sizing') || style.getPropertyValue('-webkit-box-sizing');
+	  var paddingSize = parseFloat(style.getPropertyValue('padding-bottom')) + parseFloat(style.getPropertyValue('padding-top'));
+	  var borderSize = parseFloat(style.getPropertyValue('border-bottom-width')) + parseFloat(style.getPropertyValue('border-top-width'));
+	  var sizingStyle = SIZING_STYLE.map(function (name) {
+	    return "".concat(name, ":").concat(style.getPropertyValue(name));
+	  }).join(';');
+	  var nodeInfo = {
+	    sizingStyle: sizingStyle,
+	    paddingSize: paddingSize,
+	    borderSize: borderSize,
+	    boxSizing: boxSizing
+	  };
+	
+	  if (useCache && nodeRef) {
+	    computedStyleCache[nodeRef] = nodeInfo;
+	  }
+	
+	  return nodeInfo;
+	}
+	
+	function calculateNodeHeight(uiTextNode) {
+	  var useCache = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+	  var minRows = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
+	  var maxRows = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : null;
+	
+	  if (!hiddenTextarea) {
+	    hiddenTextarea = document.createElement('textarea');
+	    hiddenTextarea.setAttribute('tab-index', '-1');
+	    hiddenTextarea.setAttribute('aria-hidden', 'true');
+	    document.body.appendChild(hiddenTextarea);
+	  } // Fix wrap="off" issue
+	  // https://github.com/ant-design/ant-design/issues/6577
+	
+	
+	  if (uiTextNode.getAttribute('wrap')) {
+	    hiddenTextarea.setAttribute('wrap', uiTextNode.getAttribute('wrap'));
+	  } else {
+	    hiddenTextarea.removeAttribute('wrap');
+	  } // Copy all CSS properties that have an impact on the height of the content in
+	  // the textbox
+	
+	
+	  var _calculateNodeStyling = calculateNodeStyling(uiTextNode, useCache),
+	      paddingSize = _calculateNodeStyling.paddingSize,
+	      borderSize = _calculateNodeStyling.borderSize,
+	      boxSizing = _calculateNodeStyling.boxSizing,
+	      sizingStyle = _calculateNodeStyling.sizingStyle; // Need to have the overflow attribute to hide the scrollbar otherwise
+	  // text-lines will not calculated properly as the shadow will technically be
+	  // narrower for content
+	
+	
+	  hiddenTextarea.setAttribute('style', "".concat(sizingStyle, ";").concat(HIDDEN_TEXTAREA_STYLE));
+	  hiddenTextarea.value = uiTextNode.value || uiTextNode.placeholder || '';
+	  var minHeight = Number.MIN_SAFE_INTEGER;
+	  var maxHeight = Number.MAX_SAFE_INTEGER;
+	  var height = hiddenTextarea.scrollHeight;
+	  var overflowY;
+	
+	  if (boxSizing === 'border-box') {
+	    // border-box: add border, since height = content + padding + border
+	    height += borderSize;
+	  } else if (boxSizing === 'content-box') {
+	    // remove padding, since height = content
+	    height -= paddingSize;
+	  }
+	
+	  if (minRows !== null || maxRows !== null) {
+	    // measure height of a textarea with a single row
+	    hiddenTextarea.value = ' ';
+	    var singleRowHeight = hiddenTextarea.scrollHeight - paddingSize;
+	
+	    if (minRows !== null) {
+	      minHeight = singleRowHeight * minRows;
+	
+	      if (boxSizing === 'border-box') {
+	        minHeight = minHeight + paddingSize + borderSize;
+	      }
+	
+	      height = Math.max(minHeight, height);
+	    }
+	
+	    if (maxRows !== null) {
+	      maxHeight = singleRowHeight * maxRows;
+	
+	      if (boxSizing === 'border-box') {
+	        maxHeight = maxHeight + paddingSize + borderSize;
+	      }
+	
+	      overflowY = height > maxHeight ? '' : 'hidden';
+	      height = Math.min(maxHeight, height);
+	    }
+	  }
+	
+	  return {
+	    height: height,
+	    minHeight: minHeight,
+	    maxHeight: maxHeight,
+	    overflowY: overflowY
+	  };
+	}
+
+/***/ }),
+/* 296 */
+/***/ (function(module, exports, __webpack_require__) {
+
 	'use strict';
 	
 	Object.defineProperty(exports, "__esModule", {
@@ -34159,15 +36466,15 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _Tree = __webpack_require__(269);
+	var _Tree = __webpack_require__(297);
 	
 	var _Tree2 = _interopRequireDefault(_Tree);
 	
-	var _TreeNode = __webpack_require__(270);
+	var _TreeNode = __webpack_require__(298);
 	
 	var _TreeNode2 = _interopRequireDefault(_TreeNode);
 	
-	var _openAnimation = __webpack_require__(278);
+	var _openAnimation = __webpack_require__(303);
 	
 	var _openAnimation2 = _interopRequireDefault(_openAnimation);
 	
@@ -34277,7 +36584,7 @@
 	module.exports = exports['default'];
 
 /***/ }),
-/* 269 */
+/* 297 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -34294,11 +36601,11 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _TreeNode = __webpack_require__(270);
+	var _TreeNode = __webpack_require__(298);
 	
 	var _TreeNode2 = _interopRequireDefault(_TreeNode);
 	
-	var _infiniteScroll = __webpack_require__(272);
+	var _infiniteScroll = __webpack_require__(300);
 	
 	var _infiniteScroll2 = _interopRequireDefault(_infiniteScroll);
 	
@@ -34306,7 +36613,7 @@
 	
 	var _classnames2 = _interopRequireDefault(_classnames);
 	
-	var _util = __webpack_require__(271);
+	var _util = __webpack_require__(299);
 	
 	var _propTypes = __webpack_require__(6);
 	
@@ -34314,15 +36621,15 @@
 	
 	var _tinperBeeCore = __webpack_require__(27);
 	
-	var _config = __webpack_require__(273);
+	var _config = __webpack_require__(301);
 	
 	var _config2 = _interopRequireDefault(_config);
 	
-	var _createStore = __webpack_require__(274);
+	var _createStore = __webpack_require__(302);
 	
 	var _createStore2 = _interopRequireDefault(_createStore);
 	
-	var _omit = __webpack_require__(275);
+	var _omit = __webpack_require__(292);
 	
 	var _omit2 = _interopRequireDefault(_omit);
 	
@@ -35680,7 +37987,7 @@
 	module.exports = exports['default'];
 
 /***/ }),
-/* 270 */
+/* 298 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -35709,7 +38016,7 @@
 	
 	var _beeAnimate2 = _interopRequireDefault(_beeAnimate);
 	
-	var _util = __webpack_require__(271);
+	var _util = __webpack_require__(299);
 	
 	var _propTypes = __webpack_require__(6);
 	
@@ -36264,7 +38571,7 @@
 	module.exports = exports['default'];
 
 /***/ }),
-/* 271 */
+/* 299 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -36686,8 +38993,8 @@
 	        var obj = {
 	          key: key,
 	          title: title,
-	          isLeaf: isLeaf,
-	          children: []
+	          isLeaf: isLeaf
+	          // children: []
 	        };
 	        tree.push(_extends(obj, _extends({}, otherProps)));
 	        treeKeysMap[key] = node;
@@ -36707,8 +39014,8 @@
 	      var obj = {
 	        key: item[attr.id],
 	        title: item[attr.name],
-	        isLeaf: item[attr.isLeaf],
-	        children: []
+	        isLeaf: item[attr.isLeaf]
+	        // children: []
 	      };
 	      tree.push(_extends(obj, _extends({}, otherProps)));
 	      treeKeysMap[key] = item;
@@ -36720,7 +39027,9 @@
 	    }
 	  }
 	  // console.log('resData',resKeysMap);
-	  var run = function run(treeArrs) {
+	  var run = function run() {
+	    var treeArrs = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
+	
 	    if (resData.length > 0) {
 	      for (var _i2 = 0; _i2 < treeArrs.length; _i2++) {
 	        for (var j = 0; j < resData.length; j++) {
@@ -36734,9 +39043,12 @@
 	            var _obj = {
 	              key: _item[attr.id],
 	              title: _item[attr.name],
-	              isLeaf: _item[attr.isLeaf],
-	              children: []
+	              isLeaf: _item[attr.isLeaf]
+	              // children: []
 	            };
+	            if (!treeArrs[_i2].children) {
+	              treeArrs[_i2].children = [];
+	            }
 	            treeArrs[_i2].children.push(_extends(_obj, _extends({}, _otherProps)));
 	            resData.splice(j, 1);
 	            j--;
@@ -36778,7 +39090,7 @@
 	}
 
 /***/ }),
-/* 272 */
+/* 300 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -36795,9 +39107,9 @@
 	
 	var _propTypes2 = _interopRequireDefault(_propTypes);
 	
-	var _util = __webpack_require__(271);
+	var _util = __webpack_require__(299);
 	
-	var _config = __webpack_require__(273);
+	var _config = __webpack_require__(301);
 	
 	var _config2 = _interopRequireDefault(_config);
 	
@@ -37108,7 +39420,7 @@
 	module.exports = exports['default'];
 
 /***/ }),
-/* 273 */
+/* 301 */
 /***/ (function(module, exports) {
 
 	"use strict";
@@ -37129,7 +39441,7 @@
 	module.exports = exports["default"];
 
 /***/ }),
-/* 274 */
+/* 302 */
 /***/ (function(module, exports) {
 
 	"use strict";
@@ -37174,69 +39486,7 @@
 	module.exports = exports["default"];
 
 /***/ }),
-/* 275 */
-/***/ (function(module, exports, __webpack_require__) {
-
-	"use strict";
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	
-	var _extends2 = __webpack_require__(276);
-	
-	var _extends3 = _interopRequireDefault(_extends2);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
-	
-	function omit(obj, fields) {
-	  var shallowCopy = (0, _extends3["default"])({}, obj);
-	  for (var i = 0; i < fields.length; i++) {
-	    var key = fields[i];
-	    delete shallowCopy[key];
-	  }
-	  return shallowCopy;
-	}
-	
-	exports["default"] = omit;
-	module.exports = exports['default'];
-
-/***/ }),
-/* 276 */
-/***/ (function(module, exports, __webpack_require__) {
-
-	"use strict";
-	
-	exports.__esModule = true;
-	
-	var _assign = __webpack_require__(277);
-	
-	var _assign2 = _interopRequireDefault(_assign);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	exports.default = _assign2.default || function (target) {
-	  for (var i = 1; i < arguments.length; i++) {
-	    var source = arguments[i];
-	
-	    for (var key in source) {
-	      if (Object.prototype.hasOwnProperty.call(source, key)) {
-	        target[key] = source[key];
-	      }
-	    }
-	  }
-	
-	  return target;
-	};
-
-/***/ }),
-/* 277 */
-/***/ (function(module, exports, __webpack_require__) {
-
-	module.exports = { "default": __webpack_require__(159), __esModule: true };
-
-/***/ }),
-/* 278 */
+/* 303 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -37284,7 +39534,7 @@
 	module.exports = exports['default'];
 
 /***/ }),
-/* 279 */
+/* 304 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -37297,7 +39547,7 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _src = __webpack_require__(268);
+	var _src = __webpack_require__(296);
 	
 	var _src2 = _interopRequireDefault(_src);
 	
@@ -37411,7 +39661,7 @@
 	module.exports = exports['default'];
 
 /***/ }),
-/* 280 */
+/* 305 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -37424,7 +39674,7 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _src = __webpack_require__(268);
+	var _src = __webpack_require__(296);
 	
 	var _src2 = _interopRequireDefault(_src);
 	
@@ -37560,7 +39810,7 @@
 	module.exports = exports['default'];
 
 /***/ }),
-/* 281 */
+/* 306 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -37573,7 +39823,7 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _src = __webpack_require__(268);
+	var _src = __webpack_require__(296);
 	
 	var _src2 = _interopRequireDefault(_src);
 	
@@ -37725,7 +39975,7 @@
 	module.exports = exports['default'];
 
 /***/ }),
-/* 282 */
+/* 307 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -37742,7 +39992,7 @@
 	
 	var _beeFormControl2 = _interopRequireDefault(_beeFormControl);
 	
-	var _src = __webpack_require__(268);
+	var _src = __webpack_require__(296);
 	
 	var _src2 = _interopRequireDefault(_src);
 	
@@ -37935,7 +40185,7 @@
 	module.exports = exports['default'];
 
 /***/ }),
-/* 283 */
+/* 308 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -37948,7 +40198,7 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _src = __webpack_require__(268);
+	var _src = __webpack_require__(296);
 	
 	var _src2 = _interopRequireDefault(_src);
 	
@@ -38133,7 +40383,7 @@
 	module.exports = exports['default'];
 
 /***/ }),
-/* 284 */
+/* 309 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -38146,7 +40396,7 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _src = __webpack_require__(268);
+	var _src = __webpack_require__(296);
 	
 	var _src2 = _interopRequireDefault(_src);
 	
@@ -38240,7 +40490,7 @@
 	module.exports = exports['default'];
 
 /***/ }),
-/* 285 */
+/* 310 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -38253,7 +40503,7 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _src = __webpack_require__(268);
+	var _src = __webpack_require__(296);
 	
 	var _src2 = _interopRequireDefault(_src);
 	
@@ -38501,7 +40751,7 @@
 	module.exports = exports['default'];
 
 /***/ }),
-/* 286 */
+/* 311 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -38514,7 +40764,7 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _src = __webpack_require__(268);
+	var _src = __webpack_require__(296);
 	
 	var _src2 = _interopRequireDefault(_src);
 	
@@ -38673,7 +40923,7 @@
 	module.exports = exports['default'];
 
 /***/ }),
-/* 287 */
+/* 312 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -38686,7 +40936,7 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _src = __webpack_require__(268);
+	var _src = __webpack_require__(296);
 	
 	var _src2 = _interopRequireDefault(_src);
 	
@@ -38756,7 +41006,7 @@
 	module.exports = exports['default'];
 
 /***/ }),
-/* 288 */
+/* 313 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -38769,7 +41019,7 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _src = __webpack_require__(268);
+	var _src = __webpack_require__(296);
 	
 	var _src2 = _interopRequireDefault(_src);
 	
@@ -38887,7 +41137,7 @@
 	module.exports = exports['default'];
 
 /***/ }),
-/* 289 */
+/* 314 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -38900,7 +41150,7 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _src = __webpack_require__(268);
+	var _src = __webpack_require__(296);
 	
 	var _src2 = _interopRequireDefault(_src);
 	
@@ -39035,7 +41285,7 @@
 	module.exports = exports['default'];
 
 /***/ }),
-/* 290 */
+/* 315 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -39048,7 +41298,7 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _src = __webpack_require__(268);
+	var _src = __webpack_require__(296);
 	
 	var _src2 = _interopRequireDefault(_src);
 	
@@ -39147,7 +41397,7 @@
 	module.exports = exports['default'];
 
 /***/ }),
-/* 291 */
+/* 316 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -39164,7 +41414,7 @@
 	
 	var _beeButton2 = _interopRequireDefault(_beeButton);
 	
-	var _src = __webpack_require__(268);
+	var _src = __webpack_require__(296);
 	
 	var _src2 = _interopRequireDefault(_src);
 	
@@ -39334,7 +41584,7 @@
 	module.exports = exports['default'];
 
 /***/ }),
-/* 292 */
+/* 317 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -39347,7 +41597,7 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _src = __webpack_require__(268);
+	var _src = __webpack_require__(296);
 	
 	var _src2 = _interopRequireDefault(_src);
 	

@@ -355,8 +355,8 @@ export function convertListToTree(treeData, attr, flatTreeKeysMap) {
           let obj = {
                 key,
                 title,
-                isLeaf,
-                children: []
+                isLeaf
+                // children: []
               }
           tree.push(Object.assign(obj, {...otherProps}));
           treeKeysMap[key] = node;
@@ -371,8 +371,8 @@ export function convertListToTree(treeData, attr, flatTreeKeysMap) {
             let obj = {
                 key: item[attr.id],
                 title: item[attr.name],
-                isLeaf: item[attr.isLeaf],
-                children: []
+                isLeaf: item[attr.isLeaf]
+                // children: []
             };
             tree.push(Object.assign(obj, {...otherProps}));
             treeKeysMap[key] = item;
@@ -383,7 +383,7 @@ export function convertListToTree(treeData, attr, flatTreeKeysMap) {
         }
     }
     // console.log('resData',resKeysMap);
-    var run = function(treeArrs) {
+    var run = function(treeArrs = []) {
         if (resData.length > 0) {
             for (let i = 0; i < treeArrs.length; i++) {
                 for (let j = 0; j < resData.length; j++) {
@@ -393,9 +393,12 @@ export function convertListToTree(treeData, attr, flatTreeKeysMap) {
                         let obj = {
                             key: item[attr.id],
                             title: item[attr.name],
-                            isLeaf: item[attr.isLeaf],
-                            children: []
+                            isLeaf: item[attr.isLeaf]
+                            // children: []
                         };
+                        if(!treeArrs[i].children) {
+                          treeArrs[i].children = [];
+                        }
                         treeArrs[i].children.push(Object.assign(obj, {...otherProps}));
                         resData.splice(j, 1);
                         j--;

@@ -37345,7 +37345,7 @@
 	
 	  /**
 	   * 此方法为了解决树快捷键，当有的元素隐藏，按tab键也要显示的问题
-	   * @param {*} e 
+	   * @param {*} e
 	   */
 	
 	
@@ -37524,7 +37524,7 @@
 	
 	  /**
 	   * 深度遍历 treeData，把Tree数据拍平，变为一维数组
-	   * @param {*} treeData 
+	   * @param {*} treeData
 	   * @param {*} parentKey 标识父节点
 	   * @param {*} isShown 该节点是否显示在页面中，当节点的父节点是展开状态 或 该节点是根节点时，该值为 true
 	   */
@@ -37659,7 +37659,7 @@
 	        draggable = _props4.draggable,
 	        others = _objectWithoutProperties(_props4, ['showLine', 'prefixCls', 'className', 'focusable', 'checkable', 'loadData', 'checkStrictly', 'tabIndexValue', 'lazyLoad', 'getScrollContainer', 'defaultExpandedKeys', 'defaultSelectedKeys', 'defaultCheckedKeys', 'openAnimation', 'draggable']);
 	
-	    var customProps = _extends({}, (0, _omit2['default'])(others, ['showIcon', 'cancelUnSelect', 'onCheck', 'selectable', 'autoExpandParent', 'defaultExpandAll', 'onExpand', 'autoSelectWhenFocus', 'expandWhenDoubleClick', 'expandedKeys', 'keyFun', 'openIcon', 'closeIcon', 'treeData', 'checkedKeys', 'selectedKeys', 'renderTreeNodes', 'mustExpandable', 'onMouseEnter', 'onMouseLeave', 'onDoubleClick']));
+	    var customProps = _extends({}, (0, _omit2['default'])(others, ['showIcon', 'cancelUnSelect', 'onCheck', 'selectable', 'autoExpandParent', 'defaultExpandAll', 'onExpand', 'autoSelectWhenFocus', 'expandWhenDoubleClick', 'expandedKeys', 'keyFun', 'openIcon', 'closeIcon', 'treeData', 'checkedKeys', 'selectedKeys', 'renderTreeNodes', 'mustExpandable', 'onMouseEnter', 'onMouseLeave', 'onFocus', 'onDoubleClick']));
 	    var _state = this.state,
 	        treeData = _state.treeData,
 	        flatTreeData = _state.flatTreeData;
@@ -38996,6 +38996,9 @@
 	          isLeaf: isLeaf
 	          // children: []
 	        };
+	        if (!obj.isLeaf) {
+	          obj.children = [];
+	        }
 	        tree.push(_extends(obj, _extends({}, otherProps)));
 	        treeKeysMap[key] = node;
 	      }
@@ -39015,8 +39018,10 @@
 	        key: item[attr.id],
 	        title: item[attr.name],
 	        isLeaf: item[attr.isLeaf]
-	        // children: []
 	      };
+	      if (!obj.isLeaf) {
+	        obj.children = [];
+	      }
 	      tree.push(_extends(obj, _extends({}, otherProps)));
 	      treeKeysMap[key] = item;
 	      resData.splice(i, 1);
@@ -39046,8 +39051,8 @@
 	              isLeaf: _item[attr.isLeaf]
 	              // children: []
 	            };
-	            if (!treeArrs[_i2].children) {
-	              treeArrs[_i2].children = [];
+	            if (!_obj.isLeaf) {
+	              _obj.children = [];
 	            }
 	            treeArrs[_i2].children.push(_extends(_obj, _extends({}, _otherProps)));
 	            resData.splice(j, 1);

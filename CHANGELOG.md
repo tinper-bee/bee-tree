@@ -1,3 +1,12 @@
+## [2.1.25](https://github.com/tinper-bee/bee-tree/compare/v2.1.24...v2.1.25) (2020-10-12)
+
+
+### Bug Fixes
+
+* #JCJS-4571 滚动加载场景下treeNode无children时不设置默认值[] ([cd432da](https://github.com/tinper-bee/bee-tree/commit/cd432da51fb74cc61611311342ecfdae8ac2d426)), closes [#JCJS-4571](https://github.com/tinper-bee/bee-tree/issues/JCJS-4571)
+
+
+
 ## [2.1.24](https://github.com/tinper-bee/bee-tree/compare/v2.1.22...v2.1.24) (2020-09-18)
 
 

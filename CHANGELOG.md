@@ -1,3 +1,12 @@
+## [2.1.26](https://github.com/tinper-bee/bee-tree/compare/v2.1.25...v2.1.26) (2020-10-12)
+
+
+### Bug Fixes
+
+* #JCJS-4571 逻辑优化 ([f737339](https://github.com/tinper-bee/bee-tree/commit/f73733928012e7bf99e3fc3c157e1abf70ac54fd)), closes [#JCJS-4571](https://github.com/tinper-bee/bee-tree/issues/JCJS-4571)
+
+
+
 ## [2.1.25](https://github.com/tinper-bee/bee-tree/compare/v2.1.24...v2.1.25) (2020-10-12)
 
 

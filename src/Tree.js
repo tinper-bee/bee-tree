@@ -611,6 +611,9 @@ onExpand(treeNode,keyType) {
       if(props.autoSelectWhenFocus){
         this.onSelect(nextTreeNode);
       }
+    } else{
+      this._setDataTransfer(e);
+      console.debug('%c[bee-tree] [goDown()] nextTreeNode is null, e ==> ', 'color:blue', e);
     }
   }
 
@@ -618,6 +621,8 @@ onExpand(treeNode,keyType) {
     const props = this.props;
     const state = this.state;
     if(currentIndex == 0 && currentPos.length === 3){
+      this._setDataTransfer(e);
+      console.debug('%c[bee-tree] [goUp()] return with noting to do because currentIndex == 0 && currentPos.length === 3, e ==> ', 'color:blue', e);
       return
     }
     // 向上键Up
@@ -659,6 +664,13 @@ onExpand(treeNode,keyType) {
       }
 
 
+    } else {
+      this._setDataTransfer(e);
+      console.debug('%c[bee-tree] [goUp()] prevTreeNode is null, e ==> ', 'color:blue', e);
+    }
+    if (!preElement) {
+      this._setDataTransfer(e);
+      console.debug('%c[bee-tree] [goUp()] preElement is null, e ==> ', 'color:blue', e);
     }
     preElement && preElement.focus();
     const eventKey = prevTreeNode.props.eventKey || prevTreeNode.key;
@@ -703,6 +715,13 @@ onExpand(treeNode,keyType) {
      this.props.keyFun && this.props.keyFun(e,treeNode);
     // e.preventDefault();
 
+  }
+
+  _setDataTransfer (e) {
+    e.target._dataTransfer = {
+      ooo: 'bee-tree',
+      _cancelBubble: false // 向上层发出不取消冒泡标识，表示bee-Tree不处理该事件，上层可以处理
+    };
   }
 
   _focusDom(selectKeyDomPos,targetDom){

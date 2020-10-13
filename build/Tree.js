@@ -145,6 +145,7 @@ var Tree = function (_React$Component) {
   };
 
   Tree.prototype.componentWillReceiveProps = function componentWillReceiveProps(nextProps) {
+    var flatTreeDataDone = false; //已经更新过flatTree
     var startIndex = this.startIndex,
         endIndex = this.endIndex,
         props = this.props,
@@ -177,6 +178,7 @@ var Tree = function (_React$Component) {
         st.flatTreeData = flatTreeData;
         var newTreeList = flatTreeData.slice(startIndex, endIndex);
         this.handleTreeListChange(newTreeList, startIndex, endIndex);
+        flatTreeDataDone = true;
       }
     }
 
@@ -200,10 +202,12 @@ var Tree = function (_React$Component) {
       this.dataChange = true;
       //treeData更新时，需要重新处理一次数据
       if (nextProps.lazyLoad) {
-        var _flatTreeData = this.deepTraversal(nextProps.treeData);
-        st.flatTreeData = _flatTreeData;
-        var _newTreeList = _flatTreeData.slice(startIndex, endIndex);
-        this.handleTreeListChange(_newTreeList, startIndex, endIndex);
+        if (!flatTreeDataDone) {
+          var _flatTreeData = this.deepTraversal(nextProps.treeData);
+          st.flatTreeData = _flatTreeData;
+          var _newTreeList = _flatTreeData.slice(startIndex, endIndex);
+          this.handleTreeListChange(_newTreeList, startIndex, endIndex);
+        }
       } else {
         st.treeData = nextProps.treeData;
       }
@@ -647,6 +651,9 @@ var Tree = function (_React$Component) {
       if (props.autoSelectWhenFocus) {
         this.onSelect(nextTreeNode);
       }
+    } else {
+      this._setDataTransfer(e);
+      console.debug('%c[bee-tree] [goDown()] nextTreeNode is null, e ==> ', 'color:blue', e);
     }
   };
 
@@ -654,6 +661,8 @@ var Tree = function (_React$Component) {
     var props = this.props;
     var state = this.state;
     if (currentIndex == 0 && currentPos.length === 3) {
+      this._setDataTransfer(e);
+      console.debug('%c[bee-tree] [goUp()] return with noting to do because currentIndex == 0 && currentPos.length === 3, e ==> ', 'color:blue', e);
       return;
     }
     // 向上键Up
@@ -694,6 +703,13 @@ var Tree = function (_React$Component) {
         // 不存在上一个节点时，选中它的父节点
         preElement = e.target.parentElement.parentElement.parentElement.querySelector('a');
       }
+    } else {
+      this._setDataTransfer(e);
+      console.debug('%c[bee-tree] [goUp()] prevTreeNode is null, e ==> ', 'color:blue', e);
+    }
+    if (!preElement) {
+      this._setDataTransfer(e);
+      console.debug('%c[bee-tree] [goUp()] preElement is null, e ==> ', 'color:blue', e);
     }
     preElement && preElement.focus();
     var eventKey = prevTreeNode.props.eventKey || prevTreeNode.key;
@@ -741,6 +757,13 @@ var Tree = function (_React$Component) {
     // e.preventDefault();
   };
 
+  Tree.prototype._setDataTransfer = function _setDataTransfer(e) {
+    e.target._dataTransfer = {
+      ooo: 'bee-tree',
+      _cancelBubble: false // 向上层发出不取消冒泡标识，表示bee-Tree不处理该事件，上层可以处理
+    };
+  };
+
   Tree.prototype._focusDom = function _focusDom(selectKeyDomPos, targetDom) {
     var queryInfo = 'a[pos="' + selectKeyDomPos + '"]';
     var parentEle = (0, _util.closest)(targetDom, ".u-tree");
@@ -752,7 +775,7 @@ var Tree = function (_React$Component) {
 
   /**
    * 此方法为了解决树快捷键，当有的元素隐藏，按tab键也要显示的问题
-   * @param {*} e 
+   * @param {*} e
    */
 
 
@@ -771,8 +794,8 @@ var Tree = function (_React$Component) {
 
       var tabIndexKey = selectedKeys[0];
       var isExist = false;
-      var treeNode = children.length && children[0];
-      var eventKey = treeNode.props.eventKey || treeNode.key;
+      var treeNode = children && children.length && children[0];
+      var eventKey = treeNode && treeNode.props.eventKey || treeNode.key;
       if (this.selectKeyDomExist && tabIndexKey || !tabIndexKey) {
         isExist = true;
         var queryInfo = 'a[pos="' + this.selectKeyDomPos + '"]';
@@ -931,7 +954,7 @@ var Tree = function (_React$Component) {
 
   /**
    * 深度遍历 treeData，把Tree数据拍平，变为一维数组
-   * @param {*} treeData 
+   * @param {*} treeData
    * @param {*} parentKey 标识父节点
    * @param {*} isShown 该节点是否显示在页面中，当节点的父节点是展开状态 或 该节点是根节点时，该值为 true
    */
@@ -1066,7 +1089,7 @@ var Tree = function (_React$Component) {
         draggable = _props4.draggable,
         others = _objectWithoutProperties(_props4, ['showLine', 'prefixCls', 'className', 'focusable', 'checkable', 'loadData', 'checkStrictly', 'tabIndexValue', 'lazyLoad', 'getScrollContainer', 'defaultExpandedKeys', 'defaultSelectedKeys', 'defaultCheckedKeys', 'openAnimation', 'draggable']);
 
-    var customProps = _extends({}, (0, _omit2["default"])(others, ['showIcon', 'cancelUnSelect', 'onCheck', 'selectable', 'autoExpandParent', 'defaultExpandAll', 'onExpand', 'autoSelectWhenFocus', 'expandWhenDoubleClick', 'expandedKeys', 'keyFun', 'openIcon', 'closeIcon', 'treeData', 'checkedKeys', 'selectedKeys', 'renderTreeNodes', 'mustExpandable', 'onMouseEnter', 'onMouseLeave', 'onDoubleClick']));
+    var customProps = _extends({}, (0, _omit2["default"])(others, ['showIcon', 'cancelUnSelect', 'onCheck', 'selectable', 'autoExpandParent', 'defaultExpandAll', 'onExpand', 'autoSelectWhenFocus', 'expandWhenDoubleClick', 'expandedKeys', 'keyFun', 'openIcon', 'closeIcon', 'treeData', 'checkedKeys', 'selectedKeys', 'renderTreeNodes', 'mustExpandable', 'onMouseEnter', 'onMouseLeave', 'onFocus', 'onDoubleClick']));
     var _state = this.state,
         treeData = _state.treeData,
         flatTreeData = _state.flatTreeData;

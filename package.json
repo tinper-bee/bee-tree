@@ -1,6 +1,7 @@
 {
   "name": "bee-tree",
-  "version": "2.1.27-yonui.0",
+  "version": "2.1.26",
+  "version-yonui": "2.1.27-yonui.0",
   "description": "Tree ui component for react",
   "keywords": [
     "react",

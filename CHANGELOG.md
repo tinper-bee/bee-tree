@@ -1,3 +1,12 @@
+## [2.1.29](https://github.com/tinper-bee/bee-tree/compare/v2.1.28...v2.1.29) (2020-10-21)
+
+
+### Bug Fixes
+
+* 懒加载场景中treeNode为undefined取不到key ([2aabc50](https://github.com/tinper-bee/bee-tree/commit/2aabc5090d0e29c53445f849f358f9b1e1838651))
+
+
+
 ## [2.1.28](https://github.com/tinper-bee/bee-tree/compare/v2.1.27...v2.1.28) (2020-10-21)
 
 

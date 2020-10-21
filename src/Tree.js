@@ -748,7 +748,7 @@ onExpand(treeNode,keyType) {
       let tabIndexKey = selectedKeys[0]
       let isExist = false;
       const treeNode = children&&children.length && children[0];
-      let eventKey = treeNode&&treeNode.props.eventKey || treeNode.key;
+      let eventKey = treeNode && (treeNode.props.eventKey || treeNode.key);
       if((this.selectKeyDomExist && tabIndexKey) || !tabIndexKey){
         isExist = true;
         const queryInfo = `a[pos="${this.selectKeyDomPos}"]`;

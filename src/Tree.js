@@ -635,8 +635,9 @@ onExpand(treeNode,keyType) {
     }
 
     let prevTreeNode,preElement;
+    const treeNodes = props.children || this.cacheTreeNodes
     //选中上一个相邻的节点
-    loopAllChildren(props.children,function(item,index,pos,newKey){
+    loopAllChildren(treeNodes,function(item,index,pos,newKey){
       if(pos == prePos){
         prevTreeNode = item;
       }

@@ -37240,6 +37240,9 @@
 	      if (props.autoSelectWhenFocus) {
 	        this.onSelect(nextTreeNode);
 	      }
+	    } else {
+	      this._setDataTransfer(e);
+	      console.debug('%c[bee-tree] [goDown()] nextTreeNode is null, e ==> ', 'color:blue', e);
 	    }
 	  };
 	
@@ -37247,6 +37250,8 @@
 	    var props = this.props;
 	    var state = this.state;
 	    if (currentIndex == 0 && currentPos.length === 3) {
+	      this._setDataTransfer(e);
+	      console.debug('%c[bee-tree] [goUp()] return with noting to do because currentIndex == 0 && currentPos.length === 3, e ==> ', 'color:blue', e);
 	      return;
 	    }
 	    // 向上键Up
@@ -37260,8 +37265,9 @@
 	
 	    var prevTreeNode = void 0,
 	        preElement = void 0;
+	    var treeNodes = props.children || this.cacheTreeNodes;
 	    //选中上一个相邻的节点
-	    (0, _util.loopAllChildren)(props.children, function (item, index, pos, newKey) {
+	    (0, _util.loopAllChildren)(treeNodes, function (item, index, pos, newKey) {
 	      if (pos == prePos) {
 	        prevTreeNode = item;
 	      }
@@ -37287,6 +37293,13 @@
 	        // 不存在上一个节点时，选中它的父节点
 	        preElement = e.target.parentElement.parentElement.parentElement.querySelector('a');
 	      }
+	    } else {
+	      this._setDataTransfer(e);
+	      console.debug('%c[bee-tree] [goUp()] prevTreeNode is null, e ==> ', 'color:blue', e);
+	    }
+	    if (!preElement) {
+	      this._setDataTransfer(e);
+	      console.debug('%c[bee-tree] [goUp()] preElement is null, e ==> ', 'color:blue', e);
 	    }
 	    preElement && preElement.focus();
 	    var eventKey = prevTreeNode.props.eventKey || prevTreeNode.key;
@@ -37332,6 +37345,13 @@
 	    }
 	    this.props.keyFun && this.props.keyFun(e, treeNode);
 	    // e.preventDefault();
+	  };
+	
+	  Tree.prototype._setDataTransfer = function _setDataTransfer(e) {
+	    e.target._dataTransfer = {
+	      ooo: 'bee-tree',
+	      _cancelBubble: false // 向上层发出不取消冒泡标识，表示bee-Tree不处理该事件，上层可以处理
+	    };
 	  };
 	
 	  Tree.prototype._focusDom = function _focusDom(selectKeyDomPos, targetDom) {

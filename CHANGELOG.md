@@ -1,3 +1,12 @@
+## [2.1.28](https://github.com/tinper-bee/bee-tree/compare/v2.1.27...v2.1.28) (2020-10-21)
+
+
+### Bug Fixes
+
+* #JCJS-4818 树的向上快捷键失效bug ([4158d7e](https://github.com/tinper-bee/bee-tree/commit/4158d7ea361cc1eec8615b2c7fafd471b58f0ff3)), closes [#JCJS-4818](https://github.com/tinper-bee/bee-tree/issues/JCJS-4818)
+
+
+
 ## [2.1.27](https://github.com/tinper-bee/bee-tree/compare/v2.1.26...v2.1.27) (2020-10-15)
 
 

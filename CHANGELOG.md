@@ -1,3 +1,12 @@
+## [2.1.30](https://github.com/tinper-bee/bee-tree/compare/v2.1.29...v2.1.30) (2020-12-02)
+
+
+### Bug Fixes
+
+* 选中树节点,focusKey一直显示bug ([4a182a9](https://github.com/tinper-bee/bee-tree/commit/4a182a93f3664670fca7add4bd74b9a565e42993))
+
+
+
 ## [2.1.29](https://github.com/tinper-bee/bee-tree/compare/v2.1.28...v2.1.29) (2020-10-21)
 
 

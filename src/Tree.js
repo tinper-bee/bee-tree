@@ -482,6 +482,9 @@ onExpand(treeNode,keyType) {
         selectedKeys,
       });
     }
+    this.setState({
+      focusKey: ''
+    })
     props.onSelect(selectedKeys, newSt);
   }
 

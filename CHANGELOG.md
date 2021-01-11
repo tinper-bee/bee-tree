@@ -1,3 +1,12 @@
+## [2.1.31](https://github.com/tinper-bee/bee-tree/compare/v2.1.30...v2.1.31) (2021-01-11)
+
+
+### Bug Fixes
+
+* 改变数据源时，scrollTop回到顶部 ([de7b4e5](https://github.com/tinper-bee/bee-tree/commit/de7b4e58fbf3768be315b3f6b7a1c0145df11162))
+
+
+
 ## [2.1.30](https://github.com/tinper-bee/bee-tree/compare/v2.1.29...v2.1.30) (2020-12-02)
 
 

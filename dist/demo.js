@@ -58,15 +58,15 @@
 	
 	var _beePanel = __webpack_require__(9);
 	
-	var _beeDrawer = __webpack_require__(84);
+	var _beeDrawer = __webpack_require__(82);
 	
 	var _beeDrawer2 = _interopRequireDefault(_beeDrawer);
 	
-	var _beeClipboard = __webpack_require__(98);
+	var _beeClipboard = __webpack_require__(96);
 	
 	var _beeClipboard2 = _interopRequireDefault(_beeClipboard);
 	
-	var _src = __webpack_require__(296);
+	var _src = __webpack_require__(300);
 	
 	var _src2 = _interopRequireDefault(_src);
 	
@@ -80,7 +80,7 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : _defaults(subClass, superClass); }
 	
-	var Demo1 = __webpack_require__(304);var Demo2 = __webpack_require__(305);var Demo3 = __webpack_require__(306);var Demo4 = __webpack_require__(307);var Demo5 = __webpack_require__(308);var Demo6 = __webpack_require__(309);var Demo7 = __webpack_require__(310);var Demo8 = __webpack_require__(311);var Demo9 = __webpack_require__(312);var Demo10 = __webpack_require__(313);var Demo11 = __webpack_require__(314);var Demo12 = __webpack_require__(315);var Demo13 = __webpack_require__(316);var Demo14 = __webpack_require__(317);var DemoArray = [{ "example": _react2['default'].createElement(Demo1, null), "title": " Tree基本使用示例", "code": "/**\n *\n * @title Tree基本使用示例\n * @description 示例涵盖 checkbox如何选择，disable状态和部分选择状态。checkStrictly为true时，子节点与父节点的选择情况都不会影响到对方\n *\n */\n\n\nimport React, {\n\tComponent\n} from 'react';\n\nconst TreeNode = Tree.TreeNode;\n\nconst defaultProps = {\n\tkeys: ['0-0-0', '0-0-1']\n}\nclass Demo1 extends Component {\n\tconstructor(props) {\n\t\tsuper(props);\n\t\tconst keys = this.props.keys;\n\t\tthis.state = {\n\t\t\tdefaultExpandedKeys: keys,\n\t\t\tdefaultSelectedKeys: keys,\n\t\t\tdefaultCheckedKeys:keys,\n\t\t\tcheckedKeys: {checked:keys},\n\t\t};\n\t}\n\tonSelect(info) {\n\t\tconsole.log('selected', info);\n\t}\n\tonCheck = (checkedKeys,newst) => {\n\t\t//用户可以自定义当前选中和半选中的节点。\n\t\tconsole.log('onCheck', checkedKeys);\n\t\tconst cks = {\n\t\t\tchecked: checkedKeys.checked || checkedKeys,\n\t\t\thalfChecked:checkedKeys.halfChecked\n\t\t};\n\t\tthis.setState({checkedKeys:cks});\n\t}\n\n\tonDoubleClick=(key,treeNode)=>{\n\t\tconsole.log('---onDblClick---',key,'--treeNode--',treeNode);\n\t}\n\trender() {\n\t\n\t\treturn (\n\t\t\t<Tree \n                className=\"myCls\" \n                showLine \n                checkable\n                defaultExpandedKeys={this.state.defaultExpandedKeys}\n                defaultSelectedKeys={this.state.defaultSelectedKeys}\n                defaultCheckedKeys = {this.state.defaultCheckedKeys}\n                checkStrictly\n                showIcon\n                cancelUnSelect={true}\n                onSelect={this.onSelect} \n                onCheck={this.onCheck}\n                onDoubleClick={this.onDoubleClick}\n\t        >\n\t        <TreeNode title=\"parent 1\" key=\"0-0\"  icon={<Icon type=\"uf-treefolder\"  />}>\n\t          <TreeNode title=\"parent 1-0\" key=\"0-0-0\" disabled  icon={<Icon type=\"uf-treefolder\" />}>\n\t            <TreeNode title=\"leaf\" key=\"0-0-0-0\" disableCheckbox icon={<Icon type=\"uf-list-s-o\" />}/>\n\t            <TreeNode title=\"leaf\" key=\"0-0-0-1\" icon={<Icon type=\"uf-list-s-o\" />}/>\n\t          </TreeNode>\n\t          <TreeNode title=\"parent 1-1\" key=\"0-0-1\" icon={<Icon type=\"uf-treefolder\" />}>\n\t            <TreeNode title={<span>sss</span>} key=\"0-0-1-0\" icon={<Icon type=\"uf-list-s-o\" />}/>\n\t          </TreeNode>\n\t        </TreeNode>\n\t      </Tree>\n\t\t);\n\t}\n}\n\nDemo1.defaultProps = defaultProps;\n\n\nexport default Demo1;", "desc": " 示例涵盖 checkbox如何选择，disable状态和部分选择状态。checkStrictly为true时，子节点与父节点的选择情况都不会影响到对方" }, { "example": _react2['default'].createElement(Demo2, null), "title": " Tree数据可控示例", "code": "/**\n*\n* @title Tree数据可控示例\n* @description\n* \b\n*/\n\nimport React, { Component } from 'react';\nimport { Tree } from 'tinper-bee';\n\n\nconst x = 6;\nconst y = 5;\nconst z = 2;\nconst gData = [];\n\nconst generateData = (_level, _preKey, _tns) => {\n    const preKey = _preKey || '0';\n    const tns = _tns || gData;\n\n    const children = [];\n    for (let i = 0; i < x; i++) {\n        const key = `${preKey}-${i}`;\n        tns.push({ title: key, key });\n        if (i < y) {\n            children.push(key);\n        }\n    }\n    if (_level < 0) {\n        return tns;\n    }\n    const level = _level - 1;\n    children.forEach((key, index) => {\n        tns[index].children = [];\n        return generateData(level, key, tns[index].children);\n    });\n};\ngenerateData(z);\n\nconst TreeNode = Tree.TreeNode;\n\n\nclass Demo2 extends Component{\n  constructor(props) {\n  \tsuper(props);\n    this.state = {\n      expandedKeys: [],\n      autoExpandParent: true,\n      checkedKeys: ['0-0-0'],\n      selectedKeys: [],\n    };\n    this.onExpand = this.onExpand.bind(this);\n    this.onCheck = this.onCheck.bind(this);\n    this.onSelect = this.onSelect.bind(this);\n  }\n  onExpand(expandedKeys) {\n    console.log('onExpand', arguments);\n    // if not set autoExpandParent to false, if children expanded, parent can not collapse.\n    // or, you can remove all expanded children keys.\n    this.setState({\n      expandedKeys,\n      autoExpandParent: false,\n    });\n  }\n  onCheck(checkedKeys) {\n    this.setState({\n      checkedKeys,\n      selectedKeys: ['0-3', '0-4'],\n    });\n  }\n  onSelect(selectedKeys, info) {\n    console.log('onSelect', info);\n    this.setState({ selectedKeys });\n  }\n  // keydown的钩子事件\n  onKeyDown = (e,treeNode)=>{\n    console.log('***',e);\n    return false;\n  }\n  render() {\n    const loop = data => data.map((item) => {\n      if (item.children) {\n        return (\n          <TreeNode key={item.key} title={item.key} disableCheckbox={item.key === '0-0-0'} ext={{'as':'sdfa'}}>\n            {loop(item.children)}\n          </TreeNode>\n        );\n      }\n      return <TreeNode key={item.key} title={item.key} isLeaf={true}/>;\n    });\n    return (\n      <Tree\n        checkable\n        focusable\n        className=\"demo2 myCls\"\n        onExpand={this.onExpand} expandedKeys={this.state.expandedKeys}\n        autoExpandParent={this.state.autoExpandParent}\n        onCheck={this.onCheck} \n        onSelect={this.onSelect} \n        keyFun={this.onKeyDown}\n      >\n        {loop(gData)}\n      </Tree>\n    );\n  }\n};\n\n\nexport default Demo2;", "desc": "", "scss_code": "// .demo2.u-tree {\n//   li a.u-tree-node-content-wrapper:hover::before {\n//     background: rgb(235, 236, 240);\n//   }\n//   li a.u-tree-node-content-wrapper.u-tree-node-selected {\n//     color: rgb(245, 60, 50);\n//     .u-tree-title{\n//         color: rgb(245, 60, 50);\n//     }\n//     background: transparent;\n//     &::before {\n//       background: rgb(235, 236, 240);\n//     }\n//   }\n\n//   li a.u-tree-node-content-wrapper::before {\n//     position: absolute;\n//     right: 0;\n//     left: 0;\n//     height: 20px;\n//     -webkit-transition: all 0.3s;\n//     transition: all 0.3s;\n//     content: \"\";\n//   }\n\n//   li  span {\n//     position: relative;\n//     z-index: 1;\n//   }\n// }\n" }, { "example": _react2['default'].createElement(Demo3, null), "title": " Tree 拖拽使用示例", "code": "/**\n*\n* @title Tree 拖拽使用示例\n* @description 拖动结点插入到另一个结点后面或者其他的父节点里面。\n*\n*/\n\n\n\nimport React, { Component } from 'react';\nimport { Tree } from 'tinper-bee';\n\n\nconst x = 3;\nconst y = 2;\nconst z = 1;\nconst gData = [];\n\nconst generateData = (_level, _preKey, _tns) => {\n    const preKey = _preKey || '0';\n    const tns = _tns || gData;\n\n    const children = [];\n    for (let i = 0; i < x; i++) {\n        const key = `${preKey}-${i}`;\n        tns.push({ title: key, key });\n        if (i < y) {\n            children.push(key);\n        }\n    }\n    if (_level < 0) {\n        return tns;\n    }\n    const level = _level - 1;\n    children.forEach((key, index) => {\n        tns[index].children = [];\n        return generateData(level, key, tns[index].children);\n    });\n};\ngenerateData(z);\n\nconst TreeNode = Tree.TreeNode;\n\nclass Demo3 extends Component{\n  constructor(props) {\n    super(props);\n    this.state = {\n      gData,\n      expandedKeys: ['0-0', '0-0-0', '0-0-0-0'],\n    };\n    this.onDragEnter = this.onDragEnter.bind(this);\n    this.onDrop = this.onDrop.bind(this);\n  }\n  onDragEnter(info) {\n    console.log(info);\n    // expandedKeys 需要受控时设置\n    // this.setState({\n    //   expandedKeys: info.expandedKeys,\n    // });\n  }\n  onDrop(info) {\n    console.log(info);\n    const dropKey = info.node.props.eventKey;\n    const dragKey = info.dragNode.props.eventKey;\n    // const dragNodesKeys = info.dragNodesKeys;\n    const loop = (data, key, callback) => {\n      data.forEach((item, index, arr) => {\n        if (item.key === key) {\n          return callback(item, index, arr);\n        }\n        if (item.children) {\n          return loop(item.children, key, callback);\n        }\n      });\n    };\n    const data = [...this.state.gData];\n    let dragObj;\n    loop(data, dragKey, (item, index, arr) => {\n      arr.splice(index, 1);\n      dragObj = item;\n    });\n    if (info.dropToGap) {\n      let ar;\n      let i;\n      loop(data, dropKey, (item, index, arr) => {\n        ar = arr;\n        i = index;\n      });\n      ar.splice(i, 0, dragObj);\n    } else {\n      loop(data, dropKey, (item) => {\n        item.children = item.children || [];\n        // where to insert 示例添加到尾部，可以是随意位置\n        item.children.push(dragObj);\n      });\n    }\n    this.setState({\n      gData: data,\n    });\n  }\n  render() {\n    const loop = data => data.map((item) => {\n      if (item.children && item.children.length) {\n        return <TreeNode key={item.key} title={item.key}>{loop(item.children)}</TreeNode>;\n      }\n      return <TreeNode key={item.key} title={item.key} />;\n    });\n    return (\n      <Tree\n        className=\"myCls\"\n        defaultExpandedKeys={this.state.expandedKeys}\n        draggable\n        onDragEnter={this.onDragEnter}\n        onDrop={this.onDrop}\n      >\n        {loop(this.state.gData)}\n      </Tree>\n    );\n  }\n};\n\nexport default Demo3;", "desc": " 拖动结点插入到另一个结点后面或者其他的父节点里面。" }, { "example": _react2['default'].createElement(Demo4, null), "title": " Tree可搜索示例", "code": "/**\n *\n * @title Tree可搜索示例\n * @description\n *\n */\n\n\nimport React, {\n  Component\n} from 'react';\n\n\nconst x = 3;\nconst y = 2;\nconst z = 1;\nconst gData = [];\n\nconst generateData = (_level, _preKey, _tns) => {\n  const preKey = _preKey || '0';\n  const tns = _tns || gData;\n\n  const children = [];\n  for (let i = 0; i < x; i++) {\n    const key = `${preKey}-${i}`;\n    tns.push({\n      title: key,\n      key\n    });\n    if (i < y) {\n      children.push(key);\n    }\n  }\n  if (_level < 0) {\n    return tns;\n  }\n  const level = _level - 1;\n  children.forEach((key, index) => {\n    tns[index].children = [];\n    return generateData(level, key, tns[index].children);\n  });\n};\ngenerateData(z);\n\nconst TreeNode = Tree.TreeNode;\n\nconst dataList = [];\nconst generateList = (data) => {\n  for (let i = 0; i < data.length; i++) {\n    const node = data[i];\n    const key = node.key;\n    dataList.push({\n      key,\n      title: key\n    });\n    if (node.children) {\n      generateList(node.children, node.key);\n    }\n  }\n};\ngenerateList(gData);\n\nconst getParentKey = (key, tree) => {\n  let parentKey;\n  for (let i = 0; i < tree.length; i++) {\n    const node = tree[i];\n    if (node.children) {\n      if (node.children.some(item => item.key === key)) {\n        parentKey = node.key;\n      } else if (getParentKey(key, node.children)) {\n        parentKey = getParentKey(key, node.children);\n      }\n    }\n  }\n  return parentKey;\n};\n\n\nclass Demo4 extends Component {\n  constructor(props) {\n    super(props);\n    this.state = {\n      expandedKeys: [],\n      searchValue: '',\n      autoExpandParent: true,\n    }\n  }\n  onExpand = (expandedKeys) => {\n    this.setState({\n      expandedKeys,\n      autoExpandParent: false,\n    });\n  }\n  onChange = (value) => {\n\n    const expandedKeys = [];\n    dataList.forEach((item) => {\n      if (item.key.indexOf(value) > -1) {\n        expandedKeys.push(getParentKey(item.key, gData));\n      }\n    });\n    const uniqueExpandedKeys = [];\n    expandedKeys.forEach((item) => {\n      if (item && uniqueExpandedKeys.indexOf(item) === -1) {\n        uniqueExpandedKeys.push(item);\n      }\n    });\n    this.setState({\n      expandedKeys: uniqueExpandedKeys,\n      searchValue: value,\n      autoExpandParent: true,\n    });\n  }\n  render() {\n    const {\n      searchValue,\n      expandedKeys,\n      autoExpandParent\n    } = this.state;\n    const loop = data => data.map((item) => {\n      const index = item.key.search(searchValue);\n      const beforeStr = item.key.substr(0, index);\n      const afterStr = item.key.substr(index + searchValue.length);\n      const title = index > -1 ? (\n        <span>\n          {beforeStr}\n          <span className=\"u-tree-searchable-filter\">{searchValue}</span>\n          {afterStr}\n        </span>\n      ) : <span>{item.key}</span>;\n      if (item.children) {\n        return (\n          <TreeNode key={item.key} title={title}>\n            {loop(item.children)}\n          </TreeNode>\n        );\n      }\n      return <TreeNode key={item.key} title={title} />;\n    });\n    return (\n      <div>\n        <FormControl\n          style={{ width: 200 }}\n          placeholder=\"Search\"\n          onChange={this.onChange}\n        />\n        <Tree\n          className=\"myCls\"\n          onExpand={this.onExpand}\n          expandedKeys={expandedKeys}\n          autoExpandParent={autoExpandParent}\n        >\n          {loop(gData)}\n        </Tree>\n      </div>\n    );\n  }\n}\n\nexport default Demo4;", "desc": "", "scss_code": ".u-tree-searchable-filter {\n  color: #f50;\n  transition: all .3s ease;\n}" }, { "example": _react2['default'].createElement(Demo5, null), "title": " Tree异步数据加载", "code": "/**\n *\n * @title Tree异步数据加载\n * @description 当点击展开，异步获取子节点数据\n *\n */\n\n\nimport React, {\n  Component\n} from 'react';\n\n\nconst x = 3;\nconst y = 2;\nconst z = 1;\nconst gData = [];\n\nconst generateData = (_level, _preKey, _tns) => {\n  const preKey = _preKey || '0';\n  const tns = _tns || gData;\n\n  const children = [];\n  for (let i = 0; i < x; i++) {\n    const key = `${preKey}-${i}`;\n    tns.push({\n      title: key,\n      key\n    });\n    if (i < y) {\n      children.push(key);\n    }\n  }\n  if (_level < 0) {\n    return tns;\n  }\n  const level = _level - 1;\n  children.forEach((key, index) => {\n    tns[index].children = [];\n    return generateData(level, key, tns[index].children);\n  });\n};\ngenerateData(z);\n\nconst TreeNode = Tree.TreeNode;\n\nfunction generateTreeNodes(treeNode) {\n  const arr = [];\n  const key = treeNode.props.eventKey;\n  for (let i = 0; i < 3; i++) {\n    arr.push({\n      name: `leaf ${key}-${i}`,\n      key: `${key}-${i}`\n    });\n  }\n  return arr;\n}\n\nfunction setLeaf(treeData, curKey, level) {\n  const loopLeaf = (data, lev) => {\n    const l = lev - 1;\n    data.forEach((item) => {\n      if ((item.key.length > curKey.length) ? item.key.indexOf(curKey) !== 0 :\n        curKey.indexOf(item.key) !== 0) {\n        return;\n      }\n      if (item.children) {\n        loopLeaf(item.children, l);\n      } else if (l < 1) {\n        item.isLeaf = true;\n      }\n    });\n  };\n  loopLeaf(treeData, level + 1);\n}\n\nfunction getNewTreeData(treeData, curKey, child, level) {\n  const loop = (data) => {\n    if (level < 1 || curKey.length - 3 > level * 2) return;\n    data.forEach((item) => {\n      if (curKey.indexOf(item.key) === 0) {\n        if (item.children) {\n          loop(item.children);\n        } else {\n          item.children = child;\n        }\n      }\n    });\n  };\n  loop(treeData);\n  setLeaf(treeData, curKey, level);\n}\n\nclass Demo5 extends Component {\n  constructor(props) {\n    super(props);\n    this.state = {\n      treeData: [],\n    };\n    this.onSelect = this.onSelect.bind(this);\n    this.onLoadData = this.onLoadData.bind(this);\n  }\n  componentDidMount() {\n    setTimeout(() => {\n      this.setState({\n        treeData: [{\n          name: 'pNode 01',\n          key: '0-0'\n        }, {\n          name: 'pNode 02',\n          key: '0-1'\n        }, {\n          name: 'pNode 03',\n          key: '0-2',\n          isLeaf: true\n        }, ],\n      });\n    }, 100);\n  }\n  onSelect(info) {\n    console.log('selected', info);\n  }\n  onLoadData(treeNode) {\n    return new Promise((resolve) => {\n      setTimeout(() => {\n        const treeData = [...this.state.treeData];\n        getNewTreeData(treeData, treeNode.props.eventKey, generateTreeNodes(treeNode), 2);\n        this.setState({\n          treeData\n        });\n        resolve();\n      }, 1000);\n    });\n  }\n  render() {\n    const loop = data => data.map((item) => {\n      if (item.children) {\n        return <TreeNode title={item.name} key={item.key}>{loop(item.children)}</TreeNode>;\n      }\n      return <TreeNode title={item.name} key={item.key} isLeaf={item.isLeaf} disabled={item.key === '0-0-0'} />;\n    });\n    const treeNodes = loop(this.state.treeData);\n    return (\n      <Tree className=\"myCls\" onSelect={this.onSelect} loadData={this.onLoadData} >\n        {treeNodes}\n      </Tree>\n    );\n  }\n};\n\nexport default Demo5", "desc": " 当点击展开，异步获取子节点数据" }, { "example": _react2['default'].createElement(Demo6, null), "title": " Tree基本使用示例自定义图标", "code": "/**\r\n *\r\n * @title Tree基本使用示例自定义图标\r\n * @description 添加openIcon、closeIcon属性\r\n *\r\n */\r\n\r\n\r\nimport React, {\r\n\tComponent\r\n} from 'react';\r\n\r\n\nconst TreeNode = Tree.TreeNode;\r\n\r\nconst defaultProps = {\r\n\tkeys: ['0-0-0', '0-0-1']\r\n}\r\nclass Demo1 extends Component {\r\n\tconstructor(props) {\r\n\t\tsuper(props);\r\n\t\tconst keys = this.props.keys;\r\n\t\tthis.state = {\r\n\t\t\tdefaultExpandedKeys: keys,\r\n\t\t\tdefaultSelectedKeys: keys,\r\n\t\t\tdefaultCheckedKeys: keys,\r\n\t\t};\r\n\t}\r\n\tonSelect(info) {\r\n\t\tconsole.log('selected', info);\r\n\t}\r\n\tonCheck(info) {\r\n\t\tconsole.log('onCheck', info);\r\n\t}\r\n\trender() {\r\n\t\treturn (\r\n\r\n\t\t\t<Tree className=\"myCls\"  checkable openIcon={<Icon type=\"uf-minus\" />} closeIcon={<Icon type=\"uf-plus\" />}\r\n\t        defaultExpandedKeys={this.state.defaultExpandedKeys}\r\n\t        defaultSelectedKeys={this.state.defaultSelectedKeys}\r\n\t        defaultCheckedKeys={this.state.defaultCheckedKeys}\r\n\t        onSelect={this.onSelect} onCheck={this.onCheck}\r\n\t      >\r\n\t        <TreeNode title=\"parent 1\" key=\"0-0\">\r\n\t          <TreeNode title=\"parent 1-0\" key=\"0-0-0\" disabled>\r\n\t            <TreeNode title=\"leaf\" key=\"0-0-0-0\" disableCheckbox />\r\n\t            <TreeNode title=\"leaf\" key=\"0-0-0-1\" />\r\n\t          </TreeNode>\r\n\t          <TreeNode title=\"parent 1-1\" key=\"0-0-1\">\r\n\t            <TreeNode title={<span>sss</span>} key=\"0-0-1-0\" />\r\n\t          </TreeNode>\r\n\t        </TreeNode>\r\n\t      </Tree>\r\n\t\t);\r\n\t}\r\n}\r\n\r\nDemo1.defaultProps = defaultProps;\r\n\r\n\r\nexport default Demo1;", "desc": " 添加openIcon、closeIcon属性" }, { "example": _react2['default'].createElement(Demo7, null), "title": " Tree增加节点", "code": "/**\n *\n * @title Tree增加节点\n * @description 增加节点和拖拽组合使用示例\n *\n */\n\n\nimport React, {\n  Component\n} from 'react';\n\n\nconst TreeNode = Tree.TreeNode;\n\n\nclass Demo7 extends Component {\n  constructor(props) {\n    super(props);\n    this.state = {\n      treeData: [],\n      defaultExpandedKeys: ['0-0', '0-1', '0-2'],\n      parentNode: {}\n    };\n    this.onSelect = this.onSelect.bind(this);\n    this.addNode = this.addNode.bind(this);\n    this.clickFun = this.clickFun.bind(this);\n    this.getNodeByKey = this.getNodeByKey.bind(this);\n    this.parentNode = null\n  }\n  componentDidMount() {\n      setTimeout(() => {\n        this.setState({\n          treeData: [{\n            name: 'pNode 01',\n            key: '0-0',\n            children: [{\n              name: 'leaf 0-0-0',\n              key: '0-0-0'\n            }, {\n              name: 'leaf 0-0-1',\n              key: '0-0-1'\n            }]\n          }, {\n            name: 'pNode 02',\n            key: '0-1',\n            children: [{\n              name: 'leaf 0-1-0',\n              key: '0-1-0'\n            }, {\n              name: 'leaf 0-1-1',\n              key: '0-1-1'\n            }]\n          }, {\n            name: 'pNode 03',\n            key: '0-2',\n            isLeaf: true\n          }, ],\n        });\n      }, 100);\n    }\n    /**\n     * 增加节点\n     * @param string prKey    [父节点key]\n     * @param object nodeItem [子节点信息]\n     */\n  addNode(prKey, nodeItem) {\n    const data = this.state.treeData;\n    let parNode;\n    if (prKey) {\n      // 如果prKey存在则搜索父节点进行添加\n      parNode = this.getNodeByKey(data, prKey);\n      //如果父节点存在的话，添加到父节点上\n      if (parNode) {\n        if (!parNode.children) {\n          parNode.children = [];\n        }\n        // 如果key不存在就动态生成一个\n        if (!nodeItem.key) {\n          nodeItem.key = prKey + parNode.children.length + 1;\n        }\n        parNode.children.push(nodeItem);\n      }\n    } else {\n      // 没有穿prKey添加到根下成为一级节点\n      if (!nodeItem.key) {\n        nodeItem.key = \"0-\" + data.length + 1;\n      }\n      data.push(nodeItem);\n    }\n\n    this.setState({\n      data\n    });\n  }\n\n  getNodeByKey(data, key) {\n    if (!this.parentNode) {\n      data.find(item => {\n        if (item.key === key) {\n          console.log('item.name---' + item.name)\n          this.parentNode = item;\n          return (true);\n        } else if (item.children) {\n          return this.getNodeByKey(item.children, key);\n\n        }\n      })\n    }\n    return this.parentNode;\n  }\n\n\n\n  onSelect(info) {\n      console.log('selected', info);\n    }\n    /**\n     * 点击button事件\n     */\n  clickFun() {\n    let prKey, nodeItem;\n    prKey = '0-1';\n    nodeItem = {\n      name: 'leaf 0-0-4'\n    }\n    this.addNode(prKey, nodeItem);\n  }\n\n  onDragEnter = (info) => {\n    console.log(info);\n    // expandedKeys 需要受控时设置\n    // this.setState({\n    //   expandedKeys: info.expandedKeys,\n    // });\n  }\n  onDrop = (info) => {\n    console.log(info);\n    const dropKey = info.node.props.eventKey;\n    const dragKey = info.dragNode.props.eventKey;\n    // const dragNodesKeys = info.dragNodesKeys;\n    const loop = (data, key, callback) => {\n      data.forEach((item, index, arr) => {\n        if (item.key === key) {\n          return callback(item, index, arr);\n        }\n        if (item.children) {\n          return loop(item.children, key, callback);\n        }\n      });\n    };\n    const data = [...this.state.treeData];\n    let dragObj;\n    loop(data, dragKey, (item, index, arr) => {\n      arr.splice(index, 1);\n      dragObj = item;\n    });\n    if (info.dropToGap) {\n      let ar;\n      let i;\n      loop(data, dropKey, (item, index, arr) => {\n        ar = arr;\n        i = index;\n      });\n      ar.splice(i, 0, dragObj);\n    } else {\n      loop(data, dropKey, (item) => {\n        item.children = item.children || [];\n        // where to insert 示例添加到尾部，可以是随意位置\n        item.children.push(dragObj);\n      });\n    }\n    this.setState({\n      treeData: data,\n    });\n  }\n\n  render() {\n    const loop = data => data.map((item) => {\n      if (item.children) {\n        return <TreeNode title={item.name} key={item.key}>{loop(item.children)}</TreeNode>;\n      }\n      return <TreeNode title={item.name} key={item.key} isLeaf={item.isLeaf} disabled={item.key === '0-0-0'} />;\n    });\n    const treeNodes = loop(this.state.treeData);\n    console.log('defaultKeys--' + this.state.defaultExpandedKeys);\n    return (\n      <div>\n        <Button colors=\"primary\" onClick={this.clickFun}>增加节点</Button>\n        <Tree \n        className=\"myCls\"\n        onSelect={this.onSelect} \n        defaultExpandedKeys={this.state.defaultExpandedKeys} \n        draggable\n        onDragEnter={this.onDragEnter}\n        onDrop={this.onDrop}>\n          {treeNodes}\n        </Tree>\n      </div>\n    );\n  }\n};\n\nexport default Demo7", "desc": " 增加节点和拖拽组合使用示例" }, { "example": _react2['default'].createElement(Demo8, null), "title": " Tree 节点可编辑", "code": "/**\n *\n * @title Tree 节点可编辑\n * @description 鼠标移动到节点上点击编辑图标进行编辑。e.node.props.eventKey代表当前节点key值。editKey指当前操作的节点key\n */\n\n\nimport React, {\n\tComponent\n} from 'react';\n\n\nconst TreeNode = Tree.TreeNode;\n\nclass Demo8 extends Component {\n\tconstructor(props) {\n\t\tsuper(props);\n\n\t\tthis.state = {\n\t\t\ttreeData: [],\n\t\t\tisHover: \"\",\n\t\t\teditKey: \"\"\n\t\t};\n\n\t}\n\n\n\tonMouseEnter = (e) => {\n\t\tthis.setState({\n\t\t\tisHover: e.node.props.eventKey\n\t\t})\n\t}\n\tonMouseLeave = (e, treenode) => {\n\t\tthis.setState({\n\t\t\tisHover: \"\",\n\t\t\teditKey: \"\"\n\t\t})\n\n\t}\n\n\teditRender = (item) => {\n\t\tthis.setState({\n\t\t\teditKey: item.key\n\t\t});\n\t}\n\tnodechange = (item, value) => {\n\t\titem.name = value;\n\t}\n\trenderTreeTitle = (item) => {\n\t\tlet titleIcon, titleInfo;\n\t\t//编辑时input框\n\t\tif (this.state.editKey == item.key) {\n\t\t\ttitleInfo = <input type=\"text\" id=\"itemKey\" defaultValue={item.name} onChange={(e) => this.nodechange(item, e.target.value)} />\n\t\t} else {\n\t\t\ttitleInfo = <span className=\"title-middle\">{item.name}</span>\n\t\t}\n\t\t//编辑图标\n\t\tif (this.state.isHover == item.key) {\n\t\t\ttitleIcon = <Icon className=\"title-middle edit-icon\" type=\"uf-pencil\" onClick={(e) => this.editRender(item)}></Icon>;\n\t\t}\n\t\treturn (<div className=\"title-con\">\n\n\t\t\t{titleInfo}\n\t\t\t{titleIcon}\n\t\t</div>);\n\t}\n\n\tcomponentDidMount = () => {\n\t\tsetTimeout(() => {\n\t\t\tthis.setState({\n\t\t\t\ttreeData: [{\n\t\t\t\t\tname: 'pNode 01',\n\t\t\t\t\tkey: '0-0',\n\t\t\t\t\tchildren: [{\n\t\t\t\t\t\tname: 'leaf 0-0-0',\n\t\t\t\t\t\tkey: '0-0-0'\n\t\t\t\t\t}, {\n\t\t\t\t\t\tname: 'leaf 0-0-1',\n\t\t\t\t\t\tkey: '0-0-1'\n\t\t\t\t\t}]\n\t\t\t\t}, {\n\t\t\t\t\tname: 'pNode 02',\n\t\t\t\t\tkey: '0-1',\n\t\t\t\t\tchildren: [{\n\t\t\t\t\t\tname: 'leaf 0-1-0',\n\t\t\t\t\t\tkey: '0-1-0'\n\t\t\t\t\t}, {\n\t\t\t\t\t\tname: 'leaf 0-1-1',\n\t\t\t\t\t\tkey: '0-1-1'\n\t\t\t\t\t}]\n\t\t\t\t}, {\n\t\t\t\t\tname: 'pNode 03',\n\t\t\t\t\tkey: '0-2',\n\t\t\t\t\tisLeaf: true\n\t\t\t\t}, ],\n\t\t\t});\n\t\t\n\t\t}, 100);\n\t}\n\trender() {\n\t\tconst loop = data => data.map((item) => {\n\t\t\tif (item.children) {\n\t\t\t\treturn <TreeNode title={this.renderTreeTitle(item)} key={item.key}>{loop(item.children)}</TreeNode>;\n\t\t\t}\n\t\t\treturn <TreeNode title={this.renderTreeTitle(item)} key={item.key} isLeaf={item.isLeaf} disabled={item.key === '0-0-0'} />;\n\t\t});\n\t\tconst treeNodes = loop(this.state.treeData);\n\t\treturn (\n\t\t\t<Tree onMouseLeave={this.onMouseLeave} onMouseEnter={this.onMouseEnter} className=\"myCls\">\n\t\t\t\t{treeNodes}\n\t\t\t</Tree>\n\n\t\t);\n\t}\n}\n\n\n\nexport default Demo8;", "desc": " 鼠标移动到节点上点击编辑图标进行编辑。e.node.props.eventKey代表当前节点key值。editKey指当前操作的节点key", "scss_code": ".title-middle {\n  display: inline-block;\n  vertical-align: middle;\n}\n.edit-icon {\n  float:right;\n  font-size: 16px;\n  height: 16px;\n  line-height: 20px;\n}\n.title-con {\n  min-width: 150px;\n}" }, { "example": _react2['default'].createElement(Demo9, null), "title": " 连接线Tree", "code": "/**\n *\n * @title 连接线Tree\n * @description \n *\n */\n\n\nimport React, {\n\tComponent\n} from 'react';\n\n\nconst TreeNode = Tree.TreeNode;\nclass Demo9 extends Component {\n\tconstructor(props) {\n\t\tsuper(props);\n\t\tconst keys = this.props.keys;\n\t\tthis.state = {\n\t\t\tdefaultExpandedKeys: keys\n\t\t};\n\n\t}\n\n\trender() {\n\t\treturn (\n\t\t\t<Tree className=\"myCls\" showLine checkable  defaultExpandAll={true}>\n\t        <TreeNode title=\"parent 1\" key=\"0-0\">\n\t          <TreeNode title=\"parent 1-0\" key=\"0-0-0\" >\n\t            <TreeNode title=\"leaf\" key=\"0-0-0-0\"  />\n\t            <TreeNode title=\"leaf\" key=\"0-0-0-1\" />\n\t          </TreeNode>\n\t          <TreeNode title=\"parent 1-1\" key=\"0-0-1\">\n\t            <TreeNode title={<span>sss</span>} key=\"0-0-1-0\" />\n\t          </TreeNode>\n\t        </TreeNode>\n\t      </Tree>\n\t\t);\n\t}\n}\n\nexport default Demo9;", "desc": " " }, { "example": _react2['default'].createElement(Demo10, null), "title": " Tree基本使用示例", "code": "/**\n *\n * @title Tree基本使用示例\n * @description 如何获取选中对象自定义对象和数据\n *\n */\n\n\nimport React, {\n\tComponent\n} from 'react';\n\n\nconst TreeNode = Tree.TreeNode;\n\nconst defaultProps = {\n\tkeys: ['0-0-0', '0-0-1']\n}\nclass Demo10 extends Component {\n\tconstructor(props) {\n\t\tsuper(props);\n\t\tconst keys = this.props.keys;\n\t\tthis.state = {\n\t\t\tdefaultExpandedKeys: keys,\n\t\t\tdefaultSelectedKeys: keys,\n\t\t\tdefaultCheckedKeys:keys\n\t\t\t// checkedKeys: {checked:keys},\n\t\t};\n    }\n    /**\n     * 获取当前选中行的item对象。\n     * @param {*} value \n     */\n\tonSelect(selectedKeys, e) {\n        console.log(`${selectedKeys} selected`);//获取key\n        let currentObject = {};\n        currentObject.title = e.node.props.title; //获取选中对象的数据\n        currentObject.key = e.node.props.eventKey;\n        console.log(currentObject); \n\t}\n\tonCheck = (checkedKeys) => {\n\t\tlet self = this;\n\t\tconsole.log('onCheck', checkedKeys);\n\t\tconst cks = {\n\t\t\tchecked: checkedKeys.checked || checkedKeys,\n\t\t};\n\t\t// this.setState({checkedKeys:cks});\n\t}\n\n\tonDoubleClick=(key,treeNode)=>{\n\t\tconsole.log('---onDblClick---'+key+'--treeNode--'+treeNode);\n\t}\n\trender() {\n\t\n\t\treturn (\n\t\t\t<Tree className=\"myCls\" showLine checkable\n                defaultExpandedKeys={this.state.defaultExpandedKeys}\n                defaultSelectedKeys={this.state.defaultSelectedKeys}\n                defaultCheckedKeys = {this.state.defaultCheckedKeys}\n                checkStrictly\n                onSelect={this.onSelect} onCheck={this.onCheck}\n                onDoubleClick={this.onDoubleClick}\n            >\n                <TreeNode title=\"parent 1\" key=\"0-0\" >\n                <TreeNode title=\"parent 1-0\" key=\"0-0-0\" disabled>\n                    <TreeNode title=\"leaf\" key=\"0-0-0-0\" disableCheckbox />\n                    <TreeNode title=\"leaf\" key=\"0-0-0-1\" />\n                </TreeNode>\n                <TreeNode title=\"parent 1-1\" key=\"0-0-1\">\n                    <TreeNode title={<span>sss</span>} key=\"0-0-1-0\" />\n                </TreeNode>\n                <TreeNode title=\"parent 1-2\" key=\"0-0-2\" >\n                    <TreeNode title=\"leaf\" key=\"0-0-2-0\" />\n                    <TreeNode title=\"leaf\" key=\"0-0-2-1\" />\n                </TreeNode>\n                </TreeNode>\n\t      </Tree>\n\t\t);\n\t}\n}\n\nDemo10.defaultProps = defaultProps;\n\n\nexport default Demo10;", "desc": " 如何获取选中对象自定义对象和数据" }, { "example": _react2['default'].createElement(Demo11, null), "title": " 用户自定义节点属性ext", "code": "/**\n*\n* @title 用户自定义节点属性ext\n* @description 业务中扩展的数据可以定义在ext属性中，用户可以在TreeNode节点中获取ext属性。此例中将treeNode的数据存放在了ext中，方便用户获取。\n* \b\n*/\n\nimport React, { Component } from 'react';\nimport { Tree } from 'tinper-bee';\n\n\nconst x = 6;\nconst y = 5;\nconst z = 2;\nconst gData = [];\n\nconst generateData = (_level, _preKey, _tns) => {\n    const preKey = _preKey || '0';\n    const tns = _tns || gData;\n\n    const children = [];\n    for (let i = 0; i < x; i++) {\n        const key = `${preKey}-${i}`;\n        tns.push({ title: key, key });\n        if (i < y) {\n            children.push(key);\n        }\n    }\n    if (_level < 0) {\n        return tns;\n    }\n    const level = _level - 1;\n    children.forEach((key, index) => {\n        tns[index].children = [];\n        return generateData(level, key, tns[index].children);\n    });\n};\ngenerateData(z);\n\nconst TreeNode = Tree.TreeNode;\n\n\nclass Demo11 extends Component{\n  constructor(props) {\n  \tsuper(props);\n    this.state = {\n      expandedKeys: [],\n      autoExpandParent: true,\n      checkedKeys: ['0-0-0'],\n      selectedKeys: [],\n    };\n    this.onExpand = this.onExpand.bind(this);\n    this.onCheck = this.onCheck.bind(this);\n    this.onSelect = this.onSelect.bind(this);\n  }\n  onExpand(expandedKeys,nodeInfo) {\n    console.log('onExpand---显示ext数据', nodeInfo.node.props.ext.data);\n\n    this.setState({\n      expandedKeys,\n      autoExpandParent: false,\n    });\n  }\n  onCheck(checkedKeys) {\n    this.setState({\n      checkedKeys,\n      selectedKeys: ['0-3', '0-4'],\n    });\n  }\n  onSelect(selectedKeys, info) {\n    console.log('onSelect', info);\n    this.setState({ selectedKeys });\n  }\n  // keydown的钩子事件\n  onKeyDown = (e,treeNode)=>{\n    console.log('***',e);\n    return false;\n  }\n  render() {\n    const loop = data => data.map((item) => {\n      if (item.children) {\n        return (\n          <TreeNode key={item.key} title={item.key} disableCheckbox={item.key === '0-0-0'} ext={{'data':item}}>\n            {loop(item.children)}\n          </TreeNode>\n        );\n      }\n      return <TreeNode key={item.key} title={item.key} isLeaf={true}/>;\n    });\n    return (\n      <Tree\n        checkable\n        focusable\n        className=\"demo2 myCls\"\n        onExpand={this.onExpand} expandedKeys={this.state.expandedKeys}\n        autoExpandParent={this.state.autoExpandParent}\n        onCheck={this.onCheck} \n        onSelect={this.onSelect} \n        keyFun={this.onKeyDown}\n      >\n        {loop(gData)}\n      </Tree>\n    );\n  }\n};\n\n\nexport default Demo11;", "desc": " 业务中扩展的数据可以定义在ext属性中，用户可以在TreeNode节点中获取ext属性。此例中将treeNode的数据存放在了ext中，方便用户获取。" }, { "example": _react2['default'].createElement(Demo12, null), "title": " 根据 treeData 数组渲染树节点", "code": "/**\r\n*\r\n* @title 根据 treeData 数组渲染树节点\r\n* @description 设置 treeData 属性，则不需要手动构造 TreeNode 节点（key 在整个树范围内唯一）\r\n*/\r\n\r\nimport React, { Component } from 'react';\nimport { Tree } from 'tinper-bee';\r\n\r\n\r\nconst treeData = [\r\n  {\r\n    title: '0-0',\r\n    key: '0-0',\r\n    ext: '自定义属性',\r\n    children: [\r\n      {\r\n        title: '0-0-0',\r\n        key: '0-0-0',\r\n        children: [\r\n          { title: '0-0-0-0', key: '0-0-0-0' },\r\n          { title: '0-0-0-1', key: '0-0-0-1' },\r\n          { title: '0-0-0-2', key: '0-0-0-2' },\r\n        ],\r\n      },\r\n      {\r\n        title: '0-0-1',\r\n        key: '0-0-1',\r\n        children: [\r\n          { title: '0-0-1-0', key: '0-0-1-0' },\r\n          { title: '0-0-1-1', key: '0-0-1-1' },\r\n          { title: '0-0-1-2', key: '0-0-1-2' },\r\n        ],\r\n      },\r\n      {\r\n        title: '0-0-2',\r\n        key: '0-0-2',\r\n      },\r\n    ],\r\n  },\r\n  {\r\n    title: '0-1',\r\n    key: '0-1',\r\n    children: [\r\n      { title: '0-1-0-0', key: '0-1-0-0' },\r\n      { title: '0-1-0-1', key: '0-1-0-1' },\r\n      { title: '0-1-0-2', key: '0-1-0-2' },\r\n    ],\r\n  },\r\n  {\r\n    title: '0-2',\r\n    key: '0-2',\r\n    ext: '自定义属性'\r\n  },\r\n];\r\n\r\nclass Demo12 extends Component {\r\n  state = {\r\n    expandedKeys: ['0-0-0', '0-0-1'],\r\n    autoExpandParent: true,\r\n    checkedKeys: ['0-0-0'],\r\n    selectedKeys: [],\r\n  };\r\n\r\n  onExpand = expandedKeys => {\r\n    console.log('onExpand', expandedKeys);\r\n    // if not set autoExpandParent to false, if children expanded, parent can not collapse.\r\n    // or, you can remove all expanded children keys.\r\n    this.setState({\r\n      expandedKeys,\r\n      autoExpandParent: false,\r\n    });\r\n  };\r\n\r\n  onCheck = checkedKeys => {\r\n    console.log('onCheck', checkedKeys);\r\n    this.setState({ checkedKeys });\r\n  };\r\n\r\n  onSelect = (selectedKeys, info) => {\r\n    console.log('onSelect', info);\r\n    this.setState({ selectedKeys });\r\n  };\r\n\r\n  render() {\r\n    return (\r\n      <Tree\r\n        checkable\r\n        treeData={treeData}\r\n        onExpand={this.onExpand}\r\n        expandedKeys={this.state.expandedKeys}\r\n        autoExpandParent={this.state.autoExpandParent}\r\n        onCheck={this.onCheck}\r\n        checkedKeys={this.state.checkedKeys}\r\n        onSelect={this.onSelect}\r\n        selectedKeys={this.state.selectedKeys}\r\n      />\r\n    );\r\n  }\r\n}\r\n\r\nexport default Demo12;", "desc": " 设置 treeData 属性，则不需要手动构造 TreeNode 节点（key 在整个树范围内唯一）" }, { "example": _react2['default'].createElement(Demo13, null), "title": " 滚动加载树节点", "code": "/**\r\n*\r\n* @title 滚动加载树节点\r\n* @description 适用于大数据场景。注意：使用懒加载，需要通过 treeData 属性传入完整的数据结构，并设置 lazyLoad = {true}。可视区域的高度可以自定义，在 Tree 组件外层包裹一层div即可。\r\n*/\r\n\r\nimport React, { Component } from 'react';\nimport { Button, Tree } from 'tinper-bee';\r\n\n\r\n\r\nconst {TreeNode} = Tree;\r\n\r\nconst x = 1000;\r\nconst y = 1;\r\nconst z = 1;\r\nconst gData = [];\r\n\r\nconst generateData = (_level, _preKey, _tns) => {\r\n    const preKey = _preKey || '0';\r\n    const tns = _tns || gData;\r\n\r\n    const children = [];\r\n    for (let i = 0; i < x; i++) {\r\n        const key = `${preKey}-${i}`;\r\n        tns.push({ title: key, key });\r\n        if (i < y) {\r\n            children.push(key);\r\n        }\r\n    }\r\n    if (_level < 0) {\r\n        return tns;\r\n    }\r\n    const level = _level - 1;\r\n    children.forEach((key, index) => {\r\n        tns[index].children = [];\r\n        return generateData(level, key, tns[index].children);\r\n    });\r\n};\r\ngenerateData(z);\r\n\r\nconst data = [ ...new Array(10000) ].map((e, i) => {\r\n  const rs = { key: i + 'a', title: i + 'a'};\r\n  return rs;\r\n})\r\n\r\nclass Demo13 extends Component{\r\n  constructor(props) {\r\n  \tsuper(props);\r\n    this.state = {\r\n      expandedKeys: ['0-0','0-1','0-2','0-3', '0-4','0-5','0-6','0-0-0','0-0-1'],\r\n      autoExpandParent: true,\r\n      checkedKeys: ['0-0-0'],\r\n      selectedKeys: [],\r\n      treeData: data\r\n    };\r\n    this.onExpand = this.onExpand.bind(this);\r\n    this.onCheck = this.onCheck.bind(this);\r\n    this.onSelect = this.onSelect.bind(this);\r\n  }\r\n  onExpand(expandedKeys,nodeInfo) {\r\n    // console.log('onExpand---显示ext数据', nodeInfo.node.props.ext.data);\r\n\r\n    this.setState({\r\n      expandedKeys,\r\n      autoExpandParent: false,\r\n    });\r\n  }\r\n  onCheck(checkedKeys) {\r\n    this.setState({\r\n      checkedKeys,\r\n      selectedKeys: ['0-3', '0-4'],\r\n    });\r\n  }\r\n  onSelect(selectedKeys, info) {\r\n    console.log('onSelect', info);\r\n    this.setState({ selectedKeys });\r\n  }\r\n  // keydown的钩子事件\r\n  onKeyDown = (e,treeNode)=>{\r\n    console.log('***',e);\r\n    return false;\r\n  }\r\n\r\n  //使用 treeData 渲染树节点时，可使用该函数自定义节点显示内容（非必须）\r\n  //注意：isLeaf 属性是必传的，否则节点层级和展示会有问题\r\n  renderTreeNodes = (data) => {\r\n    const loop = data => data.map((item) => {\r\n      if (item.children) {\r\n        return (\r\n          <TreeNode key={item.key} title={item.key} isLeaf={item.isLeaf}>\r\n            {loop(item.children)}\r\n          </TreeNode>\r\n        );\r\n      }\r\n      return <TreeNode key={item.key} title={item.key} isLeaf={true}/>;\r\n    });\r\n    return loop(data);\r\n  }\r\n\r\n  changeTreeData = () => {\r\n    this.setState({\r\n      treeData: gData\r\n    })\r\n  }\r\n\r\n  render() {\r\n    return (\r\n      <div>\r\n        <Button onClick={this.changeTreeData}>改变数据源</Button>\r\n        <div style={{height:'300px', overflow:'auto'}}>\r\n          <Tree\r\n            checkable\r\n            focusable\r\n            treeData={this.state.treeData}\r\n            lazyLoad={true}\r\n            renderTreeNodes={this.renderTreeNodes}\r\n            onExpand={this.onExpand}\r\n            defaultExpandAll={true} \r\n            expandedKeys={this.state.expandedKeys}\r\n            autoExpandParent={this.state.autoExpandParent}\r\n            onCheck={this.onCheck} \r\n            onSelect={this.onSelect} \r\n            keyFun={this.onKeyDown}\r\n          >\r\n          </Tree>\r\n        </div>\r\n      </div>\r\n    );\r\n  }\r\n};\r\n\r\n\r\nexport default Demo13;", "desc": " 适用于大数据场景。注意：使用懒加载，需要通过 treeData 属性传入完整的数据结构，并设置 lazyLoad = {true}。可视区域的高度可以自定义，在 Tree 组件外层包裹一层div即可。" }, { "example": _react2['default'].createElement(Demo14, null), "title": " 自定义滚动容器", "code": "/**\r\n*\r\n* @title 自定义滚动容器\r\n* @description 使用 getScrollParent 设置需要监听滚动事件的容器。\r\n*/\r\n\r\nimport React, { Component } from 'react';\nimport { Tree } from 'tinper-bee';\r\n\r\n\r\nconst {TreeNode} = Tree;\r\n\r\nconst x = 1000;\r\nconst y = 1;\r\nconst z = 1;\r\nconst gData = [];\r\n\r\nconst generateData = (_level, _preKey, _tns) => {\r\n    const preKey = _preKey || '0';\r\n    const tns = _tns || gData;\r\n\r\n    const children = [];\r\n    for (let i = 0; i < x; i++) {\r\n        const key = `${preKey}-${i}`;\r\n        tns.push({ title: key, key });\r\n        if (i < y) {\r\n            children.push(key);\r\n        }\r\n    }\r\n    if (_level < 0) {\r\n        return tns;\r\n    }\r\n    const level = _level - 1;\r\n    children.forEach((key, index) => {\r\n        tns[index].children = [];\r\n        return generateData(level, key, tns[index].children);\r\n    });\r\n};\r\ngenerateData(z);\r\n\r\nclass Demo14 extends Component{\r\n  constructor(props) {\r\n  \tsuper(props);\r\n    this.state = {\r\n      expandedKeys: ['0-0','0-1','0-2','0-3', '0-4','0-5','0-6','0-0-0','0-0-1'],\r\n      autoExpandParent: true,\r\n      checkedKeys: ['0-0-0'],\r\n      selectedKeys: [],\r\n    };\r\n    this.onExpand = this.onExpand.bind(this);\r\n    this.onCheck = this.onCheck.bind(this);\r\n    this.onSelect = this.onSelect.bind(this);\r\n  }\r\n  onExpand(expandedKeys,nodeInfo) {\r\n    // console.log('onExpand---显示ext数据', nodeInfo.node.props.ext.data);\r\n\r\n    this.setState({\r\n      expandedKeys,\r\n      autoExpandParent: false,\r\n    });\r\n  }\r\n  onCheck(checkedKeys) {\r\n    this.setState({\r\n      checkedKeys,\r\n      selectedKeys: ['0-3', '0-4'],\r\n    });\r\n  }\r\n  onSelect(selectedKeys, info) {\r\n    console.log('onSelect', info);\r\n    this.setState({ selectedKeys });\r\n  }\r\n  // keydown的钩子事件\r\n  onKeyDown = (e,treeNode)=>{\r\n    console.log('***',e);\r\n    return false;\r\n  }\r\n\r\n  //使用 treeData 渲染树节点时，可使用该函数自定义节点显示内容（非必须）\r\n  //注意：isLeaf 属性是必传的，否则节点层级和展示会有问题\r\n  renderTreeNodes = (data) => {\r\n    const loop = data => data.map((item) => {\r\n      if (item.children) {\r\n        return (\r\n          <TreeNode key={item.key} title={item.key} isLeaf={item.isLeaf}>\r\n            {loop(item.children)}\r\n          </TreeNode>\r\n        );\r\n      }\r\n      return <TreeNode key={item.key} title={item.key} isLeaf={true}/>;\r\n    });\r\n    return loop(data);\r\n  }\r\n\r\n  render() {\r\n    return (\r\n        <div className=\"container\" style={{height:'300px', overflow:'auto'}}>\r\n            <div>\r\n                <Tree\r\n                checkable\r\n                focusable\r\n                treeData={gData}\r\n                lazyLoad={true}\r\n                renderTreeNodes={this.renderTreeNodes}\r\n                onExpand={this.onExpand}\r\n                defaultExpandAll={true} \r\n                expandedKeys={this.state.expandedKeys}\r\n                autoExpandParent={this.state.autoExpandParent}\r\n                onCheck={this.onCheck} \r\n                onSelect={this.onSelect} \r\n                keyFun={this.onKeyDown}\r\n                getScrollContainer={() => {\r\n                    return document.querySelector('.container')\r\n                }}\r\n                >\r\n                </Tree>\r\n            </div>\r\n        </div>\r\n    );\r\n  }\r\n};\r\n\r\n\r\nexport default Demo14;", "desc": " 使用 getScrollParent 设置需要监听滚动事件的容器。" }];
+	var Demo1 = __webpack_require__(308);var Demo2 = __webpack_require__(309);var Demo3 = __webpack_require__(310);var Demo4 = __webpack_require__(311);var Demo5 = __webpack_require__(312);var Demo6 = __webpack_require__(313);var Demo7 = __webpack_require__(314);var Demo8 = __webpack_require__(315);var Demo9 = __webpack_require__(316);var Demo10 = __webpack_require__(317);var Demo11 = __webpack_require__(318);var Demo12 = __webpack_require__(319);var Demo13 = __webpack_require__(320);var Demo14 = __webpack_require__(321);var DemoArray = [{ "example": _react2['default'].createElement(Demo1, null), "title": " Tree基本使用示例", "code": "/**\r\n *\r\n * @title Tree基本使用示例\r\n * @description 示例涵盖 checkbox如何选择，disable状态和部分选择状态。checkStrictly为true时，子节点与父节点的选择情况都不会影响到对方\r\n *\r\n */\r\n\r\n\r\nimport React, {\r\n\tComponent\r\n} from 'react';\r\n\r\n\nconst TreeNode = Tree.TreeNode;\r\n\r\nconst defaultProps = {\r\n\tkeys: ['0-0-0', '0-0-1']\r\n}\r\nclass Demo1 extends Component {\r\n\tconstructor(props) {\r\n\t\tsuper(props);\r\n\t\tconst keys = this.props.keys;\r\n\t\tthis.state = {\r\n\t\t\tdefaultExpandedKeys: keys,\r\n\t\t\tdefaultSelectedKeys: keys,\r\n\t\t\tdefaultCheckedKeys:keys,\r\n\t\t\tcheckedKeys: {checked:keys},\r\n\t\t};\r\n\t}\r\n\tonSelect(info) {\r\n\t\tconsole.log('selected', info);\r\n\t}\r\n\tonCheck = (checkedKeys,newst) => {\r\n\t\t//用户可以自定义当前选中和半选中的节点。\r\n\t\tconsole.log('onCheck', checkedKeys);\r\n\t\tconst cks = {\r\n\t\t\tchecked: checkedKeys.checked || checkedKeys,\r\n\t\t\thalfChecked:checkedKeys.halfChecked\r\n\t\t};\r\n\t\tthis.setState({checkedKeys:cks});\r\n\t}\r\n\r\n\tonDoubleClick=(key,treeNode)=>{\r\n\t\tconsole.log('---onDblClick---',key,'--treeNode--',treeNode);\r\n\t}\r\n\trender() {\r\n\t\r\n\t\treturn (\r\n\t\t\t<Tree \r\n                className=\"myCls\" \r\n                showLine \r\n                checkable\r\n                defaultExpandedKeys={this.state.defaultExpandedKeys}\r\n                defaultSelectedKeys={this.state.defaultSelectedKeys}\r\n                defaultCheckedKeys = {this.state.defaultCheckedKeys}\r\n                checkStrictly\r\n                showIcon\r\n                cancelUnSelect={true}\r\n                onSelect={this.onSelect} \r\n                onCheck={this.onCheck}\r\n                onDoubleClick={this.onDoubleClick}\r\n\t        >\r\n\t        <TreeNode title=\"parent 1\" key=\"0-0\"  icon={<Icon type=\"uf-treefolder\"  />}>\r\n\t          <TreeNode title=\"parent 1-0\" key=\"0-0-0\" disabled  icon={<Icon type=\"uf-treefolder\" />}>\r\n\t            <TreeNode title=\"leaf\" key=\"0-0-0-0\" disableCheckbox icon={<Icon type=\"uf-list-s-o\" />}/>\r\n\t            <TreeNode title=\"leaf\" key=\"0-0-0-1\" icon={<Icon type=\"uf-list-s-o\" />}/>\r\n\t          </TreeNode>\r\n\t          <TreeNode title=\"parent 1-1\" key=\"0-0-1\" icon={<Icon type=\"uf-treefolder\" />}>\r\n\t            <TreeNode title={<span>sss</span>} key=\"0-0-1-0\" icon={<Icon type=\"uf-list-s-o\" />}/>\r\n\t          </TreeNode>\r\n\t        </TreeNode>\r\n\t      </Tree>\r\n\t\t);\r\n\t}\r\n}\r\n\r\nDemo1.defaultProps = defaultProps;\r\n\r\n\r\nexport default Demo1;", "desc": " 示例涵盖 checkbox如何选择，disable状态和部分选择状态。checkStrictly为true时，子节点与父节点的选择情况都不会影响到对方" }, { "example": _react2['default'].createElement(Demo2, null), "title": " Tree数据可控示例", "code": "/**\r\n*\r\n* @title Tree数据可控示例\r\n* @description\r\n* \b\r\n*/\r\n\r\nimport React, { Component } from 'react';\nimport { Tree } from 'tinper-bee';\r\n\r\n\r\nconst x = 6;\r\nconst y = 5;\r\nconst z = 2;\r\nconst gData = [];\r\n\r\nconst generateData = (_level, _preKey, _tns) => {\r\n    const preKey = _preKey || '0';\r\n    const tns = _tns || gData;\r\n\r\n    const children = [];\r\n    for (let i = 0; i < x; i++) {\r\n        const key = `${preKey}-${i}`;\r\n        tns.push({ title: key, key });\r\n        if (i < y) {\r\n            children.push(key);\r\n        }\r\n    }\r\n    if (_level < 0) {\r\n        return tns;\r\n    }\r\n    const level = _level - 1;\r\n    children.forEach((key, index) => {\r\n        tns[index].children = [];\r\n        return generateData(level, key, tns[index].children);\r\n    });\r\n};\r\ngenerateData(z);\r\n\r\nconst TreeNode = Tree.TreeNode;\r\n\r\n\r\nclass Demo2 extends Component{\r\n  constructor(props) {\r\n  \tsuper(props);\r\n    this.state = {\r\n      expandedKeys: [],\r\n      autoExpandParent: true,\r\n      checkedKeys: ['0-0-0'],\r\n      selectedKeys: [],\r\n    };\r\n    this.onExpand = this.onExpand.bind(this);\r\n    this.onCheck = this.onCheck.bind(this);\r\n    this.onSelect = this.onSelect.bind(this);\r\n  }\r\n  onExpand(expandedKeys) {\r\n    console.log('onExpand', arguments);\r\n    // if not set autoExpandParent to false, if children expanded, parent can not collapse.\r\n    // or, you can remove all expanded children keys.\r\n    this.setState({\r\n      expandedKeys,\r\n      autoExpandParent: false,\r\n    });\r\n  }\r\n  onCheck(checkedKeys) {\r\n    this.setState({\r\n      checkedKeys,\r\n      selectedKeys: ['0-3', '0-4'],\r\n    });\r\n  }\r\n  onSelect(selectedKeys, info) {\r\n    console.log('onSelect', info);\r\n    this.setState({ selectedKeys });\r\n  }\r\n  // keydown的钩子事件\r\n  onKeyDown = (e,treeNode)=>{\r\n    console.log('***',e);\r\n    return false;\r\n  }\r\n  render() {\r\n    const loop = data => data.map((item) => {\r\n      if (item.children) {\r\n        return (\r\n          <TreeNode key={item.key} title={item.key} disableCheckbox={item.key === '0-0-0'} ext={{'as':'sdfa'}}>\r\n            {loop(item.children)}\r\n          </TreeNode>\r\n        );\r\n      }\r\n      return <TreeNode key={item.key} title={item.key} isLeaf={true}/>;\r\n    });\r\n    return (\r\n      <Tree\r\n        checkable\r\n        focusable\r\n        className=\"demo2 myCls\"\r\n        onExpand={this.onExpand} expandedKeys={this.state.expandedKeys}\r\n        autoExpandParent={this.state.autoExpandParent}\r\n        onCheck={this.onCheck} \r\n        onSelect={this.onSelect} \r\n        keyFun={this.onKeyDown}\r\n      >\r\n        {loop(gData)}\r\n      </Tree>\r\n    );\r\n  }\r\n};\r\n\r\n\r\nexport default Demo2;", "desc": "", "scss_code": "// .demo2.u-tree {\r\n//   li a.u-tree-node-content-wrapper:hover::before {\r\n//     background: rgb(235, 236, 240);\r\n//   }\r\n//   li a.u-tree-node-content-wrapper.u-tree-node-selected {\r\n//     color: rgb(245, 60, 50);\r\n//     .u-tree-title{\r\n//         color: rgb(245, 60, 50);\r\n//     }\r\n//     background: transparent;\r\n//     &::before {\r\n//       background: rgb(235, 236, 240);\r\n//     }\r\n//   }\r\n\r\n//   li a.u-tree-node-content-wrapper::before {\r\n//     position: absolute;\r\n//     right: 0;\r\n//     left: 0;\r\n//     height: 20px;\r\n//     -webkit-transition: all 0.3s;\r\n//     transition: all 0.3s;\r\n//     content: \"\";\r\n//   }\r\n\r\n//   li  span {\r\n//     position: relative;\r\n//     z-index: 1;\r\n//   }\r\n// }\r\n" }, { "example": _react2['default'].createElement(Demo3, null), "title": " Tree 拖拽使用示例", "code": "/**\r\n*\r\n* @title Tree 拖拽使用示例\r\n* @description 拖动结点插入到另一个结点后面或者其他的父节点里面。\r\n*\r\n*/\r\n\r\n\r\n\r\nimport React, { Component } from 'react';\nimport { Tree } from 'tinper-bee';\r\n\r\n\r\nconst x = 3;\r\nconst y = 2;\r\nconst z = 1;\r\nconst gData = [];\r\n\r\nconst generateData = (_level, _preKey, _tns) => {\r\n    const preKey = _preKey || '0';\r\n    const tns = _tns || gData;\r\n\r\n    const children = [];\r\n    for (let i = 0; i < x; i++) {\r\n        const key = `${preKey}-${i}`;\r\n        tns.push({ title: key, key });\r\n        if (i < y) {\r\n            children.push(key);\r\n        }\r\n    }\r\n    if (_level < 0) {\r\n        return tns;\r\n    }\r\n    const level = _level - 1;\r\n    children.forEach((key, index) => {\r\n        tns[index].children = [];\r\n        return generateData(level, key, tns[index].children);\r\n    });\r\n};\r\ngenerateData(z);\r\n\r\nconst TreeNode = Tree.TreeNode;\r\n\r\nclass Demo3 extends Component{\r\n  constructor(props) {\r\n    super(props);\r\n    this.state = {\r\n      gData,\r\n      expandedKeys: ['0-0', '0-0-0', '0-0-0-0'],\r\n    };\r\n    this.onDragEnter = this.onDragEnter.bind(this);\r\n    this.onDrop = this.onDrop.bind(this);\r\n  }\r\n  onDragEnter(info) {\r\n    console.log(info);\r\n    // expandedKeys 需要受控时设置\r\n    // this.setState({\r\n    //   expandedKeys: info.expandedKeys,\r\n    // });\r\n  }\r\n  onDrop(info) {\r\n    console.log(info);\r\n    const dropKey = info.node.props.eventKey;\r\n    const dragKey = info.dragNode.props.eventKey;\r\n    // const dragNodesKeys = info.dragNodesKeys;\r\n    const loop = (data, key, callback) => {\r\n      data.forEach((item, index, arr) => {\r\n        if (item.key === key) {\r\n          return callback(item, index, arr);\r\n        }\r\n        if (item.children) {\r\n          return loop(item.children, key, callback);\r\n        }\r\n      });\r\n    };\r\n    const data = [...this.state.gData];\r\n    let dragObj;\r\n    loop(data, dragKey, (item, index, arr) => {\r\n      arr.splice(index, 1);\r\n      dragObj = item;\r\n    });\r\n    if (info.dropToGap) {\r\n      let ar;\r\n      let i;\r\n      loop(data, dropKey, (item, index, arr) => {\r\n        ar = arr;\r\n        i = index;\r\n      });\r\n      ar.splice(i, 0, dragObj);\r\n    } else {\r\n      loop(data, dropKey, (item) => {\r\n        item.children = item.children || [];\r\n        // where to insert 示例添加到尾部，可以是随意位置\r\n        item.children.push(dragObj);\r\n      });\r\n    }\r\n    this.setState({\r\n      gData: data,\r\n    });\r\n  }\r\n  render() {\r\n    const loop = data => data.map((item) => {\r\n      if (item.children && item.children.length) {\r\n        return <TreeNode key={item.key} title={item.key}>{loop(item.children)}</TreeNode>;\r\n      }\r\n      return <TreeNode key={item.key} title={item.key} />;\r\n    });\r\n    return (\r\n      <Tree\r\n        className=\"myCls\"\r\n        defaultExpandedKeys={this.state.expandedKeys}\r\n        draggable\r\n        onDragEnter={this.onDragEnter}\r\n        onDrop={this.onDrop}\r\n      >\r\n        {loop(this.state.gData)}\r\n      </Tree>\r\n    );\r\n  }\r\n};\r\n\r\nexport default Demo3;", "desc": " 拖动结点插入到另一个结点后面或者其他的父节点里面。" }, { "example": _react2['default'].createElement(Demo4, null), "title": " Tree可搜索示例", "code": "/**\r\n *\r\n * @title Tree可搜索示例\r\n * @description\r\n *\r\n */\r\n\r\n\r\nimport React, {\r\n  Component\r\n} from 'react';\r\n\n\r\n\r\nconst x = 3;\r\nconst y = 2;\r\nconst z = 1;\r\nconst gData = [];\r\n\r\nconst generateData = (_level, _preKey, _tns) => {\r\n  const preKey = _preKey || '0';\r\n  const tns = _tns || gData;\r\n\r\n  const children = [];\r\n  for (let i = 0; i < x; i++) {\r\n    const key = `${preKey}-${i}`;\r\n    tns.push({\r\n      title: key,\r\n      key\r\n    });\r\n    if (i < y) {\r\n      children.push(key);\r\n    }\r\n  }\r\n  if (_level < 0) {\r\n    return tns;\r\n  }\r\n  const level = _level - 1;\r\n  children.forEach((key, index) => {\r\n    tns[index].children = [];\r\n    return generateData(level, key, tns[index].children);\r\n  });\r\n};\r\ngenerateData(z);\r\n\r\nconst TreeNode = Tree.TreeNode;\r\n\r\nconst dataList = [];\r\nconst generateList = (data) => {\r\n  for (let i = 0; i < data.length; i++) {\r\n    const node = data[i];\r\n    const key = node.key;\r\n    dataList.push({\r\n      key,\r\n      title: key\r\n    });\r\n    if (node.children) {\r\n      generateList(node.children, node.key);\r\n    }\r\n  }\r\n};\r\ngenerateList(gData);\r\n\r\nconst getParentKey = (key, tree) => {\r\n  let parentKey;\r\n  for (let i = 0; i < tree.length; i++) {\r\n    const node = tree[i];\r\n    if (node.children) {\r\n      if (node.children.some(item => item.key === key)) {\r\n        parentKey = node.key;\r\n      } else if (getParentKey(key, node.children)) {\r\n        parentKey = getParentKey(key, node.children);\r\n      }\r\n    }\r\n  }\r\n  return parentKey;\r\n};\r\n\r\n\r\nclass Demo4 extends Component {\r\n  constructor(props) {\r\n    super(props);\r\n    this.state = {\r\n      expandedKeys: [],\r\n      searchValue: '',\r\n      autoExpandParent: true,\r\n    }\r\n  }\r\n  onExpand = (expandedKeys) => {\r\n    this.setState({\r\n      expandedKeys,\r\n      autoExpandParent: false,\r\n    });\r\n  }\r\n  onChange = (value) => {\r\n\r\n    const expandedKeys = [];\r\n    dataList.forEach((item) => {\r\n      if (item.key.indexOf(value) > -1) {\r\n        expandedKeys.push(getParentKey(item.key, gData));\r\n      }\r\n    });\r\n    const uniqueExpandedKeys = [];\r\n    expandedKeys.forEach((item) => {\r\n      if (item && uniqueExpandedKeys.indexOf(item) === -1) {\r\n        uniqueExpandedKeys.push(item);\r\n      }\r\n    });\r\n    this.setState({\r\n      expandedKeys: uniqueExpandedKeys,\r\n      searchValue: value,\r\n      autoExpandParent: true,\r\n    });\r\n  }\r\n  render() {\r\n    const {\r\n      searchValue,\r\n      expandedKeys,\r\n      autoExpandParent\r\n    } = this.state;\r\n    const loop = data => data.map((item) => {\r\n      const index = item.key.search(searchValue);\r\n      const beforeStr = item.key.substr(0, index);\r\n      const afterStr = item.key.substr(index + searchValue.length);\r\n      const title = index > -1 ? (\r\n        <span>\r\n          {beforeStr}\r\n          <span className=\"u-tree-searchable-filter\">{searchValue}</span>\r\n          {afterStr}\r\n        </span>\r\n      ) : <span>{item.key}</span>;\r\n      if (item.children) {\r\n        return (\r\n          <TreeNode key={item.key} title={title}>\r\n            {loop(item.children)}\r\n          </TreeNode>\r\n        );\r\n      }\r\n      return <TreeNode key={item.key} title={title} />;\r\n    });\r\n    return (\r\n      <div>\r\n        <FormControl\r\n          style={{ width: 200 }}\r\n          placeholder=\"Search\"\r\n          onChange={this.onChange}\r\n        />\r\n        <Tree\r\n          className=\"myCls\"\r\n          onExpand={this.onExpand}\r\n          expandedKeys={expandedKeys}\r\n          autoExpandParent={autoExpandParent}\r\n        >\r\n          {loop(gData)}\r\n        </Tree>\r\n      </div>\r\n    );\r\n  }\r\n}\r\n\r\nexport default Demo4;", "desc": "", "scss_code": ".u-tree-searchable-filter {\r\n  color: #f50;\r\n  transition: all .3s ease;\r\n}" }, { "example": _react2['default'].createElement(Demo5, null), "title": " Tree异步数据加载", "code": "/**\r\n *\r\n * @title Tree异步数据加载\r\n * @description 当点击展开，异步获取子节点数据\r\n *\r\n */\r\n\r\n\r\nimport React, {\r\n  Component\r\n} from 'react';\r\n\r\n\r\nconst x = 3;\r\nconst y = 2;\r\nconst z = 1;\r\nconst gData = [];\r\n\r\nconst generateData = (_level, _preKey, _tns) => {\r\n  const preKey = _preKey || '0';\r\n  const tns = _tns || gData;\r\n\r\n  const children = [];\r\n  for (let i = 0; i < x; i++) {\r\n    const key = `${preKey}-${i}`;\r\n    tns.push({\r\n      title: key,\r\n      key\r\n    });\r\n    if (i < y) {\r\n      children.push(key);\r\n    }\r\n  }\r\n  if (_level < 0) {\r\n    return tns;\r\n  }\r\n  const level = _level - 1;\r\n  children.forEach((key, index) => {\r\n    tns[index].children = [];\r\n    return generateData(level, key, tns[index].children);\r\n  });\r\n};\r\ngenerateData(z);\r\n\r\nconst TreeNode = Tree.TreeNode;\r\n\r\nfunction generateTreeNodes(treeNode) {\r\n  const arr = [];\r\n  const key = treeNode.props.eventKey;\r\n  for (let i = 0; i < 3; i++) {\r\n    arr.push({\r\n      name: `leaf ${key}-${i}`,\r\n      key: `${key}-${i}`\r\n    });\r\n  }\r\n  return arr;\r\n}\r\n\r\nfunction setLeaf(treeData, curKey, level) {\r\n  const loopLeaf = (data, lev) => {\r\n    const l = lev - 1;\r\n    data.forEach((item) => {\r\n      if ((item.key.length > curKey.length) ? item.key.indexOf(curKey) !== 0 :\r\n        curKey.indexOf(item.key) !== 0) {\r\n        return;\r\n      }\r\n      if (item.children) {\r\n        loopLeaf(item.children, l);\r\n      } else if (l < 1) {\r\n        item.isLeaf = true;\r\n      }\r\n    });\r\n  };\r\n  loopLeaf(treeData, level + 1);\r\n}\r\n\r\nfunction getNewTreeData(treeData, curKey, child, level) {\r\n  const loop = (data) => {\r\n    if (level < 1 || curKey.length - 3 > level * 2) return;\r\n    data.forEach((item) => {\r\n      if (curKey.indexOf(item.key) === 0) {\r\n        if (item.children) {\r\n          loop(item.children);\r\n        } else {\r\n          item.children = child;\r\n        }\r\n      }\r\n    });\r\n  };\r\n  loop(treeData);\r\n  setLeaf(treeData, curKey, level);\r\n}\r\n\r\nclass Demo5 extends Component {\r\n  constructor(props) {\r\n    super(props);\r\n    this.state = {\r\n      treeData: [],\r\n    };\r\n    this.onSelect = this.onSelect.bind(this);\r\n    this.onLoadData = this.onLoadData.bind(this);\r\n  }\r\n  componentDidMount() {\r\n    setTimeout(() => {\r\n      this.setState({\r\n        treeData: [{\r\n          name: 'pNode 01',\r\n          key: '0-0'\r\n        }, {\r\n          name: 'pNode 02',\r\n          key: '0-1'\r\n        }, {\r\n          name: 'pNode 03',\r\n          key: '0-2',\r\n          isLeaf: true\r\n        }, ],\r\n      });\r\n    }, 100);\r\n  }\r\n  onSelect(info) {\r\n    console.log('selected', info);\r\n  }\r\n  onLoadData(treeNode) {\r\n    return new Promise((resolve) => {\r\n      setTimeout(() => {\r\n        const treeData = [...this.state.treeData];\r\n        getNewTreeData(treeData, treeNode.props.eventKey, generateTreeNodes(treeNode), 2);\r\n        this.setState({\r\n          treeData\r\n        });\r\n        resolve();\r\n      }, 1000);\r\n    });\r\n  }\r\n  render() {\r\n    const loop = data => data.map((item) => {\r\n      if (item.children) {\r\n        return <TreeNode title={item.name} key={item.key}>{loop(item.children)}</TreeNode>;\r\n      }\r\n      return <TreeNode title={item.name} key={item.key} isLeaf={item.isLeaf} disabled={item.key === '0-0-0'} />;\r\n    });\r\n    const treeNodes = loop(this.state.treeData);\r\n    return (\r\n      <Tree className=\"myCls\" onSelect={this.onSelect} loadData={this.onLoadData} >\r\n        {treeNodes}\r\n      </Tree>\r\n    );\r\n  }\r\n};\r\n\r\nexport default Demo5", "desc": " 当点击展开，异步获取子节点数据" }, { "example": _react2['default'].createElement(Demo6, null), "title": " Tree基本使用示例自定义图标", "code": "/**\r\n *\r\n * @title Tree基本使用示例自定义图标\r\n * @description 添加openIcon、closeIcon属性\r\n *\r\n */\r\n\r\n\r\nimport React, {\r\n\tComponent\r\n} from 'react';\r\n\r\n\nconst TreeNode = Tree.TreeNode;\r\n\r\nconst defaultProps = {\r\n\tkeys: ['0-0-0', '0-0-1']\r\n}\r\nclass Demo1 extends Component {\r\n\tconstructor(props) {\r\n\t\tsuper(props);\r\n\t\tconst keys = this.props.keys;\r\n\t\tthis.state = {\r\n\t\t\tdefaultExpandedKeys: keys,\r\n\t\t\tdefaultSelectedKeys: keys,\r\n\t\t\tdefaultCheckedKeys: keys,\r\n\t\t};\r\n\t}\r\n\tonSelect(info) {\r\n\t\tconsole.log('selected', info);\r\n\t}\r\n\tonCheck(info) {\r\n\t\tconsole.log('onCheck', info);\r\n\t}\r\n\trender() {\r\n\t\treturn (\r\n\r\n\t\t\t<Tree className=\"myCls\"  checkable openIcon={<Icon type=\"uf-minus\" />} closeIcon={<Icon type=\"uf-plus\" />}\r\n\t        defaultExpandedKeys={this.state.defaultExpandedKeys}\r\n\t        defaultSelectedKeys={this.state.defaultSelectedKeys}\r\n\t        defaultCheckedKeys={this.state.defaultCheckedKeys}\r\n\t        onSelect={this.onSelect} onCheck={this.onCheck}\r\n\t      >\r\n\t        <TreeNode title=\"parent 1\" key=\"0-0\">\r\n\t          <TreeNode title=\"parent 1-0\" key=\"0-0-0\" disabled>\r\n\t            <TreeNode title=\"leaf\" key=\"0-0-0-0\" disableCheckbox />\r\n\t            <TreeNode title=\"leaf\" key=\"0-0-0-1\" />\r\n\t          </TreeNode>\r\n\t          <TreeNode title=\"parent 1-1\" key=\"0-0-1\">\r\n\t            <TreeNode title={<span>sss</span>} key=\"0-0-1-0\" />\r\n\t          </TreeNode>\r\n\t        </TreeNode>\r\n\t      </Tree>\r\n\t\t);\r\n\t}\r\n}\r\n\r\nDemo1.defaultProps = defaultProps;\r\n\r\n\r\nexport default Demo1;", "desc": " 添加openIcon、closeIcon属性" }, { "example": _react2['default'].createElement(Demo7, null), "title": " Tree增加节点", "code": "/**\r\n *\r\n * @title Tree增加节点\r\n * @description 增加节点和拖拽组合使用示例\r\n *\r\n */\r\n\r\n\r\nimport React, {\r\n  Component\r\n} from 'react';\r\n\r\n\n\r\nconst TreeNode = Tree.TreeNode;\r\n\r\n\r\nclass Demo7 extends Component {\r\n  constructor(props) {\r\n    super(props);\r\n    this.state = {\r\n      treeData: [],\r\n      defaultExpandedKeys: ['0-0', '0-1', '0-2'],\r\n      parentNode: {}\r\n    };\r\n    this.onSelect = this.onSelect.bind(this);\r\n    this.addNode = this.addNode.bind(this);\r\n    this.clickFun = this.clickFun.bind(this);\r\n    this.getNodeByKey = this.getNodeByKey.bind(this);\r\n    this.parentNode = null\r\n  }\r\n  componentDidMount() {\r\n      setTimeout(() => {\r\n        this.setState({\r\n          treeData: [{\r\n            name: 'pNode 01',\r\n            key: '0-0',\r\n            children: [{\r\n              name: 'leaf 0-0-0',\r\n              key: '0-0-0'\r\n            }, {\r\n              name: 'leaf 0-0-1',\r\n              key: '0-0-1'\r\n            }]\r\n          }, {\r\n            name: 'pNode 02',\r\n            key: '0-1',\r\n            children: [{\r\n              name: 'leaf 0-1-0',\r\n              key: '0-1-0'\r\n            }, {\r\n              name: 'leaf 0-1-1',\r\n              key: '0-1-1'\r\n            }]\r\n          }, {\r\n            name: 'pNode 03',\r\n            key: '0-2',\r\n            isLeaf: true\r\n          }, ],\r\n        });\r\n      }, 100);\r\n    }\r\n    /**\r\n     * 增加节点\r\n     * @param string prKey    [父节点key]\r\n     * @param object nodeItem [子节点信息]\r\n     */\r\n  addNode(prKey, nodeItem) {\r\n    const data = this.state.treeData;\r\n    let parNode;\r\n    if (prKey) {\r\n      // 如果prKey存在则搜索父节点进行添加\r\n      parNode = this.getNodeByKey(data, prKey);\r\n      //如果父节点存在的话，添加到父节点上\r\n      if (parNode) {\r\n        if (!parNode.children) {\r\n          parNode.children = [];\r\n        }\r\n        // 如果key不存在就动态生成一个\r\n        if (!nodeItem.key) {\r\n          nodeItem.key = prKey + parNode.children.length + 1;\r\n        }\r\n        parNode.children.push(nodeItem);\r\n      }\r\n    } else {\r\n      // 没有穿prKey添加到根下成为一级节点\r\n      if (!nodeItem.key) {\r\n        nodeItem.key = \"0-\" + data.length + 1;\r\n      }\r\n      data.push(nodeItem);\r\n    }\r\n\r\n    this.setState({\r\n      data\r\n    });\r\n  }\r\n\r\n  getNodeByKey(data, key) {\r\n    if (!this.parentNode) {\r\n      data.find(item => {\r\n        if (item.key === key) {\r\n          console.log('item.name---' + item.name)\r\n          this.parentNode = item;\r\n          return (true);\r\n        } else if (item.children) {\r\n          return this.getNodeByKey(item.children, key);\r\n\r\n        }\r\n      })\r\n    }\r\n    return this.parentNode;\r\n  }\r\n\r\n\r\n\r\n  onSelect(info) {\r\n      console.log('selected', info);\r\n    }\r\n    /**\r\n     * 点击button事件\r\n     */\r\n  clickFun() {\r\n    let prKey, nodeItem;\r\n    prKey = '0-1';\r\n    nodeItem = {\r\n      name: 'leaf 0-0-4'\r\n    }\r\n    this.addNode(prKey, nodeItem);\r\n  }\r\n\r\n  onDragEnter = (info) => {\r\n    console.log(info);\r\n    // expandedKeys 需要受控时设置\r\n    // this.setState({\r\n    //   expandedKeys: info.expandedKeys,\r\n    // });\r\n  }\r\n  onDrop = (info) => {\r\n    console.log(info);\r\n    const dropKey = info.node.props.eventKey;\r\n    const dragKey = info.dragNode.props.eventKey;\r\n    // const dragNodesKeys = info.dragNodesKeys;\r\n    const loop = (data, key, callback) => {\r\n      data.forEach((item, index, arr) => {\r\n        if (item.key === key) {\r\n          return callback(item, index, arr);\r\n        }\r\n        if (item.children) {\r\n          return loop(item.children, key, callback);\r\n        }\r\n      });\r\n    };\r\n    const data = [...this.state.treeData];\r\n    let dragObj;\r\n    loop(data, dragKey, (item, index, arr) => {\r\n      arr.splice(index, 1);\r\n      dragObj = item;\r\n    });\r\n    if (info.dropToGap) {\r\n      let ar;\r\n      let i;\r\n      loop(data, dropKey, (item, index, arr) => {\r\n        ar = arr;\r\n        i = index;\r\n      });\r\n      ar.splice(i, 0, dragObj);\r\n    } else {\r\n      loop(data, dropKey, (item) => {\r\n        item.children = item.children || [];\r\n        // where to insert 示例添加到尾部，可以是随意位置\r\n        item.children.push(dragObj);\r\n      });\r\n    }\r\n    this.setState({\r\n      treeData: data,\r\n    });\r\n  }\r\n\r\n  render() {\r\n    const loop = data => data.map((item) => {\r\n      if (item.children) {\r\n        return <TreeNode title={item.name} key={item.key}>{loop(item.children)}</TreeNode>;\r\n      }\r\n      return <TreeNode title={item.name} key={item.key} isLeaf={item.isLeaf} disabled={item.key === '0-0-0'} />;\r\n    });\r\n    const treeNodes = loop(this.state.treeData);\r\n    console.log('defaultKeys--' + this.state.defaultExpandedKeys);\r\n    return (\r\n      <div>\r\n        <Button colors=\"primary\" onClick={this.clickFun}>增加节点</Button>\r\n        <Tree \r\n        className=\"myCls\"\r\n        onSelect={this.onSelect} \r\n        defaultExpandedKeys={this.state.defaultExpandedKeys} \r\n        draggable\r\n        onDragEnter={this.onDragEnter}\r\n        onDrop={this.onDrop}>\r\n          {treeNodes}\r\n        </Tree>\r\n      </div>\r\n    );\r\n  }\r\n};\r\n\r\nexport default Demo7", "desc": " 增加节点和拖拽组合使用示例" }, { "example": _react2['default'].createElement(Demo8, null), "title": " Tree 节点可编辑", "code": "/**\r\n *\r\n * @title Tree 节点可编辑\r\n * @description 鼠标移动到节点上点击编辑图标进行编辑。e.node.props.eventKey代表当前节点key值。editKey指当前操作的节点key\r\n */\r\n\r\n\r\nimport React, {\r\n\tComponent\r\n} from 'react';\r\n\r\n\n\n\r\nconst TreeNode = Tree.TreeNode;\r\n\r\nclass Demo8 extends Component {\r\n\tconstructor(props) {\r\n\t\tsuper(props);\r\n\r\n\t\tthis.state = {\r\n\t\t\ttreeData: [],\r\n\t\t\tisHover: \"\",\r\n\t\t\teditKey: \"\"\r\n\t\t};\r\n\r\n\t}\r\n\r\n\r\n\tonMouseEnter = (e) => {\r\n\t\tthis.setState({\r\n\t\t\tisHover: e.node.props.eventKey\r\n\t\t})\r\n\t}\r\n\tonMouseLeave = (e, treenode) => {\r\n\t\tthis.setState({\r\n\t\t\tisHover: \"\",\r\n\t\t\teditKey: \"\"\r\n\t\t})\r\n\r\n\t}\r\n\r\n\teditRender = (item) => {\r\n\t\tthis.setState({\r\n\t\t\teditKey: item.key\r\n\t\t});\r\n\t}\r\n\tnodechange = (item, value) => {\r\n\t\titem.name = value;\r\n\t}\r\n\trenderTreeTitle = (item) => {\r\n\t\tlet titleIcon, titleInfo;\r\n\t\t//编辑时input框\r\n\t\tif (this.state.editKey == item.key) {\r\n\t\t\ttitleInfo = <input type=\"text\" id=\"itemKey\" defaultValue={item.name} onChange={(e) => this.nodechange(item, e.target.value)} />\r\n\t\t} else {\r\n\t\t\ttitleInfo = <span className=\"title-middle\">{item.name}</span>\r\n\t\t}\r\n\t\t//编辑图标\r\n\t\tif (this.state.isHover == item.key) {\r\n\t\t\ttitleIcon = <Icon className=\"title-middle edit-icon\" type=\"uf-pencil\" onClick={(e) => this.editRender(item)}></Icon>;\r\n\t\t}\r\n\t\treturn (<div className=\"title-con\">\r\n\r\n\t\t\t{titleInfo}\r\n\t\t\t{titleIcon}\r\n\t\t</div>);\r\n\t}\r\n\r\n\tcomponentDidMount = () => {\r\n\t\tsetTimeout(() => {\r\n\t\t\tthis.setState({\r\n\t\t\t\ttreeData: [{\r\n\t\t\t\t\tname: 'pNode 01',\r\n\t\t\t\t\tkey: '0-0',\r\n\t\t\t\t\tchildren: [{\r\n\t\t\t\t\t\tname: 'leaf 0-0-0',\r\n\t\t\t\t\t\tkey: '0-0-0'\r\n\t\t\t\t\t}, {\r\n\t\t\t\t\t\tname: 'leaf 0-0-1',\r\n\t\t\t\t\t\tkey: '0-0-1'\r\n\t\t\t\t\t}]\r\n\t\t\t\t}, {\r\n\t\t\t\t\tname: 'pNode 02',\r\n\t\t\t\t\tkey: '0-1',\r\n\t\t\t\t\tchildren: [{\r\n\t\t\t\t\t\tname: 'leaf 0-1-0',\r\n\t\t\t\t\t\tkey: '0-1-0'\r\n\t\t\t\t\t}, {\r\n\t\t\t\t\t\tname: 'leaf 0-1-1',\r\n\t\t\t\t\t\tkey: '0-1-1'\r\n\t\t\t\t\t}]\r\n\t\t\t\t}, {\r\n\t\t\t\t\tname: 'pNode 03',\r\n\t\t\t\t\tkey: '0-2',\r\n\t\t\t\t\tisLeaf: true\r\n\t\t\t\t}, ],\r\n\t\t\t});\r\n\t\t\r\n\t\t}, 100);\r\n\t}\r\n\trender() {\r\n\t\tconst loop = data => data.map((item) => {\r\n\t\t\tif (item.children) {\r\n\t\t\t\treturn <TreeNode title={this.renderTreeTitle(item)} key={item.key}>{loop(item.children)}</TreeNode>;\r\n\t\t\t}\r\n\t\t\treturn <TreeNode title={this.renderTreeTitle(item)} key={item.key} isLeaf={item.isLeaf} disabled={item.key === '0-0-0'} />;\r\n\t\t});\r\n\t\tconst treeNodes = loop(this.state.treeData);\r\n\t\treturn (\r\n\t\t\t<Tree onMouseLeave={this.onMouseLeave} onMouseEnter={this.onMouseEnter} className=\"myCls\">\r\n\t\t\t\t{treeNodes}\r\n\t\t\t</Tree>\r\n\r\n\t\t);\r\n\t}\r\n}\r\n\r\n\r\n\r\nexport default Demo8;", "desc": " 鼠标移动到节点上点击编辑图标进行编辑。e.node.props.eventKey代表当前节点key值。editKey指当前操作的节点key", "scss_code": ".title-middle {\r\n  display: inline-block;\r\n  vertical-align: middle;\r\n}\r\n.edit-icon {\r\n  float:right;\r\n  font-size: 16px;\r\n  height: 16px;\r\n  line-height: 20px;\r\n}\r\n.title-con {\r\n  min-width: 150px;\r\n}" }, { "example": _react2['default'].createElement(Demo9, null), "title": " 连接线Tree", "code": "/**\r\n *\r\n * @title 连接线Tree\r\n * @description \r\n *\r\n */\r\n\r\n\r\nimport React, {\r\n\tComponent\r\n} from 'react';\r\n\r\n\r\nconst TreeNode = Tree.TreeNode;\r\nclass Demo9 extends Component {\r\n\tconstructor(props) {\r\n\t\tsuper(props);\r\n\t\tconst keys = this.props.keys;\r\n\t\tthis.state = {\r\n\t\t\tdefaultExpandedKeys: keys\r\n\t\t};\r\n\r\n\t}\r\n\r\n\trender() {\r\n\t\treturn (\r\n\t\t\t<Tree className=\"myCls\" showLine checkable  defaultExpandAll={true}>\r\n\t        <TreeNode title=\"parent 1\" key=\"0-0\">\r\n\t          <TreeNode title=\"parent 1-0\" key=\"0-0-0\" >\r\n\t            <TreeNode title=\"leaf\" key=\"0-0-0-0\"  />\r\n\t            <TreeNode title=\"leaf\" key=\"0-0-0-1\" />\r\n\t          </TreeNode>\r\n\t          <TreeNode title=\"parent 1-1\" key=\"0-0-1\">\r\n\t            <TreeNode title={<span>sss</span>} key=\"0-0-1-0\" />\r\n\t          </TreeNode>\r\n\t        </TreeNode>\r\n\t      </Tree>\r\n\t\t);\r\n\t}\r\n}\r\n\r\nexport default Demo9;", "desc": " " }, { "example": _react2['default'].createElement(Demo10, null), "title": " Tree基本使用示例", "code": "/**\r\n *\r\n * @title Tree基本使用示例\r\n * @description 如何获取选中对象自定义对象和数据\r\n *\r\n */\r\n\r\n\r\nimport React, {\r\n\tComponent\r\n} from 'react';\r\n\r\n\r\nconst TreeNode = Tree.TreeNode;\r\n\r\nconst defaultProps = {\r\n\tkeys: ['0-0-0', '0-0-1']\r\n}\r\nclass Demo10 extends Component {\r\n\tconstructor(props) {\r\n\t\tsuper(props);\r\n\t\tconst keys = this.props.keys;\r\n\t\tthis.state = {\r\n\t\t\tdefaultExpandedKeys: keys,\r\n\t\t\tdefaultSelectedKeys: keys,\r\n\t\t\tdefaultCheckedKeys:keys\r\n\t\t\t// checkedKeys: {checked:keys},\r\n\t\t};\r\n    }\r\n    /**\r\n     * 获取当前选中行的item对象。\r\n     * @param {*} value \r\n     */\r\n\tonSelect(selectedKeys, e) {\r\n        console.log(`${selectedKeys} selected`);//获取key\r\n        let currentObject = {};\r\n        currentObject.title = e.node.props.title; //获取选中对象的数据\r\n        currentObject.key = e.node.props.eventKey;\r\n        console.log(currentObject); \r\n\t}\r\n\tonCheck = (checkedKeys) => {\r\n\t\tlet self = this;\r\n\t\tconsole.log('onCheck', checkedKeys);\r\n\t\tconst cks = {\r\n\t\t\tchecked: checkedKeys.checked || checkedKeys,\r\n\t\t};\r\n\t\t// this.setState({checkedKeys:cks});\r\n\t}\r\n\r\n\tonDoubleClick=(key,treeNode)=>{\r\n\t\tconsole.log('---onDblClick---'+key+'--treeNode--'+treeNode);\r\n\t}\r\n\trender() {\r\n\t\r\n\t\treturn (\r\n\t\t\t<Tree className=\"myCls\" showLine checkable\r\n                defaultExpandedKeys={this.state.defaultExpandedKeys}\r\n                defaultSelectedKeys={this.state.defaultSelectedKeys}\r\n                defaultCheckedKeys = {this.state.defaultCheckedKeys}\r\n                checkStrictly\r\n                onSelect={this.onSelect} onCheck={this.onCheck}\r\n                onDoubleClick={this.onDoubleClick}\r\n            >\r\n                <TreeNode title=\"parent 1\" key=\"0-0\" >\r\n                <TreeNode title=\"parent 1-0\" key=\"0-0-0\" disabled>\r\n                    <TreeNode title=\"leaf\" key=\"0-0-0-0\" disableCheckbox />\r\n                    <TreeNode title=\"leaf\" key=\"0-0-0-1\" />\r\n                </TreeNode>\r\n                <TreeNode title=\"parent 1-1\" key=\"0-0-1\">\r\n                    <TreeNode title={<span>sss</span>} key=\"0-0-1-0\" />\r\n                </TreeNode>\r\n                <TreeNode title=\"parent 1-2\" key=\"0-0-2\" >\r\n                    <TreeNode title=\"leaf\" key=\"0-0-2-0\" />\r\n                    <TreeNode title=\"leaf\" key=\"0-0-2-1\" />\r\n                </TreeNode>\r\n                </TreeNode>\r\n\t      </Tree>\r\n\t\t);\r\n\t}\r\n}\r\n\r\nDemo10.defaultProps = defaultProps;\r\n\r\n\r\nexport default Demo10;", "desc": " 如何获取选中对象自定义对象和数据" }, { "example": _react2['default'].createElement(Demo11, null), "title": " 用户自定义节点属性ext", "code": "/**\r\n*\r\n* @title 用户自定义节点属性ext\r\n* @description 业务中扩展的数据可以定义在ext属性中，用户可以在TreeNode节点中获取ext属性。此例中将treeNode的数据存放在了ext中，方便用户获取。\r\n* \b\r\n*/\r\n\r\nimport React, { Component } from 'react';\nimport { Tree } from 'tinper-bee';\r\n\r\n\r\nconst x = 6;\r\nconst y = 5;\r\nconst z = 2;\r\nconst gData = [];\r\n\r\nconst generateData = (_level, _preKey, _tns) => {\r\n    const preKey = _preKey || '0';\r\n    const tns = _tns || gData;\r\n\r\n    const children = [];\r\n    for (let i = 0; i < x; i++) {\r\n        const key = `${preKey}-${i}`;\r\n        tns.push({ title: key, key });\r\n        if (i < y) {\r\n            children.push(key);\r\n        }\r\n    }\r\n    if (_level < 0) {\r\n        return tns;\r\n    }\r\n    const level = _level - 1;\r\n    children.forEach((key, index) => {\r\n        tns[index].children = [];\r\n        return generateData(level, key, tns[index].children);\r\n    });\r\n};\r\ngenerateData(z);\r\n\r\nconst TreeNode = Tree.TreeNode;\r\n\r\n\r\nclass Demo11 extends Component{\r\n  constructor(props) {\r\n  \tsuper(props);\r\n    this.state = {\r\n      expandedKeys: [],\r\n      autoExpandParent: true,\r\n      checkedKeys: ['0-0-0'],\r\n      selectedKeys: [],\r\n    };\r\n    this.onExpand = this.onExpand.bind(this);\r\n    this.onCheck = this.onCheck.bind(this);\r\n    this.onSelect = this.onSelect.bind(this);\r\n  }\r\n  onExpand(expandedKeys,nodeInfo) {\r\n    console.log('onExpand---显示ext数据', nodeInfo.node.props.ext.data);\r\n\r\n    this.setState({\r\n      expandedKeys,\r\n      autoExpandParent: false,\r\n    });\r\n  }\r\n  onCheck(checkedKeys) {\r\n    this.setState({\r\n      checkedKeys,\r\n      selectedKeys: ['0-3', '0-4'],\r\n    });\r\n  }\r\n  onSelect(selectedKeys, info) {\r\n    console.log('onSelect', info);\r\n    this.setState({ selectedKeys });\r\n  }\r\n  // keydown的钩子事件\r\n  onKeyDown = (e,treeNode)=>{\r\n    console.log('***',e);\r\n    return false;\r\n  }\r\n  render() {\r\n    const loop = data => data.map((item) => {\r\n      if (item.children) {\r\n        return (\r\n          <TreeNode key={item.key} title={item.key} disableCheckbox={item.key === '0-0-0'} ext={{'data':item}}>\r\n            {loop(item.children)}\r\n          </TreeNode>\r\n        );\r\n      }\r\n      return <TreeNode key={item.key} title={item.key} isLeaf={true}/>;\r\n    });\r\n    return (\r\n      <Tree\r\n        checkable\r\n        focusable\r\n        className=\"demo2 myCls\"\r\n        onExpand={this.onExpand} expandedKeys={this.state.expandedKeys}\r\n        autoExpandParent={this.state.autoExpandParent}\r\n        onCheck={this.onCheck} \r\n        onSelect={this.onSelect} \r\n        keyFun={this.onKeyDown}\r\n      >\r\n        {loop(gData)}\r\n      </Tree>\r\n    );\r\n  }\r\n};\r\n\r\n\r\nexport default Demo11;", "desc": " 业务中扩展的数据可以定义在ext属性中，用户可以在TreeNode节点中获取ext属性。此例中将treeNode的数据存放在了ext中，方便用户获取。" }, { "example": _react2['default'].createElement(Demo12, null), "title": " 根据 treeData 数组渲染树节点", "code": "/**\r\n*\r\n* @title 根据 treeData 数组渲染树节点\r\n* @description 设置 treeData 属性，则不需要手动构造 TreeNode 节点（key 在整个树范围内唯一）\r\n*/\r\n\r\nimport React, { Component } from 'react';\nimport { Tree } from 'tinper-bee';\r\n\r\n\r\nconst treeData = [\r\n  {\r\n    title: '0-0',\r\n    key: '0-0',\r\n    ext: '自定义属性',\r\n    children: [\r\n      {\r\n        title: '0-0-0',\r\n        key: '0-0-0',\r\n        children: [\r\n          { title: '0-0-0-0', key: '0-0-0-0' },\r\n          { title: '0-0-0-1', key: '0-0-0-1' },\r\n          { title: '0-0-0-2', key: '0-0-0-2' },\r\n        ],\r\n      },\r\n      {\r\n        title: '0-0-1',\r\n        key: '0-0-1',\r\n        children: [\r\n          { title: '0-0-1-0', key: '0-0-1-0' },\r\n          { title: '0-0-1-1', key: '0-0-1-1' },\r\n          { title: '0-0-1-2', key: '0-0-1-2' },\r\n        ],\r\n      },\r\n      {\r\n        title: '0-0-2',\r\n        key: '0-0-2',\r\n      },\r\n    ],\r\n  },\r\n  {\r\n    title: '0-1',\r\n    key: '0-1',\r\n    children: [\r\n      { title: '0-1-0-0', key: '0-1-0-0' },\r\n      { title: '0-1-0-1', key: '0-1-0-1' },\r\n      { title: '0-1-0-2', key: '0-1-0-2' },\r\n    ],\r\n  },\r\n  {\r\n    title: '0-2',\r\n    key: '0-2',\r\n    ext: '自定义属性'\r\n  },\r\n];\r\n\r\nclass Demo12 extends Component {\r\n  state = {\r\n    expandedKeys: ['0-0-0', '0-0-1'],\r\n    autoExpandParent: true,\r\n    checkedKeys: ['0-0-0'],\r\n    selectedKeys: [],\r\n  };\r\n\r\n  onExpand = expandedKeys => {\r\n    console.log('onExpand', expandedKeys);\r\n    // if not set autoExpandParent to false, if children expanded, parent can not collapse.\r\n    // or, you can remove all expanded children keys.\r\n    this.setState({\r\n      expandedKeys,\r\n      autoExpandParent: false,\r\n    });\r\n  };\r\n\r\n  onCheck = checkedKeys => {\r\n    console.log('onCheck', checkedKeys);\r\n    this.setState({ checkedKeys });\r\n  };\r\n\r\n  onSelect = (selectedKeys, info) => {\r\n    console.log('onSelect', info);\r\n    this.setState({ selectedKeys });\r\n  };\r\n\r\n  render() {\r\n    return (\r\n      <Tree\r\n        checkable\r\n        treeData={treeData}\r\n        onExpand={this.onExpand}\r\n        expandedKeys={this.state.expandedKeys}\r\n        autoExpandParent={this.state.autoExpandParent}\r\n        onCheck={this.onCheck}\r\n        checkedKeys={this.state.checkedKeys}\r\n        onSelect={this.onSelect}\r\n        selectedKeys={this.state.selectedKeys}\r\n      />\r\n    );\r\n  }\r\n}\r\n\r\nexport default Demo12;", "desc": " 设置 treeData 属性，则不需要手动构造 TreeNode 节点（key 在整个树范围内唯一）" }, { "example": _react2['default'].createElement(Demo13, null), "title": " 滚动加载树节点", "code": "/**\r\n*\r\n* @title 滚动加载树节点\r\n* @description 适用于大数据场景。注意：使用懒加载，需要通过 treeData 属性传入完整的数据结构，并设置 lazyLoad = {true}。可视区域的高度可以自定义，在 Tree 组件外层包裹一层div即可。\r\n*/\r\n\r\nimport React, { Component } from 'react';\nimport { Button, Tree } from 'tinper-bee';\r\n\n\r\n\r\nconst {TreeNode} = Tree;\r\n\r\nconst x = 1000;\r\nconst y = 1;\r\nconst z = 1;\r\nconst gData = [];\r\n\r\nconst generateData = (_level, _preKey, _tns) => {\r\n    const preKey = _preKey || '0';\r\n    const tns = _tns || gData;\r\n\r\n    const children = [];\r\n    for (let i = 0; i < x; i++) {\r\n        const key = `${preKey}-${i}`;\r\n        tns.push({ title: key, key });\r\n        if (i < y) {\r\n            children.push(key);\r\n        }\r\n    }\r\n    if (_level < 0) {\r\n        return tns;\r\n    }\r\n    const level = _level - 1;\r\n    children.forEach((key, index) => {\r\n        tns[index].children = [];\r\n        return generateData(level, key, tns[index].children);\r\n    });\r\n};\r\ngenerateData(z);\r\n\r\nconst data = [ ...new Array(10000) ].map((e, i) => {\r\n  const rs = { key: i + 'a', title: i + 'a'};\r\n  return rs;\r\n})\r\n\r\nclass Demo13 extends Component{\r\n  constructor(props) {\r\n  \tsuper(props);\r\n    this.state = {\r\n      expandedKeys: ['0-0','0-1','0-2','0-3', '0-4','0-5','0-6','0-0-0','0-0-1'],\r\n      autoExpandParent: true,\r\n      checkedKeys: ['0-0-0'],\r\n      selectedKeys: [],\r\n      treeData: data\r\n    };\r\n    this.onExpand = this.onExpand.bind(this);\r\n    this.onCheck = this.onCheck.bind(this);\r\n    this.onSelect = this.onSelect.bind(this);\r\n  }\r\n  onExpand(expandedKeys,nodeInfo) {\r\n    // console.log('onExpand---显示ext数据', nodeInfo.node.props.ext.data);\r\n\r\n    this.setState({\r\n      expandedKeys,\r\n      autoExpandParent: false,\r\n    });\r\n  }\r\n  onCheck(checkedKeys) {\r\n    this.setState({\r\n      checkedKeys,\r\n      selectedKeys: ['0-3', '0-4'],\r\n    });\r\n  }\r\n  onSelect(selectedKeys, info) {\r\n    console.log('onSelect', info);\r\n    this.setState({ selectedKeys });\r\n  }\r\n  // keydown的钩子事件\r\n  onKeyDown = (e,treeNode)=>{\r\n    console.log('***',e);\r\n    return false;\r\n  }\r\n\r\n  //使用 treeData 渲染树节点时，可使用该函数自定义节点显示内容（非必须）\r\n  //注意：isLeaf 属性是必传的，否则节点层级和展示会有问题\r\n  renderTreeNodes = (data) => {\r\n    const loop = data => data.map((item) => {\r\n      if (item.children) {\r\n        return (\r\n          <TreeNode key={item.key} title={item.key} isLeaf={item.isLeaf}>\r\n            {loop(item.children)}\r\n          </TreeNode>\r\n        );\r\n      }\r\n      return <TreeNode key={item.key} title={item.key} isLeaf={true}/>;\r\n    });\r\n    return loop(data);\r\n  }\r\n\r\n  changeTreeData = () => {\r\n    this.setState({\r\n      treeData: gData\r\n    })\r\n  }\r\n\r\n  render() {\r\n    return (\r\n      <div>\r\n        <Button onClick={this.changeTreeData}>改变数据源</Button>\r\n        <div style={{height:'300px', overflow:'auto'}}>\r\n          <Tree\r\n            checkable\r\n            focusable\r\n            treeData={this.state.treeData}\r\n            lazyLoad={true}\r\n            renderTreeNodes={this.renderTreeNodes}\r\n            onExpand={this.onExpand}\r\n            defaultExpandAll={true} \r\n            expandedKeys={this.state.expandedKeys}\r\n            autoExpandParent={this.state.autoExpandParent}\r\n            onCheck={this.onCheck} \r\n            onSelect={this.onSelect} \r\n            keyFun={this.onKeyDown}\r\n          >\r\n          </Tree>\r\n        </div>\r\n      </div>\r\n    );\r\n  }\r\n};\r\n\r\n\r\nexport default Demo13;", "desc": " 适用于大数据场景。注意：使用懒加载，需要通过 treeData 属性传入完整的数据结构，并设置 lazyLoad = {true}。可视区域的高度可以自定义，在 Tree 组件外层包裹一层div即可。" }, { "example": _react2['default'].createElement(Demo14, null), "title": " 自定义滚动容器", "code": "/**\r\n*\r\n* @title 自定义滚动容器\r\n* @description 使用 getScrollParent 设置需要监听滚动事件的容器。\r\n*/\r\n\r\nimport React, { Component } from 'react';\nimport { Tree } from 'tinper-bee';\r\n\r\n\r\nconst {TreeNode} = Tree;\r\n\r\nconst x = 1000;\r\nconst y = 1;\r\nconst z = 1;\r\nconst gData = [];\r\n\r\nconst generateData = (_level, _preKey, _tns) => {\r\n    const preKey = _preKey || '0';\r\n    const tns = _tns || gData;\r\n\r\n    const children = [];\r\n    for (let i = 0; i < x; i++) {\r\n        const key = `${preKey}-${i}`;\r\n        tns.push({ title: key, key });\r\n        if (i < y) {\r\n            children.push(key);\r\n        }\r\n    }\r\n    if (_level < 0) {\r\n        return tns;\r\n    }\r\n    const level = _level - 1;\r\n    children.forEach((key, index) => {\r\n        tns[index].children = [];\r\n        return generateData(level, key, tns[index].children);\r\n    });\r\n};\r\ngenerateData(z);\r\n\r\nclass Demo14 extends Component{\r\n  constructor(props) {\r\n  \tsuper(props);\r\n    this.state = {\r\n      expandedKeys: ['0-0','0-1','0-2','0-3', '0-4','0-5','0-6','0-0-0','0-0-1'],\r\n      autoExpandParent: true,\r\n      checkedKeys: ['0-0-0'],\r\n      selectedKeys: [],\r\n    };\r\n    this.onExpand = this.onExpand.bind(this);\r\n    this.onCheck = this.onCheck.bind(this);\r\n    this.onSelect = this.onSelect.bind(this);\r\n  }\r\n  onExpand(expandedKeys,nodeInfo) {\r\n    // console.log('onExpand---显示ext数据', nodeInfo.node.props.ext.data);\r\n\r\n    this.setState({\r\n      expandedKeys,\r\n      autoExpandParent: false,\r\n    });\r\n  }\r\n  onCheck(checkedKeys) {\r\n    this.setState({\r\n      checkedKeys,\r\n      selectedKeys: ['0-3', '0-4'],\r\n    });\r\n  }\r\n  onSelect(selectedKeys, info) {\r\n    console.log('onSelect', info);\r\n    this.setState({ selectedKeys });\r\n  }\r\n  // keydown的钩子事件\r\n  onKeyDown = (e,treeNode)=>{\r\n    console.log('***',e);\r\n    return false;\r\n  }\r\n\r\n  //使用 treeData 渲染树节点时，可使用该函数自定义节点显示内容（非必须）\r\n  //注意：isLeaf 属性是必传的，否则节点层级和展示会有问题\r\n  renderTreeNodes = (data) => {\r\n    const loop = data => data.map((item) => {\r\n      if (item.children) {\r\n        return (\r\n          <TreeNode key={item.key} title={item.key} isLeaf={item.isLeaf}>\r\n            {loop(item.children)}\r\n          </TreeNode>\r\n        );\r\n      }\r\n      return <TreeNode key={item.key} title={item.key} isLeaf={true}/>;\r\n    });\r\n    return loop(data);\r\n  }\r\n\r\n  render() {\r\n    return (\r\n        <div className=\"container\" style={{height:'300px', overflow:'auto'}}>\r\n            <div>\r\n                <Tree\r\n                checkable\r\n                focusable\r\n                treeData={gData}\r\n                lazyLoad={true}\r\n                renderTreeNodes={this.renderTreeNodes}\r\n                onExpand={this.onExpand}\r\n                defaultExpandAll={true} \r\n                expandedKeys={this.state.expandedKeys}\r\n                autoExpandParent={this.state.autoExpandParent}\r\n                onCheck={this.onCheck} \r\n                onSelect={this.onSelect} \r\n                keyFun={this.onKeyDown}\r\n                getScrollContainer={() => {\r\n                    return document.querySelector('.container')\r\n                }}\r\n                >\r\n                </Tree>\r\n            </div>\r\n        </div>\r\n    );\r\n  }\r\n};\r\n\r\n\r\nexport default Demo14;", "desc": " 使用 getScrollParent 设置需要监听滚动事件的容器。" }];
 	
 	var Demo = function (_Component) {
 	    _inherits(Demo, _Component);
@@ -673,7 +673,7 @@
 	
 	var _Panel3 = _interopRequireDefault(_Panel2);
 	
-	var _PanelGroup2 = __webpack_require__(83);
+	var _PanelGroup2 = __webpack_require__(81);
 	
 	var _PanelGroup3 = _interopRequireDefault(_PanelGroup2);
 	
@@ -712,7 +712,7 @@
 	
 	var _propTypes2 = _interopRequireDefault(_propTypes);
 	
-	var _copyToClipboard = __webpack_require__(81);
+	var _copyToClipboard = __webpack_require__(79);
 	
 	var _copyToClipboard2 = _interopRequireDefault(_copyToClipboard);
 	
@@ -1184,6 +1184,8 @@
 	    _this.state = { status: initialStatus };
 	
 	    _this.nextCallback = null;
+	
+	    _this.timer = null;
 	    return _this;
 	  }
 	
@@ -1239,6 +1241,8 @@
 	  };
 	
 	  Transition.prototype.componentWillUnmount = function componentWillUnmount() {
+	    clearTimeout(this.timer);
+	    this.timer = null;
 	    this.cancelNextCallback();
 	  };
 	
@@ -1323,9 +1327,11 @@
 	      } else {
 	        (0, _on2["default"])(node, transitionEndEvent, this.nextCallback);
 	      }
-	      setTimeout(this.nextCallback, this.props.timeout);
+	      clearTimeout(this.timer);
+	      this.timer = setTimeout(this.nextCallback, this.props.timeout);
 	    } else {
-	      setTimeout(this.nextCallback, 0);
+	      clearTimeout(this.timer);
+	      this.timer = setTimeout(this.nextCallback, 0);
 	    }
 	  };
 	
@@ -6129,6 +6135,8 @@
 	    value: true
 	});
 	
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+	
 	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 	
 	var _react = __webpack_require__(1);
@@ -6143,44 +6151,37 @@
 	
 	var _classnames2 = _interopRequireDefault(_classnames);
 	
-	var _warning = __webpack_require__(32);
-	
-	var _warning2 = _interopRequireDefault(_warning);
-	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 	
 	var defaultDuration = 1.5;
-	var newDuration = void 0;
-	var defaultTop = 24;
+	var defaultTop = 0;
 	var defaultBottom = 48;
 	var bottom = 90;
 	var padding = 30;
-	var width = 240;
+	var width = 200;
 	var messageInstance = void 0;
 	var key = 1;
 	var clsPrefix = 'u-message';
 	var noop = function noop() {};
-	var notificationStyle_copy = {};
-	var messageStyle_copy = {};
-	var positionType = ['topRight', 'bottomRight', 'top', 'bottom', 'topLeft', 'bottomLeft', ''];
-	var defaultStyle = {};
 	
 	var positionObj = {
 	    "top": {
-	        messageStyle: {},
+	        messageStyle: {
+	            width: "100%"
+	        },
 	        notificationStyle: {
 	            top: defaultTop,
-	            left: '50%',
-	            transform: 'translateX( -50%)'
+	            width: "100%"
 	        },
 	        transitionName: 'top'
 	    },
 	    "bottom": {
-	        messageStyle: {},
+	        messageStyle: {
+	            width: "100%"
+	        },
 	        notificationStyle: {
 	            bottom: defaultBottom,
-	            left: '50%',
-	            transform: 'translateX( -50%)'
+	            width: "100%"
 	        },
 	        transitionName: 'bottom'
 	    },
@@ -6240,31 +6241,12 @@
 	        callback(messageInstance);
 	        return;
 	    }
-	    switch (position) {
-	        case 'top':
-	            notificationStyle_copy.top = defaultTop;
-	            break;
-	        case 'bottom':
-	            notificationStyle_copy.bottom = defaultBottom;
-	            break;
-	        case 'bottomRight':
-	            notificationStyle_copy.bottom = bottom;
-	            break;
-	        case 'bottomLeft':
-	            notificationStyle_copy.bottom = bottom;
-	            break;
-	        default:
-	            break;
-	    }
-	    if (position !== 'top' && position !== 'bottom') {
-	        messageStyle_copy.width = width;
-	    }
-	    var style = JSON.stringify(notificationStyle_copy) == "{}" ? positionObj[position].notificationStyle : notificationStyle_copy;
+	    var style = positionObj[position].notificationStyle;
 	    var instanceObj = {
 	        clsPrefix: clsPrefix,
 	        transitionName: clsPrefix + '-' + positionObj[position].transitionName,
-	        style: _extends({}, style, defaultStyle), // 覆盖原来的样式
-	        position: position
+	        style: style, // 覆盖原来的样式
+	        position: ''
 	    };
 	    if (typeof keyboard === 'boolean') {
 	        instanceObj.keyboard = keyboard;
@@ -6278,35 +6260,25 @@
 	    });
 	}
 	
-	function notice(content, duration_arg, type, onClose, position, style, keyboard, onEscapeKeyUp, showIcon, icon, props) {
-	    if (positionType.findIndex(function (item) {
-	        return item === position;
-	    }) < 0) {
-	        (0, _warning2["default"])(false, 'Failed prop type: Invalid prop `position` supplied to `Message`, expected one of ["top","bottom","topRight","topLeft","bottomRight","bottomLeft"].');
-	        return;
-	    }
-	    var duration = duration_arg !== undefined ? duration_arg : defaultDuration;
-	    notificationStyle_copy = _extends({}, positionObj[position].notificationStyle);
-	    messageStyle_copy = _extends({}, positionObj[position].messageStyle);
-	
+	function notice(content, duration, type, onClose, position, style, keyboard, onEscapeKeyUp, showIcon) {
 	    var iconType = {
 	        info: 'uf uf-i-c-2',
 	        success: 'uf uf-correct',
-	        danger: 'uf uf-exc-c',
+	        danger: 'uf uf-close-c',
 	        warning: 'uf uf-exc-t',
 	        light: 'uf uf-notification',
-	        dark: 'uf uf-notification',
+	        dark: 'uf uf-bubble',
 	        news: 'uf uf-bell',
 	        infolight: 'uf uf-i-c-2',
 	        successlight: 'uf uf-correct',
-	        dangerlight: 'uf uf-exc-c',
+	        dangerlight: 'uf uf-close-c',
 	        warninglight: 'uf uf-exc-t'
 	    }[type];
 	
-	    var positionStyle = JSON.stringify(messageStyle_copy) == "{}" ? positionObj[position].messageStyle : messageStyle_copy;
-	    defaultStyle = _extends({}, positionStyle, style);
+	    var positionStyle = positionObj[position].messageStyle;
+	
 	    getMessageInstance(position, function (instance) {
-	        instance.notice(_extends({}, props, {
+	        instance.notice({
 	            key: key,
 	            duration: duration,
 	            color: type,
@@ -6317,7 +6289,7 @@
 	                showIcon ? _react2["default"].createElement(
 	                    'div',
 	                    { className: clsPrefix + '-notice-description-icon' },
-	                    icon ? _react2["default"].createElement('i', { className: (0, _classnames2["default"])('' + icon) }) : _react2["default"].createElement('i', { className: (0, _classnames2["default"])(iconType) })
+	                    _react2["default"].createElement('i', { className: (0, _classnames2["default"])(iconType) })
 	                ) : null,
 	                _react2["default"].createElement(
 	                    'div',
@@ -6326,7 +6298,7 @@
 	                )
 	            ),
 	            onClose: onClose
-	        }));
+	        });
 	    }, keyboard, onEscapeKeyUp);
 	    return function () {
 	        var target = key++;
@@ -6340,19 +6312,14 @@
 	
 	exports["default"] = {
 	    create: function create(obj) {
-	        if (newDuration) {
-	            //如果在config方法里设置了duration
-	            obj.duration = newDuration;
-	        }
 	        var content = obj.content || '';
-	        var duration = typeof obj.duration == 'undefined' ? defaultDuration : obj.duration;
-	        var color = obj.color || 'light';
+	        var duration = _typeof(obj.duration) == undefined ? defaultDuration : obj.duration;
+	        var color = obj.color || 'dark';
 	        var onClose = obj.onClose || noop;
 	        var position = obj.position || "top";
 	        var style = obj.style || {};
-	        var showIcon = obj.hasOwnProperty('showIcon') ? obj.showIcon : true;
-	        var icon = obj.hasOwnProperty('icon') ? obj.icon : false;
-	        return notice(content, duration, color, onClose, position, style, obj.keyboard, obj.onEscapeKeyUp, showIcon, icon, obj);
+	        var showIcon = obj.showIcon || false;
+	        return notice(content, duration, color, onClose, position, style, obj.keyboard, obj.onEscapeKeyUp, showIcon);
 	    },
 	    config: function config(options) {
 	        if (options.top !== undefined) {
@@ -6360,7 +6327,6 @@
 	        }
 	        if (options.duration !== undefined) {
 	            defaultDuration = options.duration;
-	            newDuration = defaultDuration;
 	        }
 	        if (options.clsPrefix !== undefined) {
 	            clsPrefix = options.clsPrefix;
@@ -6372,23 +6338,13 @@
 	            bottom = options.bottom;
 	        }
 	        if (options.width !== undefined) {
-	            width = options.width;
+	            bottom = options.width;
 	        }
 	    },
 	    destroy: function destroy() {
 	        if (messageInstance) {
 	            messageInstance.destroy();
 	            messageInstance = null;
-	            defaultDuration = 1.5;
-	            newDuration = undefined;
-	            defaultTop = 24;
-	            defaultBottom = 48;
-	            bottom = 90;
-	            padding = 30;
-	            width = 240;
-	            notificationStyle_copy = null;
-	            messageStyle_copy = null;
-	            defaultStyle = null;
 	        }
 	    }
 	};
@@ -6484,7 +6440,7 @@
 	  show: _propTypes2["default"].bool,
 	  clsPrefix: _propTypes2["default"].string,
 	  style: _propTypes2["default"].object,
-	  position: _propTypes2["default"].oneOf(['topRight', 'bottomRight', 'top', 'bottom', 'topLeft', 'bottomLeft', '']),
+	  position: _propTypes2["default"].oneOf(['topRight', 'bottomRight', '']),
 	  transitionName: _propTypes2["default"].string,
 	  keyboard: _propTypes2["default"].bool, // 按esc键是否关闭notice
 	  onEscapeKeyUp: _propTypes2["default"].func, // 设置esc键特殊钩子函数
@@ -6624,19 +6580,13 @@
 	Notification.defaultProps = defaultProps;
 	
 	Notification.newInstance = function newNotificationInstance(properties, callback) {
-	
 	  if (typeof callback !== 'function') {
 	    console.error('You must introduce callback as the second parameter of Notification.newInstance().');
 	    return;
 	  }
 	  var props = properties || {};
-	  var container = props.container || document.body;
-	  if (typeof container == 'function') {
-	    container = container();
-	  }
-	
 	  var div = document.createElement('div');
-	  container.appendChild(div);
+	  document.body.appendChild(div);
 	
 	  var called = false;
 	  function ref(notification) {
@@ -6655,7 +6605,7 @@
 	      component: notification,
 	      destroy: function destroy() {
 	        _reactDom2["default"].unmountComponentAtNode(div);
-	        container.removeChild(div);
+	        document.body.removeChild(div);
 	      }
 	    });
 	  }
@@ -7473,8 +7423,6 @@
 	  value: true
 	});
 	
-	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-	
 	var _react = __webpack_require__(1);
 	
 	var _react2 = _interopRequireDefault(_react);
@@ -7487,17 +7435,11 @@
 	
 	var _propTypes2 = _interopRequireDefault(_propTypes);
 	
-	var _beeIcon = __webpack_require__(79);
-	
-	var _beeIcon2 = _interopRequireDefault(_beeIcon);
-	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 	
 	function _defaults(obj, defaults) { var keys = Object.getOwnPropertyNames(defaults); for (var i = 0; i < keys.length; i++) { var key = keys[i]; var value = Object.getOwnPropertyDescriptor(defaults, key); if (value && value.configurable && obj[key] === undefined) { Object.defineProperty(obj, key, value); } } return obj; }
 	
 	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-	
-	function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
@@ -7571,12 +7513,7 @@
 	        style = _props.style,
 	        children = _props.children,
 	        color = _props.color,
-	        title = _props.title,
-	        content = _props.content,
-	        onEnd = _props.onEnd,
-	        onClose = _props.onClose,
-	        duration = _props.duration,
-	        others = _objectWithoutProperties(_props, ['closable', 'clsPrefix', 'className', 'style', 'children', 'color', 'title', 'content', 'onEnd', 'onClose', 'duration']);
+	        title = _props.title;
 	
 	    var componentClass = clsPrefix + '-notice';
 	    var classes = (_classes = {}, _defineProperty(_classes, '' + componentClass, 1), _defineProperty(_classes, componentClass + '-closable', closable), _defineProperty(_classes, className, !!className), _classes);
@@ -7585,7 +7522,7 @@
 	    }
 	    return _react2["default"].createElement(
 	      'div',
-	      _extends({ className: (0, _classnames2["default"])(classes), style: style, onClick: this.close }, others),
+	      { className: (0, _classnames2["default"])(classes), style: style, onClick: this.close },
 	      _react2["default"].createElement(
 	        'div',
 	        { className: componentClass + '-content' },
@@ -7603,11 +7540,7 @@
 	      closable ? _react2["default"].createElement(
 	        'a',
 	        { tabIndex: '0', onClick: this.close, className: componentClass + '-close' },
-	        _react2["default"].createElement(
-	          'span',
-	          { className: componentClass + '-close-x' },
-	          _react2["default"].createElement(_beeIcon2["default"], { type: 'uf-close' })
-	        )
+	        _react2["default"].createElement('span', { className: componentClass + '-close-x' })
 	      ) : null
 	    );
 	  };
@@ -7627,107 +7560,9 @@
 /* 79 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	
-	var _Icon = __webpack_require__(80);
-	
-	var _Icon2 = _interopRequireDefault(_Icon);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
-	
-	exports["default"] = _Icon2["default"];
-	module.exports = exports['default'];
-
-/***/ }),
-/* 80 */
-/***/ (function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-		value: true
-	});
-	
-	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-	
-	var _react = __webpack_require__(1);
-	
-	var _react2 = _interopRequireDefault(_react);
-	
-	var _classnames = __webpack_require__(5);
-	
-	var _classnames2 = _interopRequireDefault(_classnames);
-	
-	var _propTypes = __webpack_require__(6);
-	
-	var _propTypes2 = _interopRequireDefault(_propTypes);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
-	
-	function _defaults(obj, defaults) { var keys = Object.getOwnPropertyNames(defaults); for (var i = 0; i < keys.length; i++) { var key = keys[i]; var value = Object.getOwnPropertyDescriptor(defaults, key); if (value && value.configurable && obj[key] === undefined) { Object.defineProperty(obj, key, value); } } return obj; }
-	
-	function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
-	
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-	
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-	
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : _defaults(subClass, superClass); }
-	
-	var propTypes = {
-		type: _propTypes2["default"].string
-	
-	};
-	/**
-	 *  badge 默认显示内容1
-	 */
-	var defaultProps = {
-		clsPrefix: 'uf'
-	};
-	
-	var Icon = function (_Component) {
-		_inherits(Icon, _Component);
-	
-		function Icon(props) {
-			_classCallCheck(this, Icon);
-	
-			return _possibleConstructorReturn(this, _Component.call(this, props));
-		}
-	
-		Icon.prototype.render = function render() {
-			var _props = this.props,
-			    type = _props.type,
-			    className = _props.className,
-			    clsPrefix = _props.clsPrefix,
-			    others = _objectWithoutProperties(_props, ['type', 'className', 'clsPrefix']);
-	
-			var clsObj = {};
-	
-			var classNames = (0, _classnames2["default"])(clsPrefix, type);
-	
-			return _react2["default"].createElement('i', _extends({}, others, { className: (0, _classnames2["default"])(classNames, className) }));
-		};
-	
-		return Icon;
-	}(_react.Component);
-	
-	Icon.defaultProps = defaultProps;
-	Icon.propTypes = propTypes;
-	
-	exports["default"] = Icon;
-	module.exports = exports['default'];
-
-/***/ }),
-/* 81 */
-/***/ (function(module, exports, __webpack_require__) {
-
 	"use strict";
 	
-	var deselectCurrent = __webpack_require__(82);
+	var deselectCurrent = __webpack_require__(80);
 	
 	var clipboardToIE11Formatting = {
 	  "text/plain": "Text",
@@ -7841,7 +7676,7 @@
 
 
 /***/ }),
-/* 82 */
+/* 80 */
 /***/ (function(module, exports) {
 
 	
@@ -7886,7 +7721,7 @@
 
 
 /***/ }),
-/* 83 */
+/* 81 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -8033,7 +7868,7 @@
 	module.exports = exports['default'];
 
 /***/ }),
-/* 84 */
+/* 82 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -8042,7 +7877,7 @@
 	  value: true
 	});
 	
-	var _Drawer = __webpack_require__(85);
+	var _Drawer = __webpack_require__(83);
 	
 	var _Drawer2 = _interopRequireDefault(_Drawer);
 	
@@ -8052,7 +7887,7 @@
 	module.exports = exports['default'];
 
 /***/ }),
-/* 85 */
+/* 83 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -8077,9 +7912,9 @@
 	
 	var _classnames2 = _interopRequireDefault(_classnames);
 	
-	var _common = __webpack_require__(86);
+	var _common = __webpack_require__(84);
 	
-	var _reactTransitionGroup = __webpack_require__(87);
+	var _reactTransitionGroup = __webpack_require__(85);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 	
@@ -8355,7 +8190,7 @@
 	module.exports = exports['default'];
 
 /***/ }),
-/* 86 */
+/* 84 */
 /***/ (function(module, exports) {
 
 	'use strict';
@@ -8382,18 +8217,18 @@
 	}
 
 /***/ }),
-/* 87 */
+/* 85 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
 	
-	var _CSSTransition = _interopRequireDefault(__webpack_require__(88));
+	var _CSSTransition = _interopRequireDefault(__webpack_require__(86));
 	
-	var _ReplaceTransition = _interopRequireDefault(__webpack_require__(95));
+	var _ReplaceTransition = _interopRequireDefault(__webpack_require__(93));
 	
-	var _TransitionGroup = _interopRequireDefault(__webpack_require__(96));
+	var _TransitionGroup = _interopRequireDefault(__webpack_require__(94));
 	
-	var _Transition = _interopRequireDefault(__webpack_require__(92));
+	var _Transition = _interopRequireDefault(__webpack_require__(90));
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -8405,7 +8240,7 @@
 	};
 
 /***/ }),
-/* 88 */
+/* 86 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {"use strict";
@@ -8415,15 +8250,15 @@
 	
 	var PropTypes = _interopRequireWildcard(__webpack_require__(6));
 	
-	var _addClass = _interopRequireDefault(__webpack_require__(89));
+	var _addClass = _interopRequireDefault(__webpack_require__(87));
 	
-	var _removeClass = _interopRequireDefault(__webpack_require__(91));
+	var _removeClass = _interopRequireDefault(__webpack_require__(89));
 	
 	var _react = _interopRequireDefault(__webpack_require__(1));
 	
-	var _Transition = _interopRequireDefault(__webpack_require__(92));
+	var _Transition = _interopRequireDefault(__webpack_require__(90));
 	
-	var _PropTypes = __webpack_require__(94);
+	var _PropTypes = __webpack_require__(92);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -8707,7 +8542,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(33)))
 
 /***/ }),
-/* 89 */
+/* 87 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -8717,7 +8552,7 @@
 	exports.__esModule = true;
 	exports.default = addClass;
 	
-	var _hasClass = _interopRequireDefault(__webpack_require__(90));
+	var _hasClass = _interopRequireDefault(__webpack_require__(88));
 	
 	function addClass(element, className) {
 	  if (element.classList) element.classList.add(className);else if (!(0, _hasClass.default)(element, className)) if (typeof element.className === 'string') element.className = element.className + ' ' + className;else element.setAttribute('class', (element.className && element.className.baseVal || '') + ' ' + className);
@@ -8726,7 +8561,7 @@
 	module.exports = exports["default"];
 
 /***/ }),
-/* 90 */
+/* 88 */
 /***/ (function(module, exports) {
 
 	"use strict";
@@ -8741,7 +8576,7 @@
 	module.exports = exports["default"];
 
 /***/ }),
-/* 91 */
+/* 89 */
 /***/ (function(module, exports) {
 
 	'use strict';
@@ -8755,7 +8590,7 @@
 	};
 
 /***/ }),
-/* 92 */
+/* 90 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {"use strict";
@@ -8769,9 +8604,9 @@
 	
 	var _reactDom = _interopRequireDefault(__webpack_require__(2));
 	
-	var _reactLifecyclesCompat = __webpack_require__(93);
+	var _reactLifecyclesCompat = __webpack_require__(91);
 	
-	var _PropTypes = __webpack_require__(94);
+	var _PropTypes = __webpack_require__(92);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -9371,7 +9206,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(33)))
 
 /***/ }),
-/* 93 */
+/* 91 */
 /***/ (function(module, exports) {
 
 	'use strict';
@@ -9539,7 +9374,7 @@
 
 
 /***/ }),
-/* 94 */
+/* 92 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {"use strict";
@@ -9573,7 +9408,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(33)))
 
 /***/ }),
-/* 95 */
+/* 93 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {"use strict";
@@ -9587,7 +9422,7 @@
 	
 	var _reactDom = __webpack_require__(2);
 	
-	var _TransitionGroup = _interopRequireDefault(__webpack_require__(96));
+	var _TransitionGroup = _interopRequireDefault(__webpack_require__(94));
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -9729,7 +9564,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(33)))
 
 /***/ }),
-/* 96 */
+/* 94 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {"use strict";
@@ -9741,9 +9576,9 @@
 	
 	var _react = _interopRequireDefault(__webpack_require__(1));
 	
-	var _reactLifecyclesCompat = __webpack_require__(93);
+	var _reactLifecyclesCompat = __webpack_require__(91);
 	
-	var _ChildMapping = __webpack_require__(97);
+	var _ChildMapping = __webpack_require__(95);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -9943,7 +9778,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(33)))
 
 /***/ }),
-/* 97 */
+/* 95 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -10098,7 +9933,7 @@
 	}
 
 /***/ }),
-/* 98 */
+/* 96 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -10107,7 +9942,7 @@
 	  value: true
 	});
 	
-	var _Clipboard = __webpack_require__(99);
+	var _Clipboard = __webpack_require__(97);
 	
 	var _Clipboard2 = _interopRequireDefault(_Clipboard);
 	
@@ -10117,7 +9952,7 @@
 	module.exports = exports['default'];
 
 /***/ }),
-/* 99 */
+/* 97 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -10130,7 +9965,7 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _clipboard = __webpack_require__(100);
+	var _clipboard = __webpack_require__(98);
 	
 	var _clipboard2 = _interopRequireDefault(_clipboard);
 	
@@ -10138,7 +9973,7 @@
 	
 	var _classnames2 = _interopRequireDefault(_classnames);
 	
-	var _beeIcon = __webpack_require__(79);
+	var _beeIcon = __webpack_require__(106);
 	
 	var _beeIcon2 = _interopRequireDefault(_beeIcon);
 	
@@ -10339,12 +10174,12 @@
 	module.exports = exports['default'];
 
 /***/ }),
-/* 100 */
+/* 98 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;(function (global, factory) {
 	    if (true) {
-	        !(__WEBPACK_AMD_DEFINE_ARRAY__ = [module, __webpack_require__(101), __webpack_require__(103), __webpack_require__(104)], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory), __WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ? (__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+	        !(__WEBPACK_AMD_DEFINE_ARRAY__ = [module, __webpack_require__(99), __webpack_require__(101), __webpack_require__(102)], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory), __WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ? (__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 	    } else if (typeof exports !== "undefined") {
 	        factory(module, require('./clipboard-action'), require('tiny-emitter'), require('good-listener'));
 	    } else {
@@ -10551,12 +10386,12 @@
 	});
 
 /***/ }),
-/* 101 */
+/* 99 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;(function (global, factory) {
 	    if (true) {
-	        !(__WEBPACK_AMD_DEFINE_ARRAY__ = [module, __webpack_require__(102)], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory), __WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ? (__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+	        !(__WEBPACK_AMD_DEFINE_ARRAY__ = [module, __webpack_require__(100)], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory), __WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ? (__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 	    } else if (typeof exports !== "undefined") {
 	        factory(module, require('select'));
 	    } else {
@@ -10785,7 +10620,7 @@
 	});
 
 /***/ }),
-/* 102 */
+/* 100 */
 /***/ (function(module, exports) {
 
 	function select(element) {
@@ -10834,7 +10669,7 @@
 
 
 /***/ }),
-/* 103 */
+/* 101 */
 /***/ (function(module, exports) {
 
 	function E () {
@@ -10907,11 +10742,11 @@
 
 
 /***/ }),
-/* 104 */
+/* 102 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	var is = __webpack_require__(105);
-	var delegate = __webpack_require__(106);
+	var is = __webpack_require__(103);
+	var delegate = __webpack_require__(104);
 	
 	/**
 	 * Validates all params and calls the right
@@ -11008,7 +10843,7 @@
 
 
 /***/ }),
-/* 105 */
+/* 103 */
 /***/ (function(module, exports) {
 
 	/**
@@ -11063,10 +10898,10 @@
 
 
 /***/ }),
-/* 106 */
+/* 104 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	var closest = __webpack_require__(107);
+	var closest = __webpack_require__(105);
 	
 	/**
 	 * Delegates event to a selector.
@@ -11147,7 +10982,7 @@
 
 
 /***/ }),
-/* 107 */
+/* 105 */
 /***/ (function(module, exports) {
 
 	var DOCUMENT_NODE_TYPE = 9;
@@ -11184,6 +11019,104 @@
 	
 	module.exports = closest;
 
+
+/***/ }),
+/* 106 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _Icon = __webpack_require__(107);
+	
+	var _Icon2 = _interopRequireDefault(_Icon);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+	
+	exports["default"] = _Icon2["default"];
+	module.exports = exports['default'];
+
+/***/ }),
+/* 107 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+	
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+	
+	var _react = __webpack_require__(1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _classnames = __webpack_require__(5);
+	
+	var _classnames2 = _interopRequireDefault(_classnames);
+	
+	var _propTypes = __webpack_require__(6);
+	
+	var _propTypes2 = _interopRequireDefault(_propTypes);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+	
+	function _defaults(obj, defaults) { var keys = Object.getOwnPropertyNames(defaults); for (var i = 0; i < keys.length; i++) { var key = keys[i]; var value = Object.getOwnPropertyDescriptor(defaults, key); if (value && value.configurable && obj[key] === undefined) { Object.defineProperty(obj, key, value); } } return obj; }
+	
+	function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : _defaults(subClass, superClass); }
+	
+	var propTypes = {
+		type: _propTypes2["default"].string
+	
+	};
+	/**
+	 *  badge 默认显示内容1
+	 */
+	var defaultProps = {
+		clsPrefix: 'uf'
+	};
+	
+	var Icon = function (_Component) {
+		_inherits(Icon, _Component);
+	
+		function Icon(props) {
+			_classCallCheck(this, Icon);
+	
+			return _possibleConstructorReturn(this, _Component.call(this, props));
+		}
+	
+		Icon.prototype.render = function render() {
+			var _props = this.props,
+			    type = _props.type,
+			    className = _props.className,
+			    clsPrefix = _props.clsPrefix,
+			    others = _objectWithoutProperties(_props, ['type', 'className', 'clsPrefix']);
+	
+			var clsObj = {};
+	
+			var classNames = (0, _classnames2["default"])(clsPrefix, type);
+	
+			return _react2["default"].createElement('i', _extends({}, others, { className: (0, _classnames2["default"])(classNames, className) }));
+		};
+	
+		return Icon;
+	}(_react.Component);
+	
+	Icon.defaultProps = defaultProps;
+	Icon.propTypes = propTypes;
+	
+	exports["default"] = Icon;
+	module.exports = exports['default'];
 
 /***/ }),
 /* 108 */
@@ -14119,7 +14052,7 @@
 	
 	var _confirm2 = _interopRequireDefault(_confirm);
 	
-	var _beeIcon = __webpack_require__(79);
+	var _beeIcon = __webpack_require__(106);
 	
 	var _beeIcon2 = _interopRequireDefault(_beeIcon);
 	
@@ -15716,15 +15649,15 @@
 	exports.__esModule = true;
 	exports.default = void 0;
 	
-	var _addClass = _interopRequireDefault(__webpack_require__(89));
+	var _addClass = _interopRequireDefault(__webpack_require__(87));
 	
 	exports.addClass = _addClass.default;
 	
-	var _removeClass = _interopRequireDefault(__webpack_require__(91));
+	var _removeClass = _interopRequireDefault(__webpack_require__(89));
 	
 	exports.removeClass = _removeClass.default;
 	
-	var _hasClass = _interopRequireDefault(__webpack_require__(90));
+	var _hasClass = _interopRequireDefault(__webpack_require__(88));
 	
 	exports.hasClass = _hasClass.default;
 	var _default = {
@@ -33522,7 +33455,7 @@
 	
 	var _beeButton2 = _interopRequireDefault(_beeButton);
 	
-	var _beeIcon = __webpack_require__(79);
+	var _beeIcon = __webpack_require__(106);
 	
 	var _beeIcon2 = _interopRequireDefault(_beeIcon);
 	
@@ -33932,7 +33865,7 @@
 	
 	var _classnames2 = _interopRequireDefault(_classnames);
 	
-	var _beeIcon = __webpack_require__(79);
+	var _beeIcon = __webpack_require__(106);
 	
 	var _beeIcon2 = _interopRequireDefault(_beeIcon);
 	
@@ -34306,22 +34239,16 @@
 	
 	var _inherits2 = _interopRequireDefault(__webpack_require__(271));
 	
-	var _possibleConstructorReturn2 = _interopRequireDefault(__webpack_require__(273));
-	
-	var _getPrototypeOf2 = _interopRequireDefault(__webpack_require__(275));
+	var _createSuper2 = _interopRequireDefault(__webpack_require__(273));
 	
 	var React = _interopRequireWildcard(__webpack_require__(1));
 	
-	var _ResizableTextArea = _interopRequireDefault(__webpack_require__(276));
-	
-	function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = (0, _getPrototypeOf2.default)(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = (0, _getPrototypeOf2.default)(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return (0, _possibleConstructorReturn2.default)(this, result); }; }
-	
-	function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+	var _ResizableTextArea = _interopRequireDefault(__webpack_require__(279));
 	
 	var TextArea = /*#__PURE__*/function (_React$Component) {
 	  (0, _inherits2.default)(TextArea, _React$Component);
 	
-	  var _super = _createSuper(TextArea);
+	  var _super = (0, _createSuper2.default)(TextArea);
 	
 	  function TextArea(props) {
 	    var _this;
@@ -34387,7 +34314,7 @@
 	  }, {
 	    key: "render",
 	    value: function render() {
-	      return React.createElement(_ResizableTextArea.default, Object.assign({}, this.props, {
+	      return /*#__PURE__*/React.createElement(_ResizableTextArea.default, Object.assign({}, this.props, {
 	        value: this.state.value,
 	        onKeyDown: this.handleKeyDown,
 	        onChange: this.handleChange,
@@ -34488,9 +34415,70 @@
 /* 273 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	var _typeof = __webpack_require__(274);
+	var getPrototypeOf = __webpack_require__(274);
 	
-	var assertThisInitialized = __webpack_require__(222);
+	var isNativeReflectConstruct = __webpack_require__(275);
+	
+	var possibleConstructorReturn = __webpack_require__(276);
+	
+	function _createSuper(Derived) {
+	  var hasNativeReflectConstruct = isNativeReflectConstruct();
+	  return function _createSuperInternal() {
+	    var Super = getPrototypeOf(Derived),
+	        result;
+	
+	    if (hasNativeReflectConstruct) {
+	      var NewTarget = getPrototypeOf(this).constructor;
+	      result = Reflect.construct(Super, arguments, NewTarget);
+	    } else {
+	      result = Super.apply(this, arguments);
+	    }
+	
+	    return possibleConstructorReturn(this, result);
+	  };
+	}
+	
+	module.exports = _createSuper;
+
+/***/ }),
+/* 274 */
+/***/ (function(module, exports) {
+
+	function _getPrototypeOf(o) {
+	  module.exports = _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) {
+	    return o.__proto__ || Object.getPrototypeOf(o);
+	  };
+	  return _getPrototypeOf(o);
+	}
+	
+	module.exports = _getPrototypeOf;
+
+/***/ }),
+/* 275 */
+/***/ (function(module, exports) {
+
+	function _isNativeReflectConstruct() {
+	  if (typeof Reflect === "undefined" || !Reflect.construct) return false;
+	  if (Reflect.construct.sham) return false;
+	  if (typeof Proxy === "function") return true;
+	
+	  try {
+	    Date.prototype.toString.call(Reflect.construct(Date, [], function () {}));
+	    return true;
+	  } catch (e) {
+	    return false;
+	  }
+	}
+	
+	module.exports = _isNativeReflectConstruct;
+
+/***/ }),
+/* 276 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	var _typeof = __webpack_require__(277);
+	
+	var assertThisInitialized = __webpack_require__(278);
 	
 	function _possibleConstructorReturn(self, call) {
 	  if (call && (_typeof(call) === "object" || typeof call === "function")) {
@@ -34503,7 +34491,7 @@
 	module.exports = _possibleConstructorReturn;
 
 /***/ }),
-/* 274 */
+/* 277 */
 /***/ (function(module, exports) {
 
 	function _typeof2(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof2 = function _typeof2(obj) { return typeof obj; }; } else { _typeof2 = function _typeof2(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof2(obj); }
@@ -34525,20 +34513,21 @@
 	module.exports = _typeof;
 
 /***/ }),
-/* 275 */
+/* 278 */
 /***/ (function(module, exports) {
 
-	function _getPrototypeOf(o) {
-	  module.exports = _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) {
-	    return o.__proto__ || Object.getPrototypeOf(o);
-	  };
-	  return _getPrototypeOf(o);
+	function _assertThisInitialized(self) {
+	  if (self === void 0) {
+	    throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
+	  }
+	
+	  return self;
 	}
 	
-	module.exports = _getPrototypeOf;
+	module.exports = _assertThisInitialized;
 
 /***/ }),
-/* 276 */
+/* 279 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -34552,7 +34541,9 @@
 	});
 	exports.default = void 0;
 	
-	var _defineProperty2 = _interopRequireDefault(__webpack_require__(277));
+	var _objectSpread2 = _interopRequireDefault(__webpack_require__(280));
+	
+	var _defineProperty2 = _interopRequireDefault(__webpack_require__(282));
 	
 	var _classCallCheck2 = _interopRequireDefault(__webpack_require__(269));
 	
@@ -34560,27 +34551,17 @@
 	
 	var _inherits2 = _interopRequireDefault(__webpack_require__(271));
 	
-	var _possibleConstructorReturn2 = _interopRequireDefault(__webpack_require__(273));
-	
-	var _getPrototypeOf2 = _interopRequireDefault(__webpack_require__(275));
+	var _createSuper2 = _interopRequireDefault(__webpack_require__(273));
 	
 	var React = _interopRequireWildcard(__webpack_require__(1));
 	
-	var _rcResizeObserver = _interopRequireDefault(__webpack_require__(278));
+	var _rcResizeObserver = _interopRequireDefault(__webpack_require__(283));
 	
-	var _omit = _interopRequireDefault(__webpack_require__(292));
+	var _omit = _interopRequireDefault(__webpack_require__(296));
 	
 	var _classnames = _interopRequireDefault(__webpack_require__(5));
 	
-	var _calculateNodeHeight = _interopRequireDefault(__webpack_require__(295));
-	
-	function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
-	
-	function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { (0, _defineProperty2.default)(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
-	
-	function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = (0, _getPrototypeOf2.default)(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = (0, _getPrototypeOf2.default)(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return (0, _possibleConstructorReturn2.default)(this, result); }; }
-	
-	function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+	var _calculateNodeHeight = _interopRequireDefault(__webpack_require__(299));
 	
 	// eslint-disable-next-line @typescript-eslint/naming-convention
 	var RESIZE_STATUS;
@@ -34594,7 +34575,7 @@
 	var ResizableTextArea = /*#__PURE__*/function (_React$Component) {
 	  (0, _inherits2.default)(ResizableTextArea, _React$Component);
 	
-	  var _super = _createSuper(ResizableTextArea);
+	  var _super = (0, _createSuper2.default)(ResizableTextArea);
 	
 	  function ResizableTextArea(props) {
 	    var _this;
@@ -34681,17 +34662,16 @@
 	        otherProps.value = otherProps.value || '';
 	      }
 	
-	      var style = _objectSpread(_objectSpread(_objectSpread({}, _this.props.style), textareaStyles), resizeStatus === RESIZE_STATUS.RESIZING ? // React will warning when mix `overflow` & `overflowY`.
+	      var style = (0, _objectSpread2.default)((0, _objectSpread2.default)((0, _objectSpread2.default)({}, _this.props.style), textareaStyles), resizeStatus === RESIZE_STATUS.RESIZING ? // React will warning when mix `overflow` & `overflowY`.
 	      // We need to define this separately.
 	      {
 	        overflowX: 'hidden',
 	        overflowY: 'hidden'
 	      } : null);
-	
-	      return React.createElement(_rcResizeObserver.default, {
+	      return /*#__PURE__*/React.createElement(_rcResizeObserver.default, {
 	        onResize: _this.handleResize,
 	        disabled: !(autoSize || onResize)
-	      }, React.createElement("textarea", Object.assign({}, otherProps, {
+	      }, /*#__PURE__*/React.createElement("textarea", Object.assign({}, otherProps, {
 	        className: cls,
 	        style: style,
 	        ref: _this.saveTextArea
@@ -34752,7 +34732,49 @@
 	exports.default = _default;
 
 /***/ }),
-/* 277 */
+/* 280 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	var defineProperty = __webpack_require__(281);
+	
+	function ownKeys(object, enumerableOnly) {
+	  var keys = Object.keys(object);
+	
+	  if (Object.getOwnPropertySymbols) {
+	    var symbols = Object.getOwnPropertySymbols(object);
+	    if (enumerableOnly) symbols = symbols.filter(function (sym) {
+	      return Object.getOwnPropertyDescriptor(object, sym).enumerable;
+	    });
+	    keys.push.apply(keys, symbols);
+	  }
+	
+	  return keys;
+	}
+	
+	function _objectSpread2(target) {
+	  for (var i = 1; i < arguments.length; i++) {
+	    var source = arguments[i] != null ? arguments[i] : {};
+	
+	    if (i % 2) {
+	      ownKeys(Object(source), true).forEach(function (key) {
+	        defineProperty(target, key, source[key]);
+	      });
+	    } else if (Object.getOwnPropertyDescriptors) {
+	      Object.defineProperties(target, Object.getOwnPropertyDescriptors(source));
+	    } else {
+	      ownKeys(Object(source)).forEach(function (key) {
+	        Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));
+	      });
+	    }
+	  }
+	
+	  return target;
+	}
+	
+	module.exports = _objectSpread2;
+
+/***/ }),
+/* 281 */
 /***/ (function(module, exports) {
 
 	function _defineProperty(obj, key, value) {
@@ -34773,7 +34795,28 @@
 	module.exports = _defineProperty;
 
 /***/ }),
-/* 278 */
+/* 282 */
+/***/ (function(module, exports) {
+
+	function _defineProperty(obj, key, value) {
+	  if (key in obj) {
+	    Object.defineProperty(obj, key, {
+	      value: value,
+	      enumerable: true,
+	      configurable: true,
+	      writable: true
+	    });
+	  } else {
+	    obj[key] = value;
+	  }
+	
+	  return obj;
+	}
+	
+	module.exports = _defineProperty;
+
+/***/ }),
+/* 283 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -34787,7 +34830,7 @@
 	});
 	exports.default = void 0;
 	
-	var _objectSpread2 = _interopRequireDefault(__webpack_require__(279));
+	var _objectSpread2 = _interopRequireDefault(__webpack_require__(284));
 	
 	var _classCallCheck2 = _interopRequireDefault(__webpack_require__(269));
 	
@@ -34795,19 +34838,19 @@
 	
 	var _inherits2 = _interopRequireDefault(__webpack_require__(271));
 	
-	var _createSuper2 = _interopRequireDefault(__webpack_require__(281));
+	var _createSuper2 = _interopRequireDefault(__webpack_require__(286));
 	
 	var React = _interopRequireWildcard(__webpack_require__(1));
 	
-	var _findDOMNode = _interopRequireDefault(__webpack_require__(287));
+	var _findDOMNode = _interopRequireDefault(__webpack_require__(291));
 	
-	var _toArray = _interopRequireDefault(__webpack_require__(288));
+	var _toArray = _interopRequireDefault(__webpack_require__(292));
 	
-	var _warning = _interopRequireDefault(__webpack_require__(289));
+	var _warning = _interopRequireDefault(__webpack_require__(293));
 	
-	var _ref = __webpack_require__(290);
+	var _ref = __webpack_require__(294);
 	
-	var _resizeObserverPolyfill = _interopRequireDefault(__webpack_require__(291));
+	var _resizeObserverPolyfill = _interopRequireDefault(__webpack_require__(295));
 	
 	var INTERNAL_PREFIX_KEY = 'rc-observer-key'; // Still need to be compatible with React 15, we use class component here
 	
@@ -34866,7 +34909,7 @@
 	            onResize((0, _objectSpread2.default)((0, _objectSpread2.default)({}, size), {}, {
 	              offsetWidth: offsetWidth,
 	              offsetHeight: offsetHeight
-	            }));
+	            }), target);
 	          });
 	        }
 	      }
@@ -34941,19 +34984,19 @@
 	
 	      var childNode = childNodes[0];
 	
-	      if (React.isValidElement(childNode) && (0, _ref.supportRef)(childNode)) {
+	      if ( /*#__PURE__*/React.isValidElement(childNode) && (0, _ref.supportRef)(childNode)) {
 	        var ref = childNode.ref;
-	        childNodes[0] = React.cloneElement(childNode, {
+	        childNodes[0] = /*#__PURE__*/React.cloneElement(childNode, {
 	          ref: (0, _ref.composeRef)(ref, this.setChildNode)
 	        });
 	      }
 	
 	      return childNodes.length === 1 ? childNodes[0] : childNodes.map(function (node, index) {
-	        if (!React.isValidElement(node) || 'key' in node && node.key !== null) {
+	        if (! /*#__PURE__*/React.isValidElement(node) || 'key' in node && node.key !== null) {
 	          return node;
 	        }
 	
-	        return React.cloneElement(node, {
+	        return /*#__PURE__*/React.cloneElement(node, {
 	          key: "".concat(INTERNAL_PREFIX_KEY, "-").concat(index)
 	        });
 	      });
@@ -34967,10 +35010,10 @@
 	exports.default = _default;
 
 /***/ }),
-/* 279 */
+/* 284 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	var defineProperty = __webpack_require__(280);
+	var defineProperty = __webpack_require__(285);
 	
 	function ownKeys(object, enumerableOnly) {
 	  var keys = Object.keys(object);
@@ -35009,7 +35052,7 @@
 	module.exports = _objectSpread2;
 
 /***/ }),
-/* 280 */
+/* 285 */
 /***/ (function(module, exports) {
 
 	function _defineProperty(obj, key, value) {
@@ -35030,14 +35073,14 @@
 	module.exports = _defineProperty;
 
 /***/ }),
-/* 281 */
+/* 286 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	var getPrototypeOf = __webpack_require__(282);
+	var getPrototypeOf = __webpack_require__(287);
 	
-	var isNativeReflectConstruct = __webpack_require__(283);
+	var isNativeReflectConstruct = __webpack_require__(288);
 	
-	var possibleConstructorReturn = __webpack_require__(284);
+	var possibleConstructorReturn = __webpack_require__(289);
 	
 	function _createSuper(Derived) {
 	  var hasNativeReflectConstruct = isNativeReflectConstruct();
@@ -35059,7 +35102,7 @@
 	module.exports = _createSuper;
 
 /***/ }),
-/* 282 */
+/* 287 */
 /***/ (function(module, exports) {
 
 	function _getPrototypeOf(o) {
@@ -35072,7 +35115,7 @@
 	module.exports = _getPrototypeOf;
 
 /***/ }),
-/* 283 */
+/* 288 */
 /***/ (function(module, exports) {
 
 	function _isNativeReflectConstruct() {
@@ -35091,12 +35134,12 @@
 	module.exports = _isNativeReflectConstruct;
 
 /***/ }),
-/* 284 */
+/* 289 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	var _typeof = __webpack_require__(285);
+	var _typeof = __webpack_require__(277);
 	
-	var assertThisInitialized = __webpack_require__(286);
+	var assertThisInitialized = __webpack_require__(290);
 	
 	function _possibleConstructorReturn(self, call) {
 	  if (call && (_typeof(call) === "object" || typeof call === "function")) {
@@ -35109,29 +35152,7 @@
 	module.exports = _possibleConstructorReturn;
 
 /***/ }),
-/* 285 */
-/***/ (function(module, exports) {
-
-	function _typeof(obj) {
-	  "@babel/helpers - typeof";
-	
-	  if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") {
-	    module.exports = _typeof = function _typeof(obj) {
-	      return typeof obj;
-	    };
-	  } else {
-	    module.exports = _typeof = function _typeof(obj) {
-	      return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
-	    };
-	  }
-	
-	  return _typeof(obj);
-	}
-	
-	module.exports = _typeof;
-
-/***/ }),
-/* 286 */
+/* 290 */
 /***/ (function(module, exports) {
 
 	function _assertThisInitialized(self) {
@@ -35145,10 +35166,12 @@
 	module.exports = _assertThisInitialized;
 
 /***/ }),
-/* 287 */
+/* 291 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
+	
+	var _interopRequireDefault = __webpack_require__(14);
 	
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
@@ -35156,8 +35179,6 @@
 	exports.default = findDOMNode;
 	
 	var _reactDom = _interopRequireDefault(__webpack_require__(2));
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	/**
 	 * Return if a node is a DOM node. Else will return by `findDOMNode`
@@ -35171,7 +35192,7 @@
 	}
 
 /***/ }),
-/* 288 */
+/* 292 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -35197,7 +35218,7 @@
 	module.exports = exports['default'];
 
 /***/ }),
-/* 289 */
+/* 293 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {"use strict";
@@ -35256,10 +35277,12 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(33)))
 
 /***/ }),
-/* 290 */
+/* 294 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
+	
+	var _interopRequireDefault = __webpack_require__(14);
 	
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
@@ -35268,14 +35291,14 @@
 	exports.composeRef = composeRef;
 	exports.supportRef = supportRef;
 	
-	var _reactIs = __webpack_require__(225);
+	var _typeof2 = _interopRequireDefault(__webpack_require__(277));
 	
-	function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+	var _reactIs = __webpack_require__(225);
 	
 	function fillRef(ref, node) {
 	  if (typeof ref === 'function') {
 	    ref(node);
-	  } else if (_typeof(ref) === 'object' && ref && 'current' in ref) {
+	  } else if ((0, _typeof2.default)(ref) === 'object' && ref && 'current' in ref) {
 	    ref.current = node;
 	  }
 	}
@@ -35315,7 +35338,7 @@
 	/* eslint-enable */
 
 /***/ }),
-/* 291 */
+/* 295 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {(function (global, factory) {
@@ -36258,7 +36281,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ }),
-/* 292 */
+/* 296 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -36267,7 +36290,7 @@
 	  value: true
 	});
 	
-	var _extends2 = __webpack_require__(293);
+	var _extends2 = __webpack_require__(297);
 	
 	var _extends3 = _interopRequireDefault(_extends2);
 	
@@ -36286,14 +36309,14 @@
 	module.exports = exports['default'];
 
 /***/ }),
-/* 293 */
+/* 297 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
 	
 	exports.__esModule = true;
 	
-	var _assign = __webpack_require__(294);
+	var _assign = __webpack_require__(298);
 	
 	var _assign2 = _interopRequireDefault(_assign);
 	
@@ -36314,13 +36337,13 @@
 	};
 
 /***/ }),
-/* 294 */
+/* 298 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	module.exports = { "default": __webpack_require__(159), __esModule: true };
 
 /***/ }),
-/* 295 */
+/* 299 */
 /***/ (function(module, exports) {
 
 	"use strict";
@@ -36446,12 +36469,13 @@
 	    height: height,
 	    minHeight: minHeight,
 	    maxHeight: maxHeight,
-	    overflowY: overflowY
+	    overflowY: overflowY,
+	    resize: 'none'
 	  };
 	}
 
 /***/ }),
-/* 296 */
+/* 300 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -36466,15 +36490,15 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _Tree = __webpack_require__(297);
+	var _Tree = __webpack_require__(301);
 	
 	var _Tree2 = _interopRequireDefault(_Tree);
 	
-	var _TreeNode = __webpack_require__(298);
+	var _TreeNode = __webpack_require__(302);
 	
 	var _TreeNode2 = _interopRequireDefault(_TreeNode);
 	
-	var _openAnimation = __webpack_require__(303);
+	var _openAnimation = __webpack_require__(307);
 	
 	var _openAnimation2 = _interopRequireDefault(_openAnimation);
 	
@@ -36584,7 +36608,7 @@
 	module.exports = exports['default'];
 
 /***/ }),
-/* 297 */
+/* 301 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -36601,11 +36625,11 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _TreeNode = __webpack_require__(298);
+	var _TreeNode = __webpack_require__(302);
 	
 	var _TreeNode2 = _interopRequireDefault(_TreeNode);
 	
-	var _infiniteScroll = __webpack_require__(300);
+	var _infiniteScroll = __webpack_require__(304);
 	
 	var _infiniteScroll2 = _interopRequireDefault(_infiniteScroll);
 	
@@ -36613,7 +36637,7 @@
 	
 	var _classnames2 = _interopRequireDefault(_classnames);
 	
-	var _util = __webpack_require__(299);
+	var _util = __webpack_require__(303);
 	
 	var _propTypes = __webpack_require__(6);
 	
@@ -36621,15 +36645,15 @@
 	
 	var _tinperBeeCore = __webpack_require__(27);
 	
-	var _config = __webpack_require__(301);
+	var _config = __webpack_require__(305);
 	
 	var _config2 = _interopRequireDefault(_config);
 	
-	var _createStore = __webpack_require__(302);
+	var _createStore = __webpack_require__(306);
 	
 	var _createStore2 = _interopRequireDefault(_createStore);
 	
-	var _omit = __webpack_require__(292);
+	var _omit = __webpack_require__(296);
 	
 	var _omit2 = _interopRequireDefault(_omit);
 	
@@ -37116,6 +37140,9 @@
 	        selectedKeys: selectedKeys
 	      });
 	    }
+	    this.setState({
+	      focusKey: ''
+	    });
 	    props.onSelect(selectedKeys, newSt);
 	  };
 	
@@ -37385,7 +37412,7 @@
 	      var tabIndexKey = selectedKeys[0];
 	      var isExist = false;
 	      var treeNode = children && children.length && children[0];
-	      var eventKey = treeNode && treeNode.props.eventKey || treeNode.key;
+	      var eventKey = treeNode && (treeNode.props.eventKey || treeNode.key);
 	      if (this.selectKeyDomExist && tabIndexKey || !tabIndexKey) {
 	        isExist = true;
 	        var queryInfo = 'a[pos="' + this.selectKeyDomPos + '"]';
@@ -38007,7 +38034,7 @@
 	module.exports = exports['default'];
 
 /***/ }),
-/* 298 */
+/* 302 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -38036,7 +38063,7 @@
 	
 	var _beeAnimate2 = _interopRequireDefault(_beeAnimate);
 	
-	var _util = __webpack_require__(299);
+	var _util = __webpack_require__(303);
 	
 	var _propTypes = __webpack_require__(6);
 	
@@ -38591,7 +38618,7 @@
 	module.exports = exports['default'];
 
 /***/ }),
-/* 299 */
+/* 303 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -39115,7 +39142,7 @@
 	}
 
 /***/ }),
-/* 300 */
+/* 304 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -39132,9 +39159,9 @@
 	
 	var _propTypes2 = _interopRequireDefault(_propTypes);
 	
-	var _util = __webpack_require__(299);
+	var _util = __webpack_require__(303);
 	
-	var _config = __webpack_require__(301);
+	var _config = __webpack_require__(305);
 	
 	var _config2 = _interopRequireDefault(_config);
 	
@@ -39189,7 +39216,7 @@
 	      _this.handleScrollY();
 	    };
 	
-	    _this.handleScrollY = function () {
+	    _this.handleScrollY = function (isNewDataLess) {
 	      var store = _this.props.store;
 	
 	      var parentElement = _this.getParentElement(_this.scrollComponent);
@@ -39219,7 +39246,9 @@
 	          index += 1;
 	        }
 	      }
-	
+	      if (isNewDataLess) {
+	        parentElement.scrollTop = 0;
+	      }
 	      //true 为向下滚动， false 为向上滚动
 	      var isScrollDown = index - currentIndex > 0 ? true : false;
 	
@@ -39283,8 +39312,9 @@
 	    var oldTreeList = this.props.treeList;
 	
 	    if (newTreeList !== oldTreeList) {
+	      var isNewDataLess = newTreeList.length < oldTreeList.length;
 	      this.treeList = newTreeList;
-	      this.handleScrollY();
+	      this.handleScrollY(isNewDataLess);
 	    }
 	  };
 	
@@ -39445,7 +39475,7 @@
 	module.exports = exports['default'];
 
 /***/ }),
-/* 301 */
+/* 305 */
 /***/ (function(module, exports) {
 
 	"use strict";
@@ -39466,7 +39496,7 @@
 	module.exports = exports["default"];
 
 /***/ }),
-/* 302 */
+/* 306 */
 /***/ (function(module, exports) {
 
 	"use strict";
@@ -39511,7 +39541,7 @@
 	module.exports = exports["default"];
 
 /***/ }),
-/* 303 */
+/* 307 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -39559,7 +39589,7 @@
 	module.exports = exports['default'];
 
 /***/ }),
-/* 304 */
+/* 308 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -39572,11 +39602,11 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _src = __webpack_require__(296);
+	var _src = __webpack_require__(300);
 	
 	var _src2 = _interopRequireDefault(_src);
 	
-	var _beeIcon = __webpack_require__(79);
+	var _beeIcon = __webpack_require__(106);
 	
 	var _beeIcon2 = _interopRequireDefault(_beeIcon);
 	
@@ -39686,7 +39716,7 @@
 	module.exports = exports['default'];
 
 /***/ }),
-/* 305 */
+/* 309 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -39699,7 +39729,7 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _src = __webpack_require__(296);
+	var _src = __webpack_require__(300);
 	
 	var _src2 = _interopRequireDefault(_src);
 	
@@ -39835,7 +39865,7 @@
 	module.exports = exports['default'];
 
 /***/ }),
-/* 306 */
+/* 310 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -39848,7 +39878,7 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _src = __webpack_require__(296);
+	var _src = __webpack_require__(300);
 	
 	var _src2 = _interopRequireDefault(_src);
 	
@@ -40000,7 +40030,7 @@
 	module.exports = exports['default'];
 
 /***/ }),
-/* 307 */
+/* 311 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -40017,7 +40047,7 @@
 	
 	var _beeFormControl2 = _interopRequireDefault(_beeFormControl);
 	
-	var _src = __webpack_require__(296);
+	var _src = __webpack_require__(300);
 	
 	var _src2 = _interopRequireDefault(_src);
 	
@@ -40210,7 +40240,7 @@
 	module.exports = exports['default'];
 
 /***/ }),
-/* 308 */
+/* 312 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -40223,7 +40253,7 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _src = __webpack_require__(296);
+	var _src = __webpack_require__(300);
 	
 	var _src2 = _interopRequireDefault(_src);
 	
@@ -40408,7 +40438,7 @@
 	module.exports = exports['default'];
 
 /***/ }),
-/* 309 */
+/* 313 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -40421,11 +40451,11 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _src = __webpack_require__(296);
+	var _src = __webpack_require__(300);
 	
 	var _src2 = _interopRequireDefault(_src);
 	
-	var _beeIcon = __webpack_require__(79);
+	var _beeIcon = __webpack_require__(106);
 	
 	var _beeIcon2 = _interopRequireDefault(_beeIcon);
 	
@@ -40515,7 +40545,7 @@
 	module.exports = exports['default'];
 
 /***/ }),
-/* 310 */
+/* 314 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -40528,7 +40558,7 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _src = __webpack_require__(296);
+	var _src = __webpack_require__(300);
 	
 	var _src2 = _interopRequireDefault(_src);
 	
@@ -40776,7 +40806,7 @@
 	module.exports = exports['default'];
 
 /***/ }),
-/* 311 */
+/* 315 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -40789,7 +40819,7 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _src = __webpack_require__(296);
+	var _src = __webpack_require__(300);
 	
 	var _src2 = _interopRequireDefault(_src);
 	
@@ -40797,7 +40827,7 @@
 	
 	var _beeButton2 = _interopRequireDefault(_beeButton);
 	
-	var _beeIcon = __webpack_require__(79);
+	var _beeIcon = __webpack_require__(106);
 	
 	var _beeIcon2 = _interopRequireDefault(_beeIcon);
 	
@@ -40948,7 +40978,7 @@
 	module.exports = exports['default'];
 
 /***/ }),
-/* 312 */
+/* 316 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -40961,7 +40991,7 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _src = __webpack_require__(296);
+	var _src = __webpack_require__(300);
 	
 	var _src2 = _interopRequireDefault(_src);
 	
@@ -41031,7 +41061,7 @@
 	module.exports = exports['default'];
 
 /***/ }),
-/* 313 */
+/* 317 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -41044,7 +41074,7 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _src = __webpack_require__(296);
+	var _src = __webpack_require__(300);
 	
 	var _src2 = _interopRequireDefault(_src);
 	
@@ -41162,7 +41192,7 @@
 	module.exports = exports['default'];
 
 /***/ }),
-/* 314 */
+/* 318 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -41175,7 +41205,7 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _src = __webpack_require__(296);
+	var _src = __webpack_require__(300);
 	
 	var _src2 = _interopRequireDefault(_src);
 	
@@ -41310,7 +41340,7 @@
 	module.exports = exports['default'];
 
 /***/ }),
-/* 315 */
+/* 319 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -41323,7 +41353,7 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _src = __webpack_require__(296);
+	var _src = __webpack_require__(300);
 	
 	var _src2 = _interopRequireDefault(_src);
 	
@@ -41422,7 +41452,7 @@
 	module.exports = exports['default'];
 
 /***/ }),
-/* 316 */
+/* 320 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -41439,7 +41469,7 @@
 	
 	var _beeButton2 = _interopRequireDefault(_beeButton);
 	
-	var _src = __webpack_require__(296);
+	var _src = __webpack_require__(300);
 	
 	var _src2 = _interopRequireDefault(_src);
 	
@@ -41609,7 +41639,7 @@
 	module.exports = exports['default'];
 
 /***/ }),
-/* 317 */
+/* 321 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -41622,7 +41652,7 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _src = __webpack_require__(296);
+	var _src = __webpack_require__(300);
 	
 	var _src2 = _interopRequireDefault(_src);
 	

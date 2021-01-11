@@ -48,8 +48,9 @@ export default class InfiniteScroll extends Component {
     let {treeList:newTreeList} = nextProps;
     let {treeList:oldTreeList} = this.props;
     if(newTreeList !== oldTreeList) {
+      const isNewDataLess = newTreeList.length < oldTreeList.length
       this.treeList = newTreeList;
-      this.handleScrollY();
+      this.handleScrollY(isNewDataLess);
     }
   }
 
@@ -193,7 +194,7 @@ export default class InfiniteScroll extends Component {
   /**
    * @description 根据返回的scrollTop计算当前的索引。
    */
-  handleScrollY = () => {
+  handleScrollY = (isNewDataLess) => {
     const { store } = this.props;
     const parentElement = this.getParentElement(this.scrollComponent);
     if (!parentElement) {
@@ -222,7 +223,9 @@ export default class InfiniteScroll extends Component {
         index += 1;
       }
     }
-
+    if (isNewDataLess) {
+      parentElement.scrollTop = 0
+    }
     //true 为向下滚动， false 为向上滚动
     let isScrollDown = index - currentIndex > 0 ? true : false;
 

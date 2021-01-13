@@ -389,7 +389,12 @@ onExpand(treeNode,keyType) {
       }
       this.treeNodesStates[treeNode.props.pos].checked = checked;
       newSt.checkedNodes = [];
-      loopAllChildren(this.props.children, (item, ind, pos, keyOrPos) => {
+      let childs = this.props.children
+      const { renderTreeNodes, treeData } = this.props
+      if (renderTreeNodes && treeData) {
+        childs = renderTreeNodes(treeData)
+      }
+      loopAllChildren(childs, (item, ind, pos, keyOrPos) => {
         if (checkedKeys.indexOf(keyOrPos) !== -1) {
           newSt.checkedNodes.push(item);
           rsCheckedKeys.push(keyOrPos);

@@ -1,3 +1,12 @@
+## [2.1.39](https://github.com/tinper-bee/bee-tree/compare/v2.1.38...v2.1.39) (2021-01-13)
+
+
+### Bug Fixes
+
+* 无限滚动节流函数改成防抖 ([488c719](https://github.com/tinper-bee/bee-tree/commit/488c719a64d0fe9f1c6802eea14467bc7138c907))
+
+
+
 ## [2.1.38](https://github.com/tinper-bee/bee-tree/compare/v2.1.37...v2.1.38) (2021-01-13)
 
 

@@ -113,6 +113,7 @@ class Demo13 extends Component{
             focusable
             treeData={this.state.treeData}
             lazyLoad={true}
+            debounceDuration={100}
             renderTreeNodes={this.renderTreeNodes}
             onExpand={this.onExpand}
             defaultExpandAll={true} 

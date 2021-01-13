@@ -150,7 +150,7 @@ export default class InfiniteScroll extends Component {
    * 绑定scroll事件
    */
   attachScrollListener() {
-    const { store } = this.props;
+    const { store, debounceDuration } = this.props;
     const parentElement = this.getParentElement(this.scrollComponent);
     if (!parentElement) {
       return;
@@ -161,15 +161,14 @@ export default class InfiniteScroll extends Component {
     let rowHeight = store.getState().rowHeight; 
     //默认显示20条，rowsInView根据定高算的。
     this.rowsInView = scrollY ? Math.floor(scrollY / rowHeight) : CONFIG.defaultRowsInView;
-
     scrollEl.addEventListener(
       'scroll',
-      debounce(this.scrollListener, 150),
+      debounce(this.scrollListener, (debounceDuration || 150)),
       this.options ? this.options : this.props.useCapture
     );
     scrollEl.addEventListener(
       'resize',
-      debounce(this.scrollListener, 150),
+      debounce(this.scrollListener, (debounceDuration || 150)),
       this.options ? this.options : this.props.useCapture
     );
   }

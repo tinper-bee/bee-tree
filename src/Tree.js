@@ -1109,7 +1109,7 @@ onExpand(treeNode,keyType) {
     const props = this.props;
     const {
       showLine, prefixCls, className, focusable, checkable, loadData, checkStrictly, tabIndexValue, lazyLoad, getScrollContainer,
-      defaultExpandedKeys, defaultSelectedKeys, defaultCheckedKeys, openAnimation, draggable,
+      defaultExpandedKeys, defaultSelectedKeys, defaultCheckedKeys, openAnimation, draggable, debounceDuration,
       ...others
     } = this.props;
     const customProps = {...omit(others, [
@@ -1225,6 +1225,7 @@ onExpand(treeNode,keyType) {
         <InfiniteScroll
           className="u-tree-infinite-scroll"
           treeList={flatTreeData}
+          debounceDuration={debounceDuration || 150}
           handleTreeListChange={this.handleTreeListChange}
           getScrollParent={getScrollContainer}
           store={this.store}

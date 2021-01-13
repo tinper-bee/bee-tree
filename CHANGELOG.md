@@ -1,3 +1,12 @@
+## [2.1.38](https://github.com/tinper-bee/bee-tree/compare/v2.1.37...v2.1.38) (2021-01-13)
+
+
+### Bug Fixes
+
+* checkStrictly为true时，兼容renderTreeNodes方法的循环 ([957148e](https://github.com/tinper-bee/bee-tree/commit/957148e1698d3718fac24af65240b4bd9ea2e93e))
+
+
+
 ## [2.1.37](https://github.com/tinper-bee/bee-tree/compare/v2.1.36...v2.1.37) (2021-01-11)
 
 

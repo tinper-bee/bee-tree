@@ -1,3 +1,7 @@
+## [2.1.40](https://github.com/tinper-bee/bee-tree/compare/v2.1.39...v2.1.40) (2021-01-13)
+
+
+
 ## [2.1.39](https://github.com/tinper-bee/bee-tree/compare/v2.1.38...v2.1.39) (2021-01-13)
 
 

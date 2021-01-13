@@ -3,7 +3,7 @@
  */
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import {throttle} from './util';
+import {debounce} from './util';
 import CONFIG from './config';
 
 export default class InfiniteScroll extends Component {
@@ -164,12 +164,12 @@ export default class InfiniteScroll extends Component {
 
     scrollEl.addEventListener(
       'scroll',
-      throttle(this.scrollListener, 150),
+      debounce(this.scrollListener, 150),
       this.options ? this.options : this.props.useCapture
     );
     scrollEl.addEventListener(
       'resize',
-      throttle(this.scrollListener, 150),
+      debounce(this.scrollListener, 150),
       this.options ? this.options : this.props.useCapture
     );
   }

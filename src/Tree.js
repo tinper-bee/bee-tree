@@ -30,6 +30,7 @@ class Tree extends React.Component {
       this[m] = this[m].bind(this);
     });
     this.contextmenuKeys = [];
+    this.latestTreeNode = {};
     this.checkedKeysChange = true;
     this.selectKeyDomPos = '0-0';
     this.state = {
@@ -315,6 +316,8 @@ class Tree extends React.Component {
 onExpand(treeNode,keyType) {
     const { treeData,lazyLoad } = this.props;
     let expanded = !treeNode.props.expanded;
+    this.latestState = expanded
+    this.latestTreeNode = treeNode.props
     const controlled = 'expandedKeys' in this.props;
     const expandedKeys = [...this.state.expandedKeys];
     const index = expandedKeys.indexOf(treeNode.props.eventKey);
@@ -804,6 +807,7 @@ onExpand(treeNode,keyType) {
       });
     }
     const filterExpandedKeys = [];
+    const removeRoot = this.latestState === false && props.canCloseFreely
     loopAllChildren(props.children, (item, index, pos, newKey) => {
       if (expandAll) {
         filterExpandedKeys.push(newKey);
@@ -815,6 +819,10 @@ onExpand(treeNode,keyType) {
         });
       }
     });
+    if (removeRoot && this.latestTreeNode.eventKey && filterExpandedKeys.includes(this.latestTreeNode.eventKey)) {
+      const index = filterExpandedKeys.indexOf(this.latestTreeNode.eventKey)
+      filterExpandedKeys.splice(index, 1)
+    }
     return filterExpandedKeys.length ? filterExpandedKeys : keys;
   }
 

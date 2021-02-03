@@ -1,3 +1,12 @@
+## [2.1.41](https://github.com/tinper-bee/bee-tree/compare/v2.1.40...v2.1.41) (2021-02-03)
+
+
+### Features
+
+* 支持自由关闭主树 ([7321793](https://github.com/tinper-bee/bee-tree/commit/73217935e43710d44035b5285f0a837720b4a654))
+
+
+
 ## [2.1.40](https://github.com/tinper-bee/bee-tree/compare/v2.1.39...v2.1.40) (2021-01-13)
 
 

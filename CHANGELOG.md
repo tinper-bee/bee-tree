@@ -1,3 +1,17 @@
+## [2.1.42](https://github.com/tinper-bee/bee-tree/compare/v2.1.40...v2.1.42) (2021-02-22)
+
+
+### Bug Fixes
+
+* 改用节流函数处理大数据下的滚动 ([e44506d](https://github.com/tinper-bee/bee-tree/commit/e44506dada84b77aa944196ac007a17c78bd0010))
+
+
+### Features
+
+* 支持自由关闭主树 ([7321793](https://github.com/tinper-bee/bee-tree/commit/73217935e43710d44035b5285f0a837720b4a654))
+
+
+
 ## [2.1.41](https://github.com/tinper-bee/bee-tree/compare/v2.1.40...v2.1.41) (2021-02-03)
 
 

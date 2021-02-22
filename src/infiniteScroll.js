@@ -3,7 +3,7 @@
  */
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import {debounce} from './util';
+import {debounce, throttle} from './util';
 import CONFIG from './config';
 
 export default class InfiniteScroll extends Component {
@@ -163,12 +163,12 @@ export default class InfiniteScroll extends Component {
     this.rowsInView = scrollY ? Math.floor(scrollY / rowHeight) : CONFIG.defaultRowsInView;
     scrollEl.addEventListener(
       'scroll',
-      debounce(this.scrollListener, (debounceDuration || 150)),
+      throttle(this.scrollListener, (debounceDuration || 150)),
       this.options ? this.options : this.props.useCapture
     );
     scrollEl.addEventListener(
       'resize',
-      debounce(this.scrollListener, (debounceDuration || 150)),
+      throttle(this.scrollListener, (debounceDuration || 150)),
       this.options ? this.options : this.props.useCapture
     );
   }

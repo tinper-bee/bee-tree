@@ -54,6 +54,7 @@ class Tree extends React.Component {
     this.endIndex = this.startIndex + this.loadCount;
     this.cacheTreeNodes = []; //缓存 treenode 节点数组
     this.store = createStore({ rowHeight: 24 }); //rowHeight 树节点的高度，此变量在滚动加载场景很关键
+    this.latestState = null
   }
 
   componentDidMount() {
@@ -808,6 +809,7 @@ onExpand(treeNode,keyType) {
     }
     const filterExpandedKeys = [];
     const removeRoot = this.latestState === false && props.canCloseFreely
+    this.latestState = null
     loopAllChildren(props.children, (item, index, pos, newKey) => {
       if (expandAll) {
         filterExpandedKeys.push(newKey);

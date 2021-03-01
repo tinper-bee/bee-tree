@@ -34036,7 +34036,7 @@
 	
 	    this.handleSearchChange = function (e) {
 	        var onChange = _this2.props.onChange;
-	
+	        console.log('hpapaas', this2.input.value)
 	        var value = _this2.input.value;
 	        _this2.setState({
 	            value: value,
@@ -34048,6 +34048,7 @@
 	    };
 	
 	    this.handleChange = function (e) {
+	        console.log('jira')
 	        var _props$debounceDelay = _this2.props.debounceDelay,
 	            debounceDelay = _props$debounceDelay === undefined ? 0 : _props$debounceDelay;
 	
@@ -34058,6 +34059,7 @@
 	        var onChange = _this2.props.onChange;
 	
 	        var value = _this2.input.value || e.target.value;
+	        console.log('habanova', _this2.input.value || e.target.value)
 	        if (!('value' in _this2.props)) {
 	            _this2.setState({ value: value });
 	        }
@@ -36664,6 +36666,7 @@
 	      _this[m] = _this[m].bind(_this);
 	    });
 	    _this.contextmenuKeys = [];
+	    _this.latestTreeNode = {};
 	    _this.checkedKeysChange = true;
 	    _this.selectKeyDomPos = '0-0';
 	    _this.state = {
@@ -36687,6 +36690,7 @@
 	    _this.endIndex = _this.startIndex + _this.loadCount;
 	    _this.cacheTreeNodes = []; //缓存 treenode 节点数组
 	    _this.store = (0, _createStore2['default'])({ rowHeight: 24 }); //rowHeight 树节点的高度，此变量在滚动加载场景很关键
+	    _this.latestState = null;
 	    return _this;
 	  }
 	
@@ -36948,6 +36952,8 @@
 	        lazyLoad = _props2.lazyLoad;
 	
 	    var expanded = !treeNode.props.expanded;
+	    this.latestState = expanded;
+	    this.latestTreeNode = treeNode.props;
 	    var controlled = 'expandedKeys' in this.props;
 	    var expandedKeys = [].concat(_toConsumableArray(this.state.expandedKeys));
 	    var index = expandedKeys.indexOf(treeNode.props.eventKey);
@@ -37443,6 +37449,8 @@
 	      });
 	    }
 	    var filterExpandedKeys = [];
+	    var removeRoot = this.latestState === false && props.canCloseFreely;
+	    this.latestState = null;
 	    (0, _util.loopAllChildren)(props.children, function (item, index, pos, newKey) {
 	      if (expandAll) {
 	        filterExpandedKeys.push(newKey);
@@ -37454,6 +37462,10 @@
 	        });
 	      }
 	    });
+	    if (removeRoot && this.latestTreeNode.eventKey && filterExpandedKeys.includes(this.latestTreeNode.eventKey)) {
+	      var index = filterExpandedKeys.indexOf(this.latestTreeNode.eventKey);
+	      filterExpandedKeys.splice(index, 1);
+	    }
 	    return filterExpandedKeys.length ? filterExpandedKeys : keys;
 	  };
 	
@@ -39417,8 +39429,8 @@
 	    var rowHeight = store.getState().rowHeight;
 	    //默认显示20条，rowsInView根据定高算的。
 	    this.rowsInView = scrollY ? Math.floor(scrollY / rowHeight) : _config2['default'].defaultRowsInView;
-	    scrollEl.addEventListener('scroll', (0, _util.debounce)(this.scrollListener, debounceDuration || 150), this.options ? this.options : this.props.useCapture);
-	    scrollEl.addEventListener('resize', (0, _util.debounce)(this.scrollListener, debounceDuration || 150), this.options ? this.options : this.props.useCapture);
+	    scrollEl.addEventListener('scroll', (0, _util.throttle)(this.scrollListener, debounceDuration || 150), this.options ? this.options : this.props.useCapture);
+	    scrollEl.addEventListener('resize', (0, _util.throttle)(this.scrollListener, debounceDuration || 150), this.options ? this.options : this.props.useCapture);
 	  };
 	  /**
 	   * 滚动事件监听

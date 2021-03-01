@@ -135,12 +135,37 @@ $treePrefixCls : "u-tree";
     background-color: #108ee9;
     color: white;
     opacity: 0.8;
+    position: relative;
   }
   li.drag-over-gap-top > a[draggable] {
     border-top: 2px #108ee9 solid;
+    position: relative;
+    &::before {
+      position: absolute;
+      top: -6px;
+      left: -7px;
+      content: ' ';
+      width: 8px;
+      height: 8px;
+      border: 2px solid #108ee9;
+      border-radius: 99px;
+      opacity: 1;
+    }
   }
   li.drag-over-gap-bottom > a[draggable] {
     border-bottom: 2px #108ee9 solid;
+    position: relative;
+    &::before {
+      position: absolute;
+      bottom: -5px;
+      left: -6px;
+      content: ' ';
+      width: 8px;
+      height: 8px;
+      border: 2px solid #108ee9;
+      border-radius: 99px;
+      opacity: 1;
+    }
   }
   li.filter-node > a {
     color: #f50;

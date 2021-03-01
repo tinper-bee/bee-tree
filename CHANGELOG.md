@@ -1,3 +1,12 @@
+## [2.1.43](https://github.com/tinper-bee/bee-tree/compare/v2.1.42...v2.1.43) (2021-03-01)
+
+
+### Bug Fixes
+
+* 样式修改 ([6e72512](https://github.com/tinper-bee/bee-tree/commit/6e72512fd92d8cd69a19b3f19b8acce64aeeb0f4))
+
+
+
 ## [2.1.42](https://github.com/tinper-bee/bee-tree/compare/v2.1.40...v2.1.42) (2021-02-22)
 
 

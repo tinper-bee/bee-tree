@@ -1,3 +1,27 @@
+## [2.1.44](https://github.com/tinper-bee/bee-tree/compare/v2.1.24...v2.1.44) (2021-03-07)
+
+
+### Bug Fixes
+
+* #JCJS-4571 滚动加载场景下treeNode无children时不设置默认值[] ([cd432da](https://github.com/tinper-bee/bee-tree/commit/cd432da51fb74cc61611311342ecfdae8ac2d426)), closes [#JCJS-4571](https://github.com/tinper-bee/bee-tree/issues/JCJS-4571)
+* #JCJS-4571 逻辑优化 ([f737339](https://github.com/tinper-bee/bee-tree/commit/f73733928012e7bf99e3fc3c157e1abf70ac54fd)), closes [#JCJS-4571](https://github.com/tinper-bee/bee-tree/issues/JCJS-4571)
+* #JCJS-4818 树的向上快捷键失效bug ([4158d7e](https://github.com/tinper-bee/bee-tree/commit/4158d7ea361cc1eec8615b2c7fafd471b58f0ff3)), closes [#JCJS-4818](https://github.com/tinper-bee/bee-tree/issues/JCJS-4818)
+* checkStrictly为true时，兼容renderTreeNodes方法的循环 ([957148e](https://github.com/tinper-bee/bee-tree/commit/957148e1698d3718fac24af65240b4bd9ea2e93e))
+* 懒加载场景中treeNode为undefined取不到key ([2aabc50](https://github.com/tinper-bee/bee-tree/commit/2aabc5090d0e29c53445f849f358f9b1e1838651))
+* 改变数据源时，scrollTop回到顶部 ([de7b4e5](https://github.com/tinper-bee/bee-tree/commit/de7b4e58fbf3768be315b3f6b7a1c0145df11162))
+* 改用节流函数处理大数据下的滚动 ([e44506d](https://github.com/tinper-bee/bee-tree/commit/e44506dada84b77aa944196ac007a17c78bd0010))
+* 无限滚动节流函数改成防抖 ([488c719](https://github.com/tinper-bee/bee-tree/commit/488c719a64d0fe9f1c6802eea14467bc7138c907))
+* 样式修改 ([6e72512](https://github.com/tinper-bee/bee-tree/commit/6e72512fd92d8cd69a19b3f19b8acce64aeeb0f4))
+* 点击收起按钮时，外部容器滚动条不回到顶部 ([a188004](https://github.com/tinper-bee/bee-tree/commit/a188004ad9bc95697366ea0312ee28a33f8a0055))
+* 选中树节点,focusKey一直显示bug ([4a182a9](https://github.com/tinper-bee/bee-tree/commit/4a182a93f3664670fca7add4bd74b9a565e42993))
+
+
+### Features
+
+* 支持自由关闭主树 ([7321793](https://github.com/tinper-bee/bee-tree/commit/73217935e43710d44035b5285f0a837720b4a654))
+
+
+
 ## [2.1.43](https://github.com/tinper-bee/bee-tree/compare/v2.1.42...v2.1.43) (2021-03-01)
 
 

@@ -55,6 +55,7 @@ class Tree extends React.Component {
     this.cacheTreeNodes = []; //缓存 treenode 节点数组
     this.store = createStore({ rowHeight: 24 }); //rowHeight 树节点的高度，此变量在滚动加载场景很关键
     this.latestState = null
+    this.cachedLatestState = null
   }
 
   componentDidMount() {
@@ -318,6 +319,7 @@ onExpand(treeNode,keyType) {
     const { treeData,lazyLoad } = this.props;
     let expanded = !treeNode.props.expanded;
     this.latestState = expanded
+    this.cachedLatestState = expanded
     this.latestTreeNode = treeNode.props
     const controlled = 'expandedKeys' in this.props;
     const expandedKeys = [...this.state.expandedKeys];
@@ -1230,12 +1232,15 @@ onExpand(treeNode,keyType) {
       }
     }
     this.selectKeyDomExist = false;
+    const isFold = !!this.cachedLatestState;
+    this.cachedLatestState = null;
     return (
       lazyLoad ?
         <InfiniteScroll
           className="u-tree-infinite-scroll"
           treeList={flatTreeData}
           debounceDuration={debounceDuration || 150}
+          isFold={isFold}
           handleTreeListChange={this.handleTreeListChange}
           getScrollParent={getScrollContainer}
           store={this.store}

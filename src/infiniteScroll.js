@@ -222,8 +222,8 @@ export default class InfiniteScroll extends Component {
         index += 1;
       }
     }
-    if (isNewDataLess) {
-      parentElement.scrollTop = 0
+    if (isNewDataLess && !this.props.isFold) {
+      parentElement.scrollTop = 0 // 如果不是因为点击收起造成的数据减少，则滚动条回到顶部
     }
     //true 为向下滚动， false 为向上滚动
     let isScrollDown = index - currentIndex > 0 ? true : false;

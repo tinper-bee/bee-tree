@@ -1,3 +1,12 @@
+## [2.1.46](https://github.com/tinper-bee/bee-tree/compare/v2.1.45...v2.1.46) (2021-03-08)
+
+
+### Bug Fixes
+
+* fix cacheExpandedKeys bug ([edde294](https://github.com/tinper-bee/bee-tree/commit/edde294f3a6acd4527c37c42c51308b7ab99f092))
+
+
+
 ## [2.1.45](https://github.com/tinper-bee/bee-tree/compare/v2.1.44...v2.1.45) (2021-03-08)
 
 

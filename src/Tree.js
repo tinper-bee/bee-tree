@@ -818,7 +818,7 @@ onExpand(treeNode,keyType) {
       } else if (props.autoExpandParent) {
         expandedPositionArr.forEach(p => {
           if ((p.split('-').length > pos.split('-').length && isInclude(pos.split('-'), p.split('-')) || pos === p) && filterExpandedKeys.indexOf(newKey) === -1) {
-            if (!props.canCloseFreely || this.cacheExpandedKeys.has(newKey)) {
+            if (!props.canCloseFreely || (this.cacheExpandedKeys ? this.cacheExpandedKeys.has(newKey) : true)) {
               filterExpandedKeys.push(newKey);
             }
           }

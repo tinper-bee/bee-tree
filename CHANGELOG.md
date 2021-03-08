@@ -1,3 +1,12 @@
+## [2.1.45](https://github.com/tinper-bee/bee-tree/compare/v2.1.44...v2.1.45) (2021-03-08)
+
+
+### Bug Fixes
+
+* 传autoExpandParent一直为true时收起节点bug ([1dc8fc2](https://github.com/tinper-bee/bee-tree/commit/1dc8fc2b9d49f33937e497257264fe71156dba44))
+
+
+
 ## [2.1.44](https://github.com/tinper-bee/bee-tree/compare/v2.1.24...v2.1.44) (2021-03-07)
 
 

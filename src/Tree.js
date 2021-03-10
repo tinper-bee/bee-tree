@@ -319,7 +319,7 @@ onExpand(treeNode,keyType) {
     const { treeData,lazyLoad } = this.props;
     let expanded = !treeNode.props.expanded;
     this.latestState = expanded
-    this.cachedLatestState = expanded
+    this.cachedLatestState = treeNode.props.expanded;
     this.latestTreeNode = treeNode.props
     const controlled = 'expandedKeys' in this.props;
     const expandedKeys = [...this.state.expandedKeys];
@@ -1233,8 +1233,7 @@ onExpand(treeNode,keyType) {
       }
     }
     this.selectKeyDomExist = false;
-    const isFold = !!this.cachedLatestState;
-    this.cachedLatestState = null;
+    const isFold = this.cachedLatestState === true;
     return (
       lazyLoad ?
         <InfiniteScroll

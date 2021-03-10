@@ -1,3 +1,17 @@
+## [2.1.47](https://github.com/tinper-bee/bee-tree/compare/v2.1.41...v2.1.47) (2021-03-10)
+
+
+### Bug Fixes
+
+* fix cacheExpandedKeys bug ([edde294](https://github.com/tinper-bee/bee-tree/commit/edde294f3a6acd4527c37c42c51308b7ab99f092))
+* sync cacheExpandedKeys when passing loadData func ([3f7f4c4](https://github.com/tinper-bee/bee-tree/commit/3f7f4c4237819b826694973035e6db393d3554a6))
+* 传autoExpandParent一直为true时收起节点bug ([1dc8fc2](https://github.com/tinper-bee/bee-tree/commit/1dc8fc2b9d49f33937e497257264fe71156dba44))
+* 改用节流函数处理大数据下的滚动 ([e44506d](https://github.com/tinper-bee/bee-tree/commit/e44506dada84b77aa944196ac007a17c78bd0010))
+* 样式修改 ([6e72512](https://github.com/tinper-bee/bee-tree/commit/6e72512fd92d8cd69a19b3f19b8acce64aeeb0f4))
+* 点击收起按钮时，外部容器滚动条不回到顶部 ([a188004](https://github.com/tinper-bee/bee-tree/commit/a188004ad9bc95697366ea0312ee28a33f8a0055))
+
+
+
 ## [2.1.46](https://github.com/tinper-bee/bee-tree/compare/v2.1.45...v2.1.46) (2021-03-08)
 
 

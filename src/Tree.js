@@ -345,7 +345,8 @@ onExpand(treeNode,keyType) {
       node: treeNode,
       expanded
     });
-
+    //收起和展开时，缓存 expandedKeys
+    this.cacheExpandedKeys = new Set(expandedKeys);
     // after data loaded, need set new expandedKeys
     if (expanded && this.props.loadData) {
       return this.props.loadData(treeNode).then(() => {
@@ -356,8 +357,6 @@ onExpand(treeNode,keyType) {
         }
       });
     }
-    //收起和展开时，缓存 expandedKeys
-    this.cacheExpandedKeys = new Set(expandedKeys);
     //启用懒加载，把 Tree 结构拍平，为后续动态截取数据做准备
     if(lazyLoad) {
       let flatTreeData = this.deepTraversal(treeData);

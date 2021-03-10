@@ -75,6 +75,7 @@ var Tree = function (_React$Component) {
       _this[m] = _this[m].bind(_this);
     });
     _this.contextmenuKeys = [];
+    _this.latestTreeNode = {};
     _this.checkedKeysChange = true;
     _this.selectKeyDomPos = '0-0';
     _this.state = {
@@ -98,6 +99,8 @@ var Tree = function (_React$Component) {
     _this.endIndex = _this.startIndex + _this.loadCount;
     _this.cacheTreeNodes = []; //缓存 treenode 节点数组
     _this.store = (0, _createStore2["default"])({ rowHeight: 24 }); //rowHeight 树节点的高度，此变量在滚动加载场景很关键
+    _this.latestState = null;
+    _this.cachedLatestState = null;
     return _this;
   }
 
@@ -359,6 +362,9 @@ var Tree = function (_React$Component) {
         lazyLoad = _props2.lazyLoad;
 
     var expanded = !treeNode.props.expanded;
+    this.latestState = expanded;
+    this.cachedLatestState = expanded;
+    this.latestTreeNode = treeNode.props;
     var controlled = 'expandedKeys' in this.props;
     var expandedKeys = [].concat(_toConsumableArray(this.state.expandedKeys));
     var index = expandedKeys.indexOf(treeNode.props.eventKey);
@@ -383,7 +389,8 @@ var Tree = function (_React$Component) {
       node: treeNode,
       expanded: expanded
     });
-
+    //收起和展开时，缓存 expandedKeys
+    this.cacheExpandedKeys = new Set(expandedKeys);
     // after data loaded, need set new expandedKeys
     if (expanded && this.props.loadData) {
       return this.props.loadData(treeNode).then(function () {
@@ -394,8 +401,6 @@ var Tree = function (_React$Component) {
         }
       });
     }
-    //收起和展开时，缓存 expandedKeys
-    this.cacheExpandedKeys = new Set(expandedKeys);
     //启用懒加载，把 Tree 结构拍平，为后续动态截取数据做准备
     if (lazyLoad) {
       var flatTreeData = this.deepTraversal(treeData);
@@ -434,7 +439,15 @@ var Tree = function (_React$Component) {
       }
       this.treeNodesStates[treeNode.props.pos].checked = checked;
       newSt.checkedNodes = [];
-      (0, _util.loopAllChildren)(this.props.children, function (item, ind, pos, keyOrPos) {
+      var childs = this.props.children;
+      var _props3 = this.props,
+          renderTreeNodes = _props3.renderTreeNodes,
+          treeData = _props3.treeData;
+
+      if (renderTreeNodes && treeData) {
+        childs = renderTreeNodes(treeData);
+      }
+      (0, _util.loopAllChildren)(childs, function (item, ind, pos, keyOrPos) {
         if (checkedKeys.indexOf(keyOrPos) !== -1) {
           newSt.checkedNodes.push(item);
           rsCheckedKeys.push(keyOrPos);
@@ -527,6 +540,9 @@ var Tree = function (_React$Component) {
         selectedKeys: selectedKeys
       });
     }
+    this.setState({
+      focusKey: ''
+    });
     props.onSelect(selectedKeys, newSt);
   };
 
@@ -676,8 +692,9 @@ var Tree = function (_React$Component) {
 
     var prevTreeNode = void 0,
         preElement = void 0;
+    var treeNodes = props.children || this.cacheTreeNodes;
     //选中上一个相邻的节点
-    (0, _util.loopAllChildren)(props.children, function (item, index, pos, newKey) {
+    (0, _util.loopAllChildren)(treeNodes, function (item, index, pos, newKey) {
       if (pos == prePos) {
         prevTreeNode = item;
       }
@@ -786,16 +803,16 @@ var Tree = function (_React$Component) {
 
     // 如果当前tree节点不包括上一个焦点节点会触发此方法
     if (this.tree == targetDom && !this.isIn && !this.tree.contains(e.relatedTarget)) {
-      var _props3 = this.props,
-          onFocus = _props3.onFocus,
-          children = _props3.children;
+      var _props4 = this.props,
+          onFocus = _props4.onFocus,
+          children = _props4.children;
       var _state$selectedKeys = this.state.selectedKeys,
           selectedKeys = _state$selectedKeys === undefined ? [] : _state$selectedKeys;
 
       var tabIndexKey = selectedKeys[0];
       var isExist = false;
       var treeNode = children && children.length && children[0];
-      var eventKey = treeNode && treeNode.props.eventKey || treeNode.key;
+      var eventKey = treeNode && (treeNode.props.eventKey || treeNode.key);
       if (this.selectKeyDomExist && tabIndexKey || !tabIndexKey) {
         isExist = true;
         var queryInfo = 'a[pos="' + this.selectKeyDomPos + '"]';
@@ -829,6 +846,8 @@ var Tree = function (_React$Component) {
   };
 
   Tree.prototype.getFilterExpandedKeys = function getFilterExpandedKeys(props, expandKeyProp, expandAll) {
+    var _this6 = this;
+
     var keys = props[expandKeyProp];
     if (!expandAll && !props.autoExpandParent) {
       return keys || [];
@@ -842,17 +861,25 @@ var Tree = function (_React$Component) {
       });
     }
     var filterExpandedKeys = [];
+    var removeRoot = this.latestState === false && props.canCloseFreely;
+    this.latestState = null;
     (0, _util.loopAllChildren)(props.children, function (item, index, pos, newKey) {
       if (expandAll) {
         filterExpandedKeys.push(newKey);
       } else if (props.autoExpandParent) {
         expandedPositionArr.forEach(function (p) {
           if ((p.split('-').length > pos.split('-').length && (0, _util.isInclude)(pos.split('-'), p.split('-')) || pos === p) && filterExpandedKeys.indexOf(newKey) === -1) {
-            filterExpandedKeys.push(newKey);
+            if (!props.canCloseFreely || (_this6.cacheExpandedKeys ? _this6.cacheExpandedKeys.has(newKey) : true)) {
+              filterExpandedKeys.push(newKey);
+            }
           }
         });
       }
     });
+    if (removeRoot && this.latestTreeNode.eventKey && filterExpandedKeys.includes(this.latestTreeNode.eventKey)) {
+      var index = filterExpandedKeys.indexOf(this.latestTreeNode.eventKey);
+      filterExpandedKeys.splice(index, 1);
+    }
     return filterExpandedKeys.length ? filterExpandedKeys : keys;
   };
 
@@ -1067,27 +1094,28 @@ var Tree = function (_React$Component) {
   };
 
   Tree.prototype.render = function render() {
-    var _this6 = this;
+    var _this7 = this;
 
     var props = this.props;
 
-    var _props4 = this.props,
-        showLine = _props4.showLine,
-        prefixCls = _props4.prefixCls,
-        className = _props4.className,
-        focusable = _props4.focusable,
-        checkable = _props4.checkable,
-        loadData = _props4.loadData,
-        checkStrictly = _props4.checkStrictly,
-        tabIndexValue = _props4.tabIndexValue,
-        lazyLoad = _props4.lazyLoad,
-        getScrollContainer = _props4.getScrollContainer,
-        defaultExpandedKeys = _props4.defaultExpandedKeys,
-        defaultSelectedKeys = _props4.defaultSelectedKeys,
-        defaultCheckedKeys = _props4.defaultCheckedKeys,
-        openAnimation = _props4.openAnimation,
-        draggable = _props4.draggable,
-        others = _objectWithoutProperties(_props4, ['showLine', 'prefixCls', 'className', 'focusable', 'checkable', 'loadData', 'checkStrictly', 'tabIndexValue', 'lazyLoad', 'getScrollContainer', 'defaultExpandedKeys', 'defaultSelectedKeys', 'defaultCheckedKeys', 'openAnimation', 'draggable']);
+    var _props5 = this.props,
+        showLine = _props5.showLine,
+        prefixCls = _props5.prefixCls,
+        className = _props5.className,
+        focusable = _props5.focusable,
+        checkable = _props5.checkable,
+        loadData = _props5.loadData,
+        checkStrictly = _props5.checkStrictly,
+        tabIndexValue = _props5.tabIndexValue,
+        lazyLoad = _props5.lazyLoad,
+        getScrollContainer = _props5.getScrollContainer,
+        defaultExpandedKeys = _props5.defaultExpandedKeys,
+        defaultSelectedKeys = _props5.defaultSelectedKeys,
+        defaultCheckedKeys = _props5.defaultCheckedKeys,
+        openAnimation = _props5.openAnimation,
+        draggable = _props5.draggable,
+        debounceDuration = _props5.debounceDuration,
+        others = _objectWithoutProperties(_props5, ['showLine', 'prefixCls', 'className', 'focusable', 'checkable', 'loadData', 'checkStrictly', 'tabIndexValue', 'lazyLoad', 'getScrollContainer', 'defaultExpandedKeys', 'defaultSelectedKeys', 'defaultCheckedKeys', 'openAnimation', 'draggable', 'debounceDuration']);
 
     var customProps = _extends({}, (0, _omit2["default"])(others, ['showIcon', 'cancelUnSelect', 'onCheck', 'selectable', 'autoExpandParent', 'defaultExpandAll', 'onExpand', 'autoSelectWhenFocus', 'expandWhenDoubleClick', 'expandedKeys', 'keyFun', 'openIcon', 'closeIcon', 'treeData', 'checkedKeys', 'selectedKeys', 'renderTreeNodes', 'mustExpandable', 'onMouseEnter', 'onMouseLeave', 'onFocus', 'onDoubleClick']));
     var _state = this.state,
@@ -1130,9 +1158,9 @@ var Tree = function (_React$Component) {
     //   // domProps.onKeyDown = this.onKeyDown;//添加到具体的treeNode上了
     // }
     var getTreeNodesStates = function getTreeNodesStates() {
-      _this6.treeNodesStates = {};
+      _this7.treeNodesStates = {};
       (0, _util.loopAllChildren)(treeChildren, function (item, index, pos, keyOrPos, siblingPosition) {
-        _this6.treeNodesStates[pos] = {
+        _this7.treeNodesStates[pos] = {
           siblingPosition: siblingPosition
         };
       }, undefined, startIndex);
@@ -1157,7 +1185,7 @@ var Tree = function (_React$Component) {
           var checkedPositions = [];
           this.treeNodesStates = {};
           (0, _util.loopAllChildren)(treeChildren, function (item, index, pos, keyOrPos, siblingPosition) {
-            _this6.treeNodesStates[pos] = {
+            _this7.treeNodesStates[pos] = {
               node: item,
               key: keyOrPos,
               checked: false,
@@ -1165,7 +1193,7 @@ var Tree = function (_React$Component) {
               siblingPosition: siblingPosition
             };
             if (checkedKeys.indexOf(keyOrPos) !== -1) {
-              _this6.treeNodesStates[pos].checked = true;
+              _this7.treeNodesStates[pos].checked = true;
               checkedPositions.push(pos);
             }
           }, undefined, startIndex);
@@ -1178,11 +1206,15 @@ var Tree = function (_React$Component) {
       }
     }
     this.selectKeyDomExist = false;
+    var isFold = !!this.cachedLatestState;
+    this.cachedLatestState = null;
     return lazyLoad ? _react2["default"].createElement(
       _infiniteScroll2["default"],
       {
         className: 'u-tree-infinite-scroll',
         treeList: flatTreeData,
+        debounceDuration: debounceDuration || 150,
+        isFold: isFold,
         handleTreeListChange: this.handleTreeListChange,
         getScrollParent: getScrollContainer,
         store: this.store
@@ -1190,7 +1222,7 @@ var Tree = function (_React$Component) {
       _react2["default"].createElement(
         'ul',
         _extends({}, domProps, { unselectable: 'true', ref: function ref(el) {
-            _this6.tree = el;
+            _this7.tree = el;
           }, tabIndex: focusable && tabIndexValue }, customProps),
         _react2["default"].createElement('li', { style: { height: preHeight }, className: 'u-treenode-start', key: 'tree_node_start' }),
         _react2["default"].Children.map(treeChildren, this.renderTreeNode, this),
@@ -1199,7 +1231,7 @@ var Tree = function (_React$Component) {
     ) : _react2["default"].createElement(
       'ul',
       _extends({}, domProps, { unselectable: 'true', ref: function ref(el) {
-          _this6.tree = el;
+          _this7.tree = el;
         }, tabIndex: focusable && tabIndexValue }, customProps),
       _react2["default"].Children.map(treeChildren, this.renderTreeNode, this)
     );
@@ -1209,27 +1241,27 @@ var Tree = function (_React$Component) {
 }(_react2["default"].Component);
 
 var _initialiseProps = function _initialiseProps() {
-  var _this7 = this;
+  var _this8 = this;
 
   this.hasTreeNode = function () {
-    var _props5 = _this7.props,
-        children = _props5.children,
-        treeData = _props5.treeData;
+    var _props6 = _this8.props,
+        children = _props6.children,
+        treeData = _props6.treeData;
 
     var noTreeNode = children === null || typeof children === 'undefined' || (typeof children === 'undefined' ? 'undefined' : _typeof(children)) === 'object' && children.length === 0 || (typeof treeData === 'undefined' ? 'undefined' : _typeof(treeData)) === 'object' && treeData.length === 0;
     return !noTreeNode;
   };
 
   this.calculateRowHeight = function () {
-    var lazyLoad = _this7.props.lazyLoad;
+    var lazyLoad = _this8.props.lazyLoad;
     // 启用懒加载，计算树节点真实高度
 
     if (!lazyLoad) return;
-    var treenodes = _this7.tree.querySelectorAll('.u-tree-treenode-close')[0];
+    var treenodes = _this8.tree.querySelectorAll('.u-tree-treenode-close')[0];
     if (!treenodes) return;
-    _this7.hasCalculateRowHeight = true;
+    _this8.hasCalculateRowHeight = true;
     var rowHeight = treenodes.getBoundingClientRect().height;
-    _this7.store.setState({
+    _this8.store.setState({
       rowHeight: rowHeight
     });
   };
@@ -1243,23 +1275,23 @@ var _initialiseProps = function _initialiseProps() {
       rootId: null,
       isLeaf: 'isLeaf'
     };
-    var treeData = (0, _util.convertListToTree)(treeList, attr, _this7.flatTreeKeysMap);
+    var treeData = (0, _util.convertListToTree)(treeList, attr, _this8.flatTreeKeysMap);
 
-    _this7.startIndex = typeof startIndex !== "undefined" ? startIndex : _this7.startIndex;
-    _this7.endIndex = typeof endIndex !== "undefined" ? endIndex : _this7.endIndex;
-    _this7.setState({
+    _this8.startIndex = typeof startIndex !== "undefined" ? startIndex : _this8.startIndex;
+    _this8.endIndex = typeof endIndex !== "undefined" ? endIndex : _this8.endIndex;
+    _this8.setState({
       treeData: treeData
     });
-    _this7.dataChange = true;
+    _this8.dataChange = true;
   };
 
   this.deepTraversal = function (treeData) {
     var parentKey = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
     var isShown = arguments[2];
-    var expandedKeys = _this7.state.expandedKeys,
-        expandedKeysSet = _this7.cacheExpandedKeys ? _this7.cacheExpandedKeys : new Set(expandedKeys),
+    var expandedKeys = _this8.state.expandedKeys,
+        expandedKeysSet = _this8.cacheExpandedKeys ? _this8.cacheExpandedKeys : new Set(expandedKeys),
         flatTreeData = [],
-        flatTreeKeysMap = _this7.flatTreeKeysMap,
+        flatTreeKeysMap = _this8.flatTreeKeysMap,
         dataCopy = treeData;
 
     if (Array.isArray(dataCopy)) {
@@ -1290,7 +1322,7 @@ var _initialiseProps = function _initialiseProps() {
         }
         if (Array.isArray(children) && children.length > 0) {
           // 若存在children则递归调用，把数据拼接到新数组中，并且删除该children
-          flatTreeData = flatTreeData.concat(_this7.deepTraversal(children, key, isExpanded));
+          flatTreeData = flatTreeData.concat(_this8.deepTraversal(children, key, isExpanded));
         }
       }
     }
@@ -1298,9 +1330,9 @@ var _initialiseProps = function _initialiseProps() {
   };
 
   this.renderTreefromData = function (data) {
-    var _props6 = _this7.props,
-        renderTitle = _props6.renderTitle,
-        renderTreeNodes = _props6.renderTreeNodes;
+    var _props7 = _this8.props,
+        renderTitle = _props7.renderTitle,
+        renderTreeNodes = _props7.renderTreeNodes;
 
     if (renderTreeNodes) {
       return renderTreeNodes(data);
@@ -1333,7 +1365,7 @@ var _initialiseProps = function _initialiseProps() {
     }
     var span = Math.abs(end - start);
     if (span) {
-      sumHeight = span * _this7.store.getState().rowHeight;
+      sumHeight = span * _this8.store.getState().rowHeight;
     }
     return sumHeight;
   };

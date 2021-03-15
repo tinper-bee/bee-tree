@@ -69,7 +69,7 @@ var InfiniteScroll = function (_Component) {
       _this.handleScrollY();
     };
 
-    _this.handleScrollY = function () {
+    _this.handleScrollY = function (isNewDataLess, isFold) {
       var store = _this.props.store;
 
       var parentElement = _this.getParentElement(_this.scrollComponent);
@@ -99,7 +99,9 @@ var InfiniteScroll = function (_Component) {
           index += 1;
         }
       }
-
+      if (isNewDataLess && !isFold) {
+        parentElement.scrollTop = 0; // 如果不是因为点击收起造成的数据减少，则滚动条回到顶部
+      }
       //true 为向下滚动， false 为向上滚动
       var isScrollDown = index - currentIndex > 0 ? true : false;
 
@@ -163,8 +165,9 @@ var InfiniteScroll = function (_Component) {
     var oldTreeList = this.props.treeList;
 
     if (newTreeList !== oldTreeList) {
+      var isNewDataLess = newTreeList.length < oldTreeList.length;
       this.treeList = newTreeList;
-      this.handleScrollY();
+      this.handleScrollY(isNewDataLess, nextProps.isFold);
     }
   };
 
@@ -245,7 +248,9 @@ var InfiniteScroll = function (_Component) {
 
 
   InfiniteScroll.prototype.attachScrollListener = function attachScrollListener() {
-    var store = this.props.store;
+    var _props = this.props,
+        store = _props.store,
+        debounceDuration = _props.debounceDuration;
 
     var parentElement = this.getParentElement(this.scrollComponent);
     if (!parentElement) {
@@ -257,9 +262,8 @@ var InfiniteScroll = function (_Component) {
     var rowHeight = store.getState().rowHeight;
     //默认显示20条，rowsInView根据定高算的。
     this.rowsInView = scrollY ? Math.floor(scrollY / rowHeight) : _config2["default"].defaultRowsInView;
-
-    scrollEl.addEventListener('scroll', (0, _util.throttle)(this.scrollListener, 150), this.options ? this.options : this.props.useCapture);
-    scrollEl.addEventListener('resize', (0, _util.throttle)(this.scrollListener, 150), this.options ? this.options : this.props.useCapture);
+    scrollEl.addEventListener('scroll', (0, _util.throttle)(this.scrollListener, debounceDuration || 150), this.options ? this.options : this.props.useCapture);
+    scrollEl.addEventListener('resize', (0, _util.throttle)(this.scrollListener, debounceDuration || 150), this.options ? this.options : this.props.useCapture);
   };
   /**
    * 滚动事件监听
@@ -281,15 +285,15 @@ var InfiniteScroll = function (_Component) {
   InfiniteScroll.prototype.render = function render() {
     var _this2 = this;
 
-    var _props = this.props,
-        children = _props.children,
-        element = _props.element,
-        ref = _props.ref,
-        getScrollParent = _props.getScrollParent,
-        treeList = _props.treeList,
-        handleTreeListChange = _props.handleTreeListChange,
-        store = _props.store,
-        props = _objectWithoutProperties(_props, ['children', 'element', 'ref', 'getScrollParent', 'treeList', 'handleTreeListChange', 'store']);
+    var _props2 = this.props,
+        children = _props2.children,
+        element = _props2.element,
+        ref = _props2.ref,
+        getScrollParent = _props2.getScrollParent,
+        treeList = _props2.treeList,
+        handleTreeListChange = _props2.handleTreeListChange,
+        store = _props2.store,
+        props = _objectWithoutProperties(_props2, ['children', 'element', 'ref', 'getScrollParent', 'treeList', 'handleTreeListChange', 'store']);
 
     props.ref = function (node) {
       _this2.scrollComponent = node;

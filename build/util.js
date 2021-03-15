@@ -24,6 +24,7 @@ exports.getNodeChildren = getNodeChildren;
 exports.warnOnlyTreeNode = warnOnlyTreeNode;
 exports.convertListToTree = convertListToTree;
 exports.throttle = throttle;
+exports.debounce = debounce;
 
 var _react = require('react');
 
@@ -515,5 +516,26 @@ function throttle(fn, wait) {
       fn.apply(this, arguments);
       last = now;
     }
+  };
+}
+
+/**
+ * 函数防抖
+ * @param {*} func 延时调用函数
+ * @param {*} wait 延迟多长时间
+ * @return Function 延迟执行的方法
+ */
+function debounce(fn, delay) {
+  var timeout = null; // 创建一个标记用来存放定时器的返回值
+  return function (e) {
+    var _this = this,
+        _arguments = arguments;
+
+    // 每当用户输入的时候把前一个 setTimeout clear 掉
+    clearTimeout(timeout);
+    // 然后又创建一个新的 setTimeout, 这样就能保证interval 间隔内如果时间持续触发，就不会执行 fn 函数
+    timeout = setTimeout(function () {
+      fn.apply(_this, _arguments);
+    }, delay);
   };
 }

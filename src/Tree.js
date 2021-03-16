@@ -810,6 +810,7 @@ onExpand(treeNode,keyType) {
     }
     const filterExpandedKeys = [];
     const removeRoot = this.latestState === false && props.canCloseFreely
+    const cachedLatestState = this.latestState // 这个值用来判断此次刷新是否是因为点击了展开/收回
     this.latestState = null
     loopAllChildren(props.children, (item, index, pos, newKey) => {
       if (expandAll) {
@@ -817,7 +818,7 @@ onExpand(treeNode,keyType) {
       } else if (props.autoExpandParent) {
         expandedPositionArr.forEach(p => {
           if ((p.split('-').length > pos.split('-').length && isInclude(pos.split('-'), p.split('-')) || pos === p) && filterExpandedKeys.indexOf(newKey) === -1) {
-            if (!props.canCloseFreely || (this.cacheExpandedKeys ? this.cacheExpandedKeys.has(newKey) : true)) {
+            if (!props.canCloseFreely || (cachedLatestState === null ? true : this.cacheExpandedKeys ? this.cacheExpandedKeys.has(newKey) : true)) {
               filterExpandedKeys.push(newKey);
             }
           }

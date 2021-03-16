@@ -1,3 +1,13 @@
+## [2.1.49](https://github.com/tinper-bee/bee-tree/compare/v2.1.47...v2.1.49) (2021-03-16)
+
+
+### Bug Fixes
+
+* keep latest action to judge whether a node is to be expanded ([65b98f3](https://github.com/tinper-bee/bee-tree/commit/65b98f3bd40875a29a539c6a6c1db52536b25d66))
+* reset cacheLatestState ([bf29762](https://github.com/tinper-bee/bee-tree/commit/bf29762374601028d7065f4f1f3f357092539e19))
+
+
+
 ## [2.1.48](https://github.com/tinper-bee/bee-tree/compare/v2.1.43...v2.1.48) (2021-03-11)
 
 

@@ -208,6 +208,14 @@ var TreeNode = function (_React$Component) {
     }
   };
 
+  TreeNode.prototype.onSwitcherMouseDown = function onSwitcherMouseDown(e) {
+    e.preventDefault();
+  };
+
+  TreeNode.prototype.onCheckboxMouseDown = function onCheckboxMouseDown(e) {
+    e.preventDefault();
+  };
+
   // keyboard event support
 
 
@@ -251,7 +259,7 @@ var TreeNode = function (_React$Component) {
     }
     return _react2["default"].createElement(
       'span',
-      { className: (0, _classnames2["default"])(switcherCls), style: props.switcherStyle, onClick: this.onExpand },
+      { className: (0, _classnames2["default"])(switcherCls), style: props.switcherStyle, onClick: this.onExpand, onMouseDown: this.onSwitcherMouseDown },
       stateIcon
     );
   };
@@ -280,7 +288,8 @@ var TreeNode = function (_React$Component) {
       'span',
       {
         className: (0, _classnames2["default"])(checkboxCls),
-        onClick: this.onCheck
+        onClick: this.onCheck,
+        onMouseDown: this.onCheckboxMouseDown
       },
       customEle
     );

@@ -168,13 +168,20 @@ class TreeNode extends React.Component {
     }
   }
 
+  onSwitcherMouseDown(e) {
+    e.preventDefault();
+  }
+
+  onCheckboxMouseDown (e) {
+    e.preventDefault();
+  }
+
   // keyboard event support
   onKeyDown(e) {
     this.props.root.onKeyDown(e,this);
     if(e.keyCode == KeyCode.SPACE || e.keyCode == KeyCode.DOWN || e.keyCode == KeyCode.LEFT || e.keyCode == KeyCode.RIGHT ||e.keyCode == KeyCode.UP){
       e.preventDefault();
     }
-    
   }
 
   renderSwitcher(props, expandedState) {
@@ -206,7 +213,7 @@ class TreeNode extends React.Component {
       switcherCls[`${prefixCls}-switcher-disabled`] = true;
       return <span className={classNames(switcherCls)} style={props.switcherStyle}>{stateIcon}</span>;
     }
-    return <span className={classNames(switcherCls)} style={props.switcherStyle} onClick={this.onExpand}>{stateIcon}</span>;
+    return <span className={classNames(switcherCls)} style={props.switcherStyle} onClick={this.onExpand} onMouseDown={this.onSwitcherMouseDown}>{stateIcon}</span>;
   }
 
   renderCheckbox(props) {
@@ -231,6 +238,7 @@ class TreeNode extends React.Component {
       <span 
         className={classNames(checkboxCls) }
         onClick={this.onCheck}
+        onMouseDown={this.onCheckboxMouseDown}
       >{customEle}</span>);
   }
 

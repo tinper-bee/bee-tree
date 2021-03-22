@@ -177,6 +177,12 @@ class TreeNode extends React.Component {
     
   }
 
+  onStopPropagation = event => {
+    if (event) {
+      event.stopPropagation()
+    }
+  }
+
   renderSwitcher(props, expandedState) {
     let stateIcon;
     const prefixCls = props.prefixCls;
@@ -206,7 +212,7 @@ class TreeNode extends React.Component {
       switcherCls[`${prefixCls}-switcher-disabled`] = true;
       return <span className={classNames(switcherCls)} style={props.switcherStyle}>{stateIcon}</span>;
     }
-    return <span className={classNames(switcherCls)} style={props.switcherStyle} onClick={this.onExpand}>{stateIcon}</span>;
+    return <span className={classNames(switcherCls)} style={props.switcherStyle} onMouseDown={this.onStopPropagation} onClick={this.onExpand}>{stateIcon}</span>;
   }
 
   renderCheckbox(props) {
@@ -228,9 +234,10 @@ class TreeNode extends React.Component {
       return <span  className={classNames(checkboxCls)}>{customEle}</span>;
     }
     return (
-      <span 
+      <span
         className={classNames(checkboxCls) }
         onClick={this.onCheck}
+        onMouseDown={this.onStopPropagation}
       >{customEle}</span>);
   }
 

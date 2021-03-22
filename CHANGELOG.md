@@ -1,3 +1,12 @@
+## [2.1.50](https://github.com/tinper-bee/bee-tree/compare/v2.1.49...v2.1.50) (2021-03-22)
+
+
+### Bug Fixes
+
+* stop propatation when cliking or checking a node ([09b9d18](https://github.com/tinper-bee/bee-tree/commit/09b9d18e583563e9874c73c8e69e098501776180))
+
+
+
 ## [2.1.49](https://github.com/tinper-bee/bee-tree/compare/v2.1.47...v2.1.49) (2021-03-16)
 
 

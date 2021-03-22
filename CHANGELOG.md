@@ -1,3 +1,12 @@
+## [2.1.51](https://github.com/tinper-bee/bee-tree/compare/v2.1.50...v2.1.51) (2021-03-22)
+
+
+### Bug Fixes
+
+* change stopPropatation event ([c08be8d](https://github.com/tinper-bee/bee-tree/commit/c08be8d6a84c7263091c6324d5cc343dff49bfb6))
+
+
+
 ## [2.1.50](https://github.com/tinper-bee/bee-tree/compare/v2.1.49...v2.1.50) (2021-03-22)
 
 

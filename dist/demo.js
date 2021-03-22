@@ -41295,13 +41295,6 @@
 	
 	    var _this2 = _possibleConstructorReturn(this, _React$Component.call(this, props));
 	
-	    _this2.onStopPropagation = function (event) {
-	      console.log('caili');
-	      if (event) {
-	        event.stopPropagation();
-	      }
-	    };
-	
 	    _this2.getNodeChildren = function () {
 	      var children = _this2.props.children;
 	
@@ -41461,6 +41454,14 @@
 	    }
 	  };
 	
+	  TreeNode.prototype.onSwitcherMouseDown = function onSwitcherMouseDown(e) {
+	    e.preventDefault();
+	  };
+	
+	  TreeNode.prototype.onCheckboxMouseDown = function onCheckboxMouseDown(e) {
+	    e.preventDefault();
+	  };
+	
 	  TreeNode.prototype.renderSwitcher = function renderSwitcher(props, expandedState) {
 	    var stateIcon = void 0;
 	    var prefixCls = props.prefixCls;
@@ -41494,7 +41495,7 @@
 	    }
 	    return _react2['default'].createElement(
 	      'span',
-	      { className: (0, _classnames2['default'])(switcherCls), style: props.switcherStyle, onMouseDown: this.onStopPropagation, onClick: this.onExpand },
+	      { className: (0, _classnames2['default'])(switcherCls), style: props.switcherStyle, onMouseDown: this.onSwitcherMouseDown, onClick: this.onExpand },
 	      stateIcon
 	    );
 	  };
@@ -41524,7 +41525,7 @@
 	      {
 	        className: (0, _classnames2['default'])(checkboxCls),
 	        onClick: this.onCheck,
-	        onMouseDown: this.onStopPropagation
+	        onMouseDown: this.onCheckboxMouseDown
 	      },
 	      customEle
 	    );

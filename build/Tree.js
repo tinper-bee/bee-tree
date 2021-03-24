@@ -527,6 +527,9 @@ var Tree = function (_React$Component) {
         selectedKeys: selectedKeys
       });
     }
+    this.setState({
+      focusKey: ''
+    });
     props.onSelect(selectedKeys, newSt);
   };
 
@@ -676,8 +679,9 @@ var Tree = function (_React$Component) {
 
     var prevTreeNode = void 0,
         preElement = void 0;
+    var treeNodes = props.children || this.cacheTreeNodes;
     //选中上一个相邻的节点
-    (0, _util.loopAllChildren)(props.children, function (item, index, pos, newKey) {
+    (0, _util.loopAllChildren)(treeNodes, function (item, index, pos, newKey) {
       if (pos == prePos) {
         prevTreeNode = item;
       }
@@ -795,7 +799,7 @@ var Tree = function (_React$Component) {
       var tabIndexKey = selectedKeys[0];
       var isExist = false;
       var treeNode = children && children.length && children[0];
-      var eventKey = treeNode && treeNode.props.eventKey || treeNode.key;
+      var eventKey = treeNode && (treeNode.props.eventKey || treeNode.key);
       if (this.selectKeyDomExist && tabIndexKey || !tabIndexKey) {
         isExist = true;
         var queryInfo = 'a[pos="' + this.selectKeyDomPos + '"]';
@@ -1230,7 +1234,7 @@ var _initialiseProps = function _initialiseProps() {
     _this7.hasCalculateRowHeight = true;
     var rowHeight = treenodes.getBoundingClientRect().height;
     _this7.store.setState({
-      rowHeight: rowHeight
+      rowHeight: rowHeight || 24
     });
   };
 

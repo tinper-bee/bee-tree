@@ -188,7 +188,7 @@ class Tree extends React.Component {
     this.hasCalculateRowHeight = true;
     let rowHeight = treenodes.getBoundingClientRect().height;
     this.store.setState({
-      rowHeight: rowHeight
+      rowHeight: rowHeight || 24
     });
   }
 

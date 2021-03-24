@@ -1,3 +1,12 @@
+## [2.1.52](https://github.com/tinper-bee/bee-tree/compare/v2.1.51...v2.1.52) (2021-03-24)
+
+
+### Bug Fixes
+
+* set rowHeight to 24 when dom is not loaded ([f21c9a0](https://github.com/tinper-bee/bee-tree/commit/f21c9a03ab8b17935d8be2d99a4df2efc04c321e))
+
+
+
 ## [2.1.51](https://github.com/tinper-bee/bee-tree/compare/v2.1.50...v2.1.51) (2021-03-22)
 
 

@@ -1,3 +1,16 @@
+## [2.1.53](https://github.com/tinper-bee/bee-tree/compare/v2.1.48...v2.1.53) (2021-03-29)
+
+
+### Bug Fixes
+
+* add compare function in sort ([b25ff2a](https://github.com/tinper-bee/bee-tree/commit/b25ff2a98e4916463e0ac44351eb73636f0f7543))
+* change stopPropatation event ([c08be8d](https://github.com/tinper-bee/bee-tree/commit/c08be8d6a84c7263091c6324d5cc343dff49bfb6))
+* keep latest action to judge whether a node is to be expanded ([65b98f3](https://github.com/tinper-bee/bee-tree/commit/65b98f3bd40875a29a539c6a6c1db52536b25d66))
+* set rowHeight to 24 when dom is not loaded ([f21c9a0](https://github.com/tinper-bee/bee-tree/commit/f21c9a03ab8b17935d8be2d99a4df2efc04c321e))
+* stop propatation when cliking or checking a node ([09b9d18](https://github.com/tinper-bee/bee-tree/commit/09b9d18e583563e9874c73c8e69e098501776180))
+
+
+
 ## [2.1.52](https://github.com/tinper-bee/bee-tree/compare/v2.1.51...v2.1.52) (2021-03-24)
 
 

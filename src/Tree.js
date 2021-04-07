@@ -784,6 +784,17 @@ onExpand(treeNode,keyType) {
       }
   }
 
+
+  onUlMouseEnter(e){
+    // this.isIn = true;
+    // console.log('onUlMouseEnter----isIn-----',this.isIn);
+  }
+  onUlMouseLeave(e){
+    // this.isIn = false;
+    // console.log('onUlMouseLeave----isIn-----',this.isIn);
+
+  }
+
   getFilterExpandedKeys(props, expandKeyProp, expandAll) {
     const keys = props[expandKeyProp];
     if (!expandAll && !props.autoExpandParent) {
@@ -1165,6 +1176,8 @@ onExpand(treeNode,keyType) {
 
     if (focusable) {
       domProps.onFocus = this.onUlFocus;
+      domProps.onMouseEnter = this.onUlMouseEnter;
+      domProps.onMouseLeave = this.onUlMouseLeave;
     }
 
     // if (props.focusable) {

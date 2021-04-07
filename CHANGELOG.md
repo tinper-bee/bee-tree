@@ -1,3 +1,13 @@
+## [2.1.54](https://github.com/tinper-bee/bee-tree/compare/v2.1.52...v2.1.54) (2021-04-07)
+
+
+### Bug Fixes
+
+* add compare function in sort ([b25ff2a](https://github.com/tinper-bee/bee-tree/commit/b25ff2a98e4916463e0ac44351eb73636f0f7543))
+* remove this.isIn ([e79d90a](https://github.com/tinper-bee/bee-tree/commit/e79d90ac2767a2248f029a8e21b6fa36a196940a))
+
+
+
 ## [2.1.53](https://github.com/tinper-bee/bee-tree/compare/v2.1.48...v2.1.53) (2021-03-29)
 
 

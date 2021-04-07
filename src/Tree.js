@@ -755,7 +755,7 @@ onExpand(treeNode,keyType) {
     const targetDom = e.target;
 
     // 如果当前tree节点不包括上一个焦点节点会触发此方法
-    if(this.tree == targetDom && !this.isIn && !this.tree.contains(e.relatedTarget)){
+    if(this.tree == targetDom && !this.tree.contains(e.relatedTarget)){
       const {onFocus, children} = this.props;
       const {selectedKeys=[]} = this.state;
       let tabIndexKey = selectedKeys[0]
@@ -786,13 +786,10 @@ onExpand(treeNode,keyType) {
 
 
   onUlMouseEnter(e){
-    this.isIn = true;
-    // console.log('onUlMouseEnter----isIn-----',this.isIn);
+    // console.log('onUlMouseEnter----isIn-----');
   }
   onUlMouseLeave(e){
-    this.isIn = false;
-    // console.log('onUlMouseLeave----isIn-----',this.isIn);
-
+    // console.log('onUlMouseLeave----isIn-----');
   }
 
   getFilterExpandedKeys(props, expandKeyProp, expandAll) {

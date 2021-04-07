@@ -1,3 +1,12 @@
+## [2.1.55](https://github.com/tinper-bee/bee-tree/compare/v2.1.54...v2.1.55) (2021-04-07)
+
+
+### Bug Fixes
+
+* add mouse events ([864e286](https://github.com/tinper-bee/bee-tree/commit/864e286202440d2f417273e12e495a90362d08c8))
+
+
+
 ## [2.1.54](https://github.com/tinper-bee/bee-tree/compare/v2.1.52...v2.1.54) (2021-04-07)
 
 

@@ -40584,7 +40584,7 @@
 	    var targetDom = e.target;
 	
 	    // 如果当前tree节点不包括上一个焦点节点会触发此方法
-	    if (this.tree == targetDom && !this.isIn && !this.tree.contains(e.relatedTarget)) {
+	    if (this.tree == targetDom && !this.tree.contains(e.relatedTarget)) {
 	      var _props4 = this.props,
 	          onFocus = _props4.onFocus,
 	          children = _props4.children;
@@ -40618,13 +40618,14 @@
 	  };
 	
 	  Tree.prototype.onUlMouseEnter = function onUlMouseEnter(e) {
-	    this.isIn = true;
+	    // this.isIn = true;
 	    // console.log('onUlMouseEnter----isIn-----',this.isIn);
 	  };
 	
 	  Tree.prototype.onUlMouseLeave = function onUlMouseLeave(e) {
-	    this.isIn = false;
+	    // this.isIn = false;
 	    // console.log('onUlMouseLeave----isIn-----',this.isIn);
+	
 	  };
 	
 	  Tree.prototype.getFilterExpandedKeys = function getFilterExpandedKeys(props, expandKeyProp, expandAll) {
@@ -41044,7 +41045,7 @@
 	    _this8.hasCalculateRowHeight = true;
 	    var rowHeight = treenodes.getBoundingClientRect().height;
 	    _this8.store.setState({
-	      rowHeight: rowHeight
+	      rowHeight: rowHeight || 24
 	    });
 	  };
 	
@@ -41992,7 +41993,9 @@
 	    }
 	    levelObj[posLen].push(item);
 	  });
-	  var levelArr = Object.keys(levelObj).sort();
+	  var levelArr = Object.keys(levelObj).sort(function (a, b) {
+	    return +a > +b;
+	  });
 	
 	  var _loop = function _loop(i) {
 	    if (levelArr[i + 1]) {

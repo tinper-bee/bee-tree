@@ -94,28 +94,30 @@
     opacity: 0.8;
     position: relative; }
   .u-tree li.drag-over-gap-top > a[draggable] {
-    border-top: 2px #108ee9 solid;
-    position: relative; }
+    border-top: 22x #108ee9 solid;
+    position: relative;
+    border-radius: 0; }
     .u-tree li.drag-over-gap-top > a[draggable]::before {
       position: absolute;
       top: -6px;
-      left: -7px;
+      left: -8px;
       content: ' ';
-      width: 8px;
-      height: 8px;
+      width: 10px;
+      height: 10px;
       border: 2px solid #108ee9;
       border-radius: 99px;
       opacity: 1; }
   .u-tree li.drag-over-gap-bottom > a[draggable] {
     border-bottom: 2px #108ee9 solid;
-    position: relative; }
+    position: relative;
+    border-radius: 0; }
     .u-tree li.drag-over-gap-bottom > a[draggable]::before {
       position: absolute;
-      bottom: -5px;
-      left: -6px;
+      bottom: -6px;
+      left: -8px;
       content: ' ';
-      width: 8px;
-      height: 8px;
+      width: 10px;
+      height: 10px;
       border: 2px solid #108ee9;
       border-radius: 99px;
       opacity: 1; }

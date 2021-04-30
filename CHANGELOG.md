@@ -1,3 +1,12 @@
+## [2.1.56](https://github.com/tinper-bee/bee-tree/compare/v2.1.55...v2.1.56) (2021-04-30)
+
+
+### Bug Fixes
+
+* 拖拽样式修改 ([cd492b9](https://github.com/tinper-bee/bee-tree/commit/cd492b9fee9e37449271dbf7ce924e03b819dda6))
+
+
+
 ## [2.1.55](https://github.com/tinper-bee/bee-tree/compare/v2.1.54...v2.1.55) (2021-04-07)
 
 

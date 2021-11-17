@@ -431,7 +431,7 @@ var Tree = function (_React$Component) {
       var rsCheckedKeys = [];
       if (checked && index === -1) {
         checkedKeys.push(key);
-        rsCheckedKeys.push(key);
+        rsCheckedKeys.push(key); //onCheck第一个参数的key不对
       }
       if (!checked && index > -1) {
         checkedKeys.splice(index, 1);

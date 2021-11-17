@@ -74,6 +74,7 @@ var InfiniteScroll = function (_Component) {
     _this.handleScrollY = function () {
       var rowHeight = _this.props.store.getState().rowHeight;
       //默认显示20条，rowsInView根据定高算的。在非固定高下，这个只是一个大概的值。
+      var scrollY = void 0;
       _this.rowsInView = scrollY ? Math.floor(scrollY / rowHeight) : _config2["default"].defaultRowsInView;
 
       var currentIndex = _this.currentIndex,

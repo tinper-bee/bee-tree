@@ -527,6 +527,9 @@ var Tree = function (_React$Component) {
         selectedKeys: selectedKeys
       });
     }
+    this.setState({
+      focusKey: ''
+    });
     props.onSelect(selectedKeys, newSt);
   };
 
@@ -676,8 +679,9 @@ var Tree = function (_React$Component) {
 
     var prevTreeNode = void 0,
         preElement = void 0;
+    var treeNodes = props.children || this.cacheTreeNodes;
     //选中上一个相邻的节点
-    (0, _util.loopAllChildren)(props.children, function (item, index, pos, newKey) {
+    (0, _util.loopAllChildren)(treeNodes, function (item, index, pos, newKey) {
       if (pos == prePos) {
         prevTreeNode = item;
       }
@@ -795,7 +799,7 @@ var Tree = function (_React$Component) {
       var tabIndexKey = selectedKeys[0];
       var isExist = false;
       var treeNode = children && children.length && children[0];
-      var eventKey = treeNode && treeNode.props.eventKey || treeNode.key;
+      var eventKey = treeNode && (treeNode.props.eventKey || treeNode.key);
       if (this.selectKeyDomExist && tabIndexKey || !tabIndexKey) {
         isExist = true;
         var queryInfo = 'a[pos="' + this.selectKeyDomPos + '"]';
@@ -846,11 +850,15 @@ var Tree = function (_React$Component) {
       if (expandAll) {
         filterExpandedKeys.push(newKey);
       } else if (props.autoExpandParent) {
-        expandedPositionArr.forEach(function (p) {
-          if ((p.split('-').length > pos.split('-').length && (0, _util.isInclude)(pos.split('-'), p.split('-')) || pos === p) && filterExpandedKeys.indexOf(newKey) === -1) {
-            filterExpandedKeys.push(newKey);
-          }
-        });
+        if (expandKeyProp === 'expandedKeys' && keys.includes(newKey)) {
+          filterExpandedKeys.push(newKey); // 如果外部传来的expandedKeys本来包含这个节点的key，就不用进行遍历，直接放到结果里
+        } else {
+          expandedPositionArr.forEach(function (p) {
+            if ((p.split('-').length > pos.split('-').length && (0, _util.isInclude)(pos.split('-'), p.split('-')) || pos === p) && filterExpandedKeys.indexOf(newKey) === -1) {
+              filterExpandedKeys.push(newKey);
+            }
+          });
+        }
       }
     });
     return filterExpandedKeys.length ? filterExpandedKeys : keys;

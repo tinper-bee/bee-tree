@@ -803,11 +803,15 @@ onExpand(treeNode,keyType) {
       if (expandAll) {
         filterExpandedKeys.push(newKey);
       } else if (props.autoExpandParent) {
-        expandedPositionArr.forEach(p => {
-          if ((p.split('-').length > pos.split('-').length && isInclude(pos.split('-'), p.split('-')) || pos === p) && filterExpandedKeys.indexOf(newKey) === -1) {
-            filterExpandedKeys.push(newKey);
-          }
-        });
+        if (expandKeyProp === 'expandedKeys' && keys.includes(newKey)) {
+          filterExpandedKeys.push(newKey) // 如果外部传来的expandedKeys本来包含这个节点的key，就不用进行遍历，直接放到结果里
+        } else {
+          expandedPositionArr.forEach(p => {
+            if ((p.split('-').length > pos.split('-').length && isInclude(pos.split('-'), p.split('-')) || pos === p) && filterExpandedKeys.indexOf(newKey) === -1) {
+              filterExpandedKeys.push(newKey);
+            }
+          });
+        }
       }
     });
     return filterExpandedKeys.length ? filterExpandedKeys : keys;
